@@ -193,7 +193,6 @@ const OrganizationTab: React.FC = () => (
       <div className="flex items-center justify-between mb-4">
         <div>
           <Title level={5} style={{ margin: 0 }}>Company Address</Title>
-          <Text type="secondary">Legal and brand details of your organization</Text>
         </div>
         <Button icon={<EditOutlined />}>Edit</Button>
       </div>
