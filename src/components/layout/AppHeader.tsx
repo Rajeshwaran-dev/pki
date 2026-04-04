@@ -83,11 +83,26 @@ const AppHeader: React.FC = () => {
           <Badge count={3} size="small">
             <Button type="text" icon={<BellOutlined style={{ fontSize: 18 }} />} />
           </Badge>
-          <Avatar
-            style={{ background: '#B19625', cursor: 'pointer' }}
-            icon={<UserOutlined />}
-            onClick={() => setProfileOpen(true)}
-          />
+          <Dropdown
+            menu={{
+              items: [
+                { key: 'profile', icon: <UserOutlined />, label: 'Profile' },
+                { type: 'divider' as const },
+                { key: 'logout', icon: <LogoutOutlined />, label: 'Logout', danger: true },
+              ],
+              onClick: ({ key }) => {
+                if (key === 'profile') setProfileOpen(true);
+                if (key === 'logout') handleLogout();
+              },
+            }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <Avatar
+              style={{ background: '#B19625', cursor: 'pointer' }}
+              icon={<UserOutlined />}
+            />
+          </Dropdown>
         </Space>
       </Header>
 
