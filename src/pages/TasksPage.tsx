@@ -156,6 +156,8 @@ const TasksPage: React.FC = () => {
   const isMobile = useIsMobile();
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const [activeTab, setActiveTab] = useState<'tasks' | 'requests'>('tasks');
   const [form] = Form.useForm();
 
