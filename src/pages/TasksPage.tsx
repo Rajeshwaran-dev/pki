@@ -451,38 +451,46 @@ const TasksPage: React.FC = () => {
       />
 
       {/* Tab buttons - horizontally scrollable on mobile */}
-      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
-        {[
-          { key: 'tasks' as const, label: 'All Tasks', icon: <OrderedListOutlined /> },
-          { key: 'requests' as const, label: `All Requests (${mockRequests.length})`, icon: <FileTextOutlined /> },
-        ].map(tab => {
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => { setActiveTab(tab.key); setSelectedTask(null); }}
-              className="settings-pill-tab"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '8px 16px',
-                borderRadius: 24,
-                border: isActive ? '2px solid #B19625' : '1px solid hsl(var(--border))',
-                background: isActive ? '#B1962510' : 'transparent',
-                color: isActive ? '#B19625' : 'inherit',
-                fontWeight: isActive ? 600 : 400,
-                fontSize: 13,
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-              }}
-            >
-              {tab.icon} {tab.label}
-            </button>
-          );
-        })}
+      <div style={{
+        background: 'var(--ant-color-bg-container, #fff)',
+        borderRadius: 12,
+        padding: '12px 16px',
+        marginBottom: 16,
+        borderBottom: '1px solid hsl(var(--border))',
+      }}>
+        <div className="flex items-center gap-2 overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {[
+            { key: 'tasks' as const, label: 'All Tasks', icon: <OrderedListOutlined /> },
+            { key: 'requests' as const, label: `All Requests (${mockRequests.length})`, icon: <FileTextOutlined /> },
+          ].map(tab => {
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => { setActiveTab(tab.key); setSelectedTask(null); }}
+                className="settings-pill-tab"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '8px 16px',
+                  borderRadius: 24,
+                  border: isActive ? '2px solid #B19625' : '1px solid transparent',
+                  background: isActive ? '#B1962510' : 'transparent',
+                  color: isActive ? '#B19625' : 'inherit',
+                  fontWeight: isActive ? 600 : 400,
+                  fontSize: 13,
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                }}
+              >
+                {tab.icon} {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* ===== ALL TASKS - BOARD VIEW ===== */}
