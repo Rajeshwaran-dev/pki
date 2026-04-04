@@ -147,6 +147,115 @@ const RequestCard: React.FC<{ request: Request }> = ({ request }) => (
   </Card>
 );
 
+/* ========== Request Detail Panel ========== */
+const RequestDetailPanel: React.FC<{ request: Request }> = ({ request }) => (
+  <div>
+    <Card style={{ borderRadius: 12, border: 'none', marginBottom: 16 }} styles={{ body: { padding: '16px 20px' } }}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+        <div>
+          <Space size={8} wrap>
+            <Typography.Title level={5} style={{ margin: 0 }}>{request.title}</Typography.Title>
+            <Tag style={{ borderRadius: 12 }}>Request</Tag>
+          </Space>
+          <div className="mt-1">
+            <a style={{ color: 'hsl(var(--info))', fontSize: 13 }}>{request.projectName}</a>
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}> ({request.projectCode})</Typography.Text>
+          </div>
+        </div>
+        <Space wrap>
+          <Button type="primary" icon={<CheckSquareOutlined />} ghost style={{ borderRadius: 8 }}>Approve</Button>
+          <Tag color={statusColors[request.status]} style={{ borderRadius: 12 }}>{request.status}</Tag>
+        </Space>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4" style={{ borderTop: '1px solid hsl(var(--border))', borderBottom: '1px solid hsl(var(--border))' }}>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>⚑ Status</Typography.Text>
+          <div className="mt-1"><Tag color={statusColors[request.status]} style={{ borderRadius: 12 }}>{request.status}</Tag></div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Assignee</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{request.assignee}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Due Date</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{request.dueDate}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>⏱ Time Spent</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>00:00:00</div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Client Name</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{request.clientName}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Created</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{request.createdDate}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Created By</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>Admin</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>📋 Project</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{request.projectName}</div>
+        </div>
+      </div>
+    </Card>
+
+    <Card style={{ borderRadius: 12, border: 'none' }} styles={{ body: { padding: '16px 20px' } }}>
+      <Typography.Title level={5} style={{ margin: 0, marginBottom: 12 }}>Comments (0) <a style={{ fontSize: 12, color: 'hsl(var(--info))', marginLeft: 8 }}>Hide</a></Typography.Title>
+      <Input.TextArea rows={2} placeholder="Add a comment..." style={{ borderRadius: 8, marginBottom: 16 }} />
+      <div className="text-center py-6">
+        <MessageOutlined style={{ fontSize: 36, color: 'hsl(var(--muted-foreground))' }} />
+        <div className="mt-2"><Typography.Text type="secondary">No comments have been made to this request yet</Typography.Text></div>
+      </div>
+    </Card>
+  </div>
+);
+
+/* ========== List Request Card ========== */
+const ListRequestCard: React.FC<{ request: Request; isSelected: boolean; onClick: () => void }> = ({ request, isSelected, onClick }) => (
+  <Card
+    size="small"
+    hoverable
+    onClick={onClick}
+    style={{
+      borderRadius: 10, marginBottom: 10, cursor: 'pointer',
+      borderLeft: `3px solid ${statusColors[request.status]}`,
+      background: isSelected ? 'hsl(var(--primary) / 0.08)' : undefined,
+      borderColor: isSelected ? 'hsl(var(--primary))' : undefined,
+      borderLeftColor: statusColors[request.status],
+    }}
+    styles={{ body: { padding: '12px 14px' } }}
+  >
+    <div className="flex items-center justify-between mb-1 gap-2">
+      <Typography.Text strong style={{ fontSize: 13, flex: 1, minWidth: 0 }} ellipsis>{request.title}</Typography.Text>
+      <Tag color={statusColors[request.status]} style={{ borderRadius: 12, fontSize: 10 }}>{request.status}</Tag>
+    </div>
+    <a style={{ color: 'hsl(var(--info))', fontSize: 11 }}>{request.projectName}</a>
+    <Typography.Text type="secondary" style={{ fontSize: 11 }}> ({request.projectCode})</Typography.Text>
+    <div className="grid grid-cols-2 gap-x-4 mt-2">
+      <div>
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Client</Typography.Text>
+        <div style={{ fontSize: 11 }}><UserOutlined style={{ fontSize: 10, marginRight: 4 }} />{request.clientName}</div>
+      </div>
+      <div>
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Assignee</Typography.Text>
+        <div style={{ fontSize: 11 }}><UserOutlined style={{ fontSize: 10, marginRight: 4 }} />{request.assignee}</div>
+      </div>
+    </div>
+    <div className="flex items-center justify-between mt-2">
+      <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> 00:00:00</Typography.Text>
+      <MessageOutlined style={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+    </div>
+  </Card>
+);
+
 /* ========== Task Detail Panel ========== */
 const TaskDetailPanel: React.FC<{ task: Task; onClose?: () => void; showBack?: boolean }> = ({ task, onClose, showBack }) => (
   <div>
