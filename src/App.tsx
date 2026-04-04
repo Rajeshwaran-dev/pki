@@ -7,6 +7,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ClientsPage from "./pages/ClientsPage";
 import TasksPage from "./pages/TasksPage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const ThemedApp = () => {
@@ -39,6 +40,7 @@ const ThemedApp = () => {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
