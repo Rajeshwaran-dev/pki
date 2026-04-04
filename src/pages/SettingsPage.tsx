@@ -955,6 +955,10 @@ const SettingsPage: React.FC = () => {
       </div>
 
       <Card style={{ borderRadius: 12, border: 'none' }}>
+        <Title level={4} style={{ marginBottom: 20 }}>
+          {tabItems.find(t => t.key === activeTab)?.icon}{' '}
+          {tabItems.find(t => t.key === activeTab)?.label}
+        </Title>
         {renderContent()}
       </Card>
     </div>
