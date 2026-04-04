@@ -4,6 +4,7 @@ import uiSlice from './slices/uiSlice';
 import projectSlice from './slices/projectSlice';
 import clientSlice from './slices/clientSlice';
 import taskSlice from './slices/taskSlice';
+import authSlice from './slices/authSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     projects: projectSlice,
     clients: clientSlice,
     tasks: taskSlice,
+    auth: authSlice,
   },
 });
 
