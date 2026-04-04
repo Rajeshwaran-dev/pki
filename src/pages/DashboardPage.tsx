@@ -1,13 +1,11 @@
 import React from 'react';
-import { Row, Col, Card, Statistic, Typography, Progress, Input, DatePicker, Button, Space } from 'antd';
+import { Row, Col, Card, Statistic, Typography, Progress } from 'antd';
 import {
   ProjectOutlined,
   TeamOutlined,
   CheckSquareOutlined,
   DollarOutlined,
   ArrowUpOutlined,
-  SearchOutlined,
-  ExportOutlined,
 } from '@ant-design/icons';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
