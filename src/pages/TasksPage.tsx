@@ -249,7 +249,7 @@ const TasksPage: React.FC = () => {
         })}
       </div>
 
-      {activeTab === 'tasks' && (
+      {activeTab === 'tasks' && viewMode === 'board' && (
         <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
             {taskStatuses.map(status => {
@@ -265,7 +265,28 @@ const TasksPage: React.FC = () => {
         </DndContext>
       )}
 
-      {activeTab === 'requests' && (
+      {activeTab === 'tasks' && viewMode === 'list' && (
+        <Card style={{ borderRadius: 12, border: 'none' }} className="animate-fade-in">
+          <Table
+            dataSource={tasks}
+            rowKey="id"
+            pagination={{ pageSize: 10, showSizeChanger: true }}
+            scroll={{ x: 800 }}
+            columns={[
+              { title: 'Title', dataIndex: 'title', render: (v: string) => <Typography.Text strong>{v}</Typography.Text> },
+              { title: 'Project', dataIndex: 'projectName' },
+              { title: 'Client', dataIndex: 'clientName' },
+              { title: 'Assignee', dataIndex: 'assignee', render: (v: string) => <Space><Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>{v.charAt(0)}</Avatar>{v}</Space> },
+              { title: 'Priority', dataIndex: 'priority', render: (v: string) => <StatusTag value={v} type="priority" /> },
+              { title: 'Status', dataIndex: 'status', render: (v: string) => <Tag color={statusColors[v]} style={{ borderRadius: 12 }}>{v}</Tag> },
+              { title: 'Due Date', dataIndex: 'dueDate' },
+              { title: 'Type', dataIndex: 'type', render: (v: string) => <Tag>{v}</Tag> },
+            ]}
+          />
+        </Card>
+      )}
+
+      {activeTab === 'requests' && viewMode === 'board' && (
         <div className="animate-fade-in" style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
           {requestStatuses.map(status => {
             const items = requestsByStatus(status);
@@ -290,6 +311,26 @@ const TasksPage: React.FC = () => {
             );
           })}
         </div>
+      )}
+
+      {activeTab === 'requests' && viewMode === 'list' && (
+        <Card style={{ borderRadius: 12, border: 'none' }} className="animate-fade-in">
+          <Table
+            dataSource={mockRequests}
+            rowKey="id"
+            pagination={{ pageSize: 10, showSizeChanger: true }}
+            scroll={{ x: 800 }}
+            columns={[
+              { title: 'Title', dataIndex: 'title', render: (v: string) => <Typography.Text strong>{v}</Typography.Text> },
+              { title: 'Project', dataIndex: 'projectName', render: (v: string, r: Request) => <><a style={{ color: 'hsl(var(--info))' }}>{v}</a> <Typography.Text type="secondary">({r.projectCode})</Typography.Text></> },
+              { title: 'Client', dataIndex: 'clientName' },
+              { title: 'Assignee', dataIndex: 'assignee', render: (v: string) => <Space><Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>{v.charAt(0)}</Avatar>{v}</Space> },
+              { title: 'Status', dataIndex: 'status', render: (v: string) => <Tag color={statusColors[v]} style={{ borderRadius: 12 }}>{v}</Tag> },
+              { title: 'Created', dataIndex: 'createdDate' },
+              { title: 'Due Date', dataIndex: 'dueDate' },
+            ]}
+          />
+        </Card>
       )}
 
       <Modal title="Add Task" open={modalOpen} onCancel={() => { setModalOpen(false); form.resetFields(); }} onOk={handleAdd} okText="Create Task" width={isMobile ? '95%' : 560} centered>
