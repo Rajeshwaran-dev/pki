@@ -45,13 +45,6 @@ const DashboardPage: React.FC = () => {
     <div>
       <PageHeader
         title="Dashboard"
-        actions={
-          <>
-            <Input prefix={<SearchOutlined />} placeholder="Search..." style={{ width: 200, borderRadius: 8 }} allowClear />
-            <RangePicker style={{ borderRadius: 8 }} />
-            <Button icon={<ExportOutlined />}>Export</Button>
-          </>
-        }
       />
 
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
