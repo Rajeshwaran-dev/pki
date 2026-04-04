@@ -102,7 +102,7 @@ const SubscriptionTab: React.FC = () => {
         <Title level={4} style={{ margin: 0 }}>Subscription Type - Per Project</Title>
         <Button type="primary" size="large">Convert to Per Seats</Button>
       </div>
-      <Text type="secondary">***Please Reachout to your POC for bulk credits and discount</Text>
+      
       <Row gutter={[16, 16]} className="mt-6">
         <Col xs={24} lg={14}>
           <Row gutter={[16, 16]} className="mb-6">
@@ -148,12 +148,11 @@ const SubscriptionTab: React.FC = () => {
 
 const OrganizationTab: React.FC = () => (
   <div className="animate-fade-in">
-    <Title level={4}>Organization details</Title>
+    
     <Card style={{ borderRadius: 12, marginBottom: 24 }}>
       <div className="flex items-center justify-between mb-4">
         <div>
           <Title level={5} style={{ margin: 0 }}>Company Information</Title>
-          <Text type="secondary">Legal and brand details of your organization</Text>
         </div>
         <Button icon={<EditOutlined />}>Edit</Button>
       </div>
@@ -194,7 +193,6 @@ const OrganizationTab: React.FC = () => (
       <div className="flex items-center justify-between mb-4">
         <div>
           <Title level={5} style={{ margin: 0 }}>Company Address</Title>
-          <Text type="secondary">Legal and brand details of your organization</Text>
         </div>
         <Button icon={<EditOutlined />}>Edit</Button>
       </div>
@@ -235,7 +233,7 @@ const OrganizationTab: React.FC = () => (
       <div className="flex items-center justify-between mb-4">
         <div>
           <Title level={5} style={{ margin: 0 }}>Bank Details</Title>
-          <Text type="secondary">Legal and brand details of your organization</Text>
+          
         </div>
         <Button icon={<EditOutlined />}>Edit</Button>
       </div>
@@ -278,7 +276,7 @@ const ListingPageTab: React.FC = () => (
       <Title level={4} style={{ margin: 0 }}>Listing Page</Title>
       <Tag color="error" style={{ borderRadius: 12 }}>● Inactive</Tag>
     </div>
-    <Text type="secondary" className="mb-6 block">Brand details for listing page</Text>
+    
     <div className="text-right mb-4">
       <Button icon={<EditOutlined />}>Edit</Button>
     </div>
