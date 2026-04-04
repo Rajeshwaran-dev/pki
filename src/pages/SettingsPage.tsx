@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Typography, Input, Button, Form, Upload, Tag, Row, Col, Table, Divider, DatePicker, Select, Space } from 'antd';
+import { Card, Typography, Input, Button, Form, Upload, Tag, Row, Col, Table, Divider, DatePicker, Select, Space, Empty } from 'antd';
 import {
   CreditCardOutlined,
   BankOutlined,
@@ -21,6 +21,9 @@ import {
   ExportOutlined,
   SearchOutlined,
   FilterOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
 import PageHeader from '@/components/shared/PageHeader';
 
@@ -421,6 +424,264 @@ const MaterialsMasterTab: React.FC = () => {
   );
 };
 
+const ChecklistMasterTab: React.FC = () => (
+  <div className="animate-fade-in">
+    <div className="flex justify-end gap-3 mb-4">
+      <Button type="primary" icon={<PlusOutlined />}>Create Design Checklist</Button>
+      <Button icon={<PlusOutlined />}>Add Handover Checklist</Button>
+    </div>
+    <div className="py-12 text-center">
+      <Text type="secondary">No checklists available</Text>
+    </div>
+  </div>
+);
+
+const MoodboardTab: React.FC = () => {
+  const [subTab, setSubTab] = useState('items');
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center gap-2 mb-4">
+        {['items', 'groups'].map(t => (
+          <button
+            key={t}
+            onClick={() => setSubTab(t)}
+            style={{
+              padding: '6px 18px', borderRadius: 20, fontSize: 13, fontWeight: subTab === t ? 600 : 400, cursor: 'pointer',
+              background: subTab === t ? 'hsl(var(--primary))' : 'transparent',
+              color: subTab === t ? 'hsl(var(--primary-foreground))' : 'inherit',
+              border: subTab === t ? 'none' : '1px solid hsl(var(--border))',
+            }}
+          >
+            {t === 'items' ? 'Items' : 'Groups'}
+          </button>
+        ))}
+      </div>
+      <Card style={{ borderRadius: 12, background: 'hsl(var(--muted))', textAlign: 'center', padding: 40 }}>
+        <div className="flex justify-end mb-4">
+          <Button icon={<PlusOutlined />}>Add New</Button>
+        </div>
+        <Empty description="No Data Found" />
+      </Card>
+    </div>
+  );
+};
+
+const ActivityTab: React.FC = () => {
+  const [subTab, setSubTab] = useState('tags');
+  const tags = [
+    { key: '1', name: 'Painting' },
+    { key: '2', name: 'Countertops' },
+    { key: '3', name: 'Electrical' },
+  ];
+  const activities = [
+    { key: '1', name: 'Site Visit' },
+    { key: '2', name: 'Design Review' },
+    { key: '3', name: 'Client Meeting' },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center gap-2 mb-4">
+        {['tags', 'activity'].map(t => (
+          <button
+            key={t}
+            onClick={() => setSubTab(t)}
+            style={{
+              padding: '6px 18px', borderRadius: 20, fontSize: 13, fontWeight: subTab === t ? 600 : 400, cursor: 'pointer',
+              background: subTab === t ? 'hsl(var(--primary))' : 'transparent',
+              color: subTab === t ? 'hsl(var(--primary-foreground))' : 'inherit',
+              border: subTab === t ? 'none' : '1px solid hsl(var(--border))',
+            }}
+          >
+            {t === 'tags' ? 'Tags' : 'Activity Master'}
+          </button>
+        ))}
+      </div>
+      <div className="flex justify-end mb-4">
+        <Button type="primary" icon={<PlusOutlined />}>Add Tag</Button>
+      </div>
+      <Table
+        dataSource={subTab === 'tags' ? tags : activities}
+        pagination={{ pageSize: 25, showSizeChanger: true, showTotal: (t) => `${t} items` }}
+        columns={[
+          { title: 'Name', dataIndex: 'name', render: (v: string) => <Text style={{ color: 'hsl(var(--primary))' }}>{v}</Text> },
+          {
+            title: 'Actions', width: 120, align: 'center' as const,
+            render: () => (
+              <div className="flex justify-center gap-2">
+                <Button type="primary" shape="circle" size="small" icon={<EditOutlined />} ghost />
+                <Button danger shape="circle" size="small" icon={<DeleteOutlined />} />
+              </div>
+            ),
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
+const ManpowerTab: React.FC = () => {
+  const data = [
+    { key: '1', date: '27 Mar, 2025', name: 'Logistics Team' },
+    { key: '2', date: '27 Mar, 2025', name: 'Demolition Crew' },
+    { key: '3', date: '27 Mar, 2025', name: 'Plumber' },
+    { key: '4', date: '27 Mar, 2025', name: 'Electrician' },
+    { key: '5', date: '27 Mar, 2025', name: 'Tile Worker' },
+    { key: '6', date: '27 Mar, 2025', name: 'Painter' },
+    { key: '7', date: '27 Mar, 2025', name: 'Carpenter' },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex justify-end gap-3 mb-4">
+        <Button type="primary" icon={<PlusOutlined />}>Add Manpower</Button>
+        <Button icon={<UploadOutlined />}>Import Excel</Button>
+      </div>
+      <Table
+        dataSource={data}
+        pagination={{ pageSize: 25, showSizeChanger: true, showTotal: (t) => `${t} items` }}
+        columns={[
+          { title: 'Created On', dataIndex: 'date', width: 150 },
+          { title: 'Name', dataIndex: 'name' },
+          {
+            title: 'Actions', width: 80, align: 'center' as const,
+            render: () => <Button type="text" icon={<MoreOutlined />} />,
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
+const VendorsTab: React.FC = () => {
+  const [subTab, setSubTab] = useState('all');
+  const vendors = [
+    { key: '1', date: '01 Apr, 2025', code: 'PSVR-002', name: 'Shri Karani', pan: '', gst: 'N/A', legalName: 'Shri Karani', phone: '', city: 'Salem', type: '', status: 'Active' },
+    { key: '2', date: '27 Mar, 2025', code: 'PSVR-001', name: 'Test Vendor', pan: '', gst: 'N/A', legalName: '', phone: '', city: 'Kadapa', type: '', status: 'Active' },
+  ];
+  const tabs = [
+    { key: 'all', label: `All (${vendors.length})` },
+    { key: 'active', label: `Active (${vendors.filter(v => v.status === 'Active').length})` },
+    { key: 'inactive', label: 'Inactive (0)' },
+    { key: 'blacklist', label: 'Blacklist (0)' },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setSubTab(t.key)}
+              style={{
+                padding: '6px 18px', borderRadius: 20, fontSize: 13, fontWeight: subTab === t.key ? 600 : 400, cursor: 'pointer',
+                background: subTab === t.key ? 'hsl(var(--primary))' : 'transparent',
+                color: subTab === t.key ? 'hsl(var(--primary-foreground))' : 'inherit',
+                border: subTab === t.key ? 'none' : '1px solid hsl(var(--border))',
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-3">
+          <Button type="primary" icon={<PlusOutlined />}>Add Vendor</Button>
+          <Button icon={<ExportOutlined />}>Export Excel</Button>
+        </div>
+      </div>
+      <Table
+        dataSource={vendors}
+        scroll={{ x: 1100 }}
+        pagination={{ pageSize: 25, showSizeChanger: true, showTotal: (t) => `${t} items` }}
+        columns={[
+          { title: 'Created On', dataIndex: 'date', width: 110 },
+          { title: 'Vendor Code', dataIndex: 'code', width: 110 },
+          { title: 'Display name', dataIndex: 'name', render: (v: string) => <Text style={{ color: 'hsl(var(--primary))' }}>{v}</Text> },
+          { title: 'PAN', dataIndex: 'pan', width: 100 },
+          { title: 'GST Number', dataIndex: 'gst', width: 100, render: (v: string) => v ? <Tag>{v}</Tag> : '-' },
+          { title: 'Legal Name', dataIndex: 'legalName' },
+          { title: 'Phone', dataIndex: 'phone', width: 120 },
+          { title: 'City', dataIndex: 'city', width: 100 },
+          { title: 'Vendor Type', dataIndex: 'type', width: 110 },
+          { title: 'Status', dataIndex: 'status', width: 90, render: (v: string) => <Tag color={v === 'Active' ? 'success' : 'default'}>{v}</Tag> },
+          { title: 'View Details', width: 100, align: 'center' as const, render: () => <Button type="primary" shape="circle" size="small" icon={<EyeOutlined />} ghost /> },
+        ]}
+      />
+    </div>
+  );
+};
+
+const UsersTab: React.FC = () => {
+  const [subTab, setSubTab] = useState('internal');
+  const users = [
+    { key: '1', name: 'Ramu', phone: '+91 9626419878', joining: '', email: '', role: '', groups: ['Project Files'], groupCount: 7 },
+    { key: '2', name: 'Chandra Bose', phone: '+91 8925835892', joining: '', email: '', role: '', groups: ['Quote'], groupCount: 6 },
+    { key: '3', name: 'Sathish', phone: '+91 8925835895', joining: '', email: '', role: '', groups: ['Project Files'], groupCount: 10 },
+    { key: '4', name: 'Vighnesh Shetty', phone: '+91 7348941417', joining: '', email: '', role: '', groups: ['Moodboard'], groupCount: 10 },
+    { key: '5', name: 'Renuga Devi', phone: '+91 6369467389', joining: '', email: '', role: '', groups: ['Moodboard'], groupCount: 5 },
+    { key: '6', name: 'Praveen Kumar', phone: '+91 7010017410', joining: '', email: '', role: '', groups: ['Moodboard'], groupCount: 5 },
+    { key: '7', name: 'Madhu Loganathan', phone: '+91 8925835894', joining: '', email: '', role: '', groups: ['Project Files'], groupCount: 8 },
+    { key: '8', name: 'Sharmila', phone: '+91 7200989485', joining: '', email: '', role: '', groups: ['Moodboard'], groupCount: 15 },
+    { key: '9', name: 'Thara', phone: '+91 9008949311', joining: '', email: '', role: '', groups: ['Can Punch In Punch Out'], groupCount: 1 },
+    { key: '10', name: 'Anantha Narayana', phone: '+91 9944166332', joining: '', email: 'ananth@perspectivekitchens.com', role: '', groups: ['Can Punch In Punch Out'], groupCount: 1 },
+  ];
+  const tabs = [
+    { key: 'internal', label: `Internal Users (${users.length})` },
+    { key: 'clients', label: 'Clients (0)' },
+    { key: 'vendors', label: 'Vendors (0)' },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setSubTab(t.key)}
+              style={{
+                padding: '6px 18px', borderRadius: 20, fontSize: 13, fontWeight: subTab === t.key ? 600 : 400, cursor: 'pointer',
+                background: subTab === t.key ? 'hsl(var(--primary))' : 'transparent',
+                color: subTab === t.key ? 'hsl(var(--primary-foreground))' : 'inherit',
+                border: subTab === t.key ? 'none' : '1px solid hsl(var(--border))',
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <Button type="primary" icon={<PlusOutlined />}>Add User</Button>
+      </div>
+      <Table
+        dataSource={subTab === 'internal' ? users : []}
+        scroll={{ x: 1000 }}
+        pagination={{ pageSize: 25, showSizeChanger: true, showTotal: (t) => `${t} items` }}
+        columns={[
+          { title: 'Name', dataIndex: 'name' },
+          { title: 'Phone', dataIndex: 'phone', width: 150 },
+          { title: 'Joining Date', dataIndex: 'joining', width: 120 },
+          { title: 'Email', dataIndex: 'email' },
+          { title: 'Role', dataIndex: 'role', width: 100 },
+          {
+            title: 'Groups', dataIndex: 'groups', width: 200,
+            render: (_: any, record: any) => (
+              <div className="flex items-center gap-1">
+                {record.groups.map((g: string, i: number) => <Tag key={i} color="blue">{g}</Tag>)}
+                {record.groupCount > 1 && <Text type="secondary" style={{ fontSize: 12 }}>+{record.groupCount}</Text>}
+              </div>
+            ),
+          },
+          {
+            title: 'Actions', width: 60, align: 'center' as const,
+            render: () => <Button type="text" icon={<MoreOutlined />} />,
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
 const PlaceholderTab: React.FC<{ title: string }> = ({ title }) => (
   <Card style={{ borderRadius: 12, textAlign: 'center', padding: 40 }} className="animate-fade-in">
     <SettingOutlined style={{ fontSize: 48, color: 'hsl(var(--muted-foreground))' }} />
@@ -440,6 +701,12 @@ const SettingsPage: React.FC = () => {
       case 'listing': return <ListingPageTab />;
       case 'items': return <ItemMasterTab />;
       case 'materials': return <MaterialsMasterTab />;
+      case 'checklist': return <ChecklistMasterTab />;
+      case 'moodboard': return <MoodboardTab />;
+      case 'activity': return <ActivityTab />;
+      case 'manpower': return <ManpowerTab />;
+      case 'vendors': return <VendorsTab />;
+      case 'users': return <UsersTab />;
       default: return <PlaceholderTab title={tabItems.find(t => t.key === activeTab)?.label || activeTab} />;
     }
   };
