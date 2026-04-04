@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
-  ClockCircleOutlined, UserOutlined, SearchOutlined, ExportOutlined,
+  ClockCircleOutlined, UserOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragEndEvent, DragOverlay, DragStartEvent,
@@ -133,9 +133,6 @@ const TasksPage: React.FC = () => {
         title="Tasks"
         actions={
           <>
-            <Input prefix={<SearchOutlined />} placeholder="Search tasks..." style={{ width: 200, borderRadius: 8 }} allowClear />
-            <RangePicker style={{ borderRadius: 8 }} />
-            <Button icon={<ExportOutlined />}>Export</Button>
             <Segmented
               value={viewMode}
               onChange={val => dispatch(setViewMode(val as 'board' | 'list'))}

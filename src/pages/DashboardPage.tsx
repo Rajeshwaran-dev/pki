@@ -1,13 +1,11 @@
 import React from 'react';
-import { Row, Col, Card, Statistic, Typography, Progress, Input, DatePicker, Button, Space } from 'antd';
+import { Row, Col, Card, Statistic, Typography, Progress } from 'antd';
 import {
   ProjectOutlined,
   TeamOutlined,
   CheckSquareOutlined,
   DollarOutlined,
   ArrowUpOutlined,
-  SearchOutlined,
-  ExportOutlined,
 } from '@ant-design/icons';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
@@ -17,7 +15,6 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const { RangePicker } = DatePicker;
 const CHART_COLORS = ['#B19625', '#D4B96E', '#1677FF', '#52C41A', '#FAAD14', '#FF4D4F'];
 
 const DashboardPage: React.FC = () => {
@@ -47,13 +44,6 @@ const DashboardPage: React.FC = () => {
     <div>
       <PageHeader
         title="Dashboard"
-        actions={
-          <>
-            <Input prefix={<SearchOutlined />} placeholder="Search..." style={{ width: 200, borderRadius: 8 }} allowClear />
-            <RangePicker style={{ borderRadius: 8 }} />
-            <Button icon={<ExportOutlined />}>Export</Button>
-          </>
-        }
       />
 
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>

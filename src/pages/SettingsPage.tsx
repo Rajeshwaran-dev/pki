@@ -448,9 +448,7 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div>
-      <PageHeader title="Settings" subtitle="Manage your organization settings and preferences." />
-
-      <FilterBar />
+      <PageHeader title="Settings" />
 
       {/* Pill-style tab bar like reference */}
       <div
