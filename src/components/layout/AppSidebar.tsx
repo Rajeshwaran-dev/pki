@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Drawer, Button, Typography } from 'antd';
+import React from 'react';
+import { Layout, Drawer, Button, Typography } from 'antd';
 import {
   DashboardOutlined,
   ProjectOutlined,
@@ -75,21 +75,51 @@ const AppSidebar: React.FC = () => {
     </div>
   );
 
+  const handleClick = (key: string) => {
+    navigate(key);
+    if (isMobile) dispatch(setMobileSidebarOpen(false));
+  };
+
   const menuContent = (
-    <Menu
-      mode="inline"
-      selectedKeys={[location.pathname]}
-      onClick={({ key }) => {
-        navigate(key);
-        if (isMobile) dispatch(setMobileSidebarOpen(false));
-      }}
-      items={menuItems}
-      style={{
-        border: 'none',
-        background: 'transparent',
-        marginTop: 8,
-      }}
-    />
+    <div style={{ marginTop: 8, padding: '0 8px' }}>
+      {menuItems.map(item => {
+        const isActive = location.pathname === item.key;
+        return (
+          <div
+            key={item.key}
+            onClick={() => handleClick(item.key)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              padding: collapsed && !isMobile ? '10px 0' : '10px 16px',
+              justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+              marginBottom: 4,
+              borderRadius: 8,
+              cursor: 'pointer',
+              background: isActive ? '#B19625' : 'transparent',
+              color: isActive ? '#ffffff' : (theme === 'dark' ? '#a0a0a0' : '#666'),
+              fontWeight: isActive ? 600 : 400,
+              fontSize: 14,
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              if (!isActive) {
+                (e.currentTarget as HTMLDivElement).style.background = theme === 'dark' ? '#2a2a2a' : '#f5f5f5';
+              }
+            }}
+            onMouseLeave={e => {
+              if (!isActive) {
+                (e.currentTarget as HTMLDivElement).style.background = 'transparent';
+              }
+            }}
+          >
+            <span style={{ fontSize: 18, display: 'flex', alignItems: 'center' }}>{item.icon}</span>
+            {(!collapsed || isMobile) && <span>{item.label}</span>}
+          </div>
+        );
+      })}
+    </div>
   );
 
   if (isMobile) {
