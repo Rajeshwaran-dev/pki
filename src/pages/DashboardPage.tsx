@@ -51,7 +51,7 @@ const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} lg={6} key={i}>
             <Card
               className="dashboard-stat-card"
-              style={{ borderRadius: 12, border: 'none' }}
+              style={{ borderRadius: 12, border: 'none', borderLeft: `3px solid ${stat.color}` }}
               styles={{ body: { padding: '20px 24px' } }}
               hoverable
             >
