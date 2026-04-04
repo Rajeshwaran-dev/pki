@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented, Table } from 'antd';
+import { Button, Modal, Drawer, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented, Table } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
   ClockCircleOutlined, UserOutlined, MessageOutlined, CheckSquareOutlined,
-  OrderedListOutlined, FileTextOutlined,
+  OrderedListOutlined, FileTextOutlined, ArrowLeftOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragEndEvent, DragOverlay, DragStartEvent,
@@ -90,22 +90,20 @@ const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }
 const KanbanColumn: React.FC<{ status: string; tasks: { id: string }[]; children: React.ReactNode }> = ({ status, tasks, children }) => {
   const taskIds = tasks.map(t => t.id);
   return (
-    <div style={{
-      minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12,
-      background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300,
+    <div className="kanban-column" style={{
+      minWidth: 260, flex: '1 0 260px', borderRadius: 12, padding: 12,
+      background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 200,
       borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
     }}>
       <div className="flex items-center justify-between mb-3 px-1">
-        <Space>
-          <Typography.Text strong style={{ fontSize: 13 }}>{status}</Typography.Text>
-        </Space>
+        <Typography.Text strong style={{ fontSize: 13 }}>{status}</Typography.Text>
         <Tag style={{ borderRadius: 8, fontSize: 11 }}>{tasks.length}</Tag>
       </div>
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
         {children}
       </SortableContext>
       {tasks.length === 0 && (
-        <div className="text-center py-8"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
+        <div className="text-center py-6"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
       )}
     </div>
   );
@@ -146,6 +144,129 @@ const RequestCard: React.FC<{ request: Request }> = ({ request }) => (
       <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> 00:00:00</Typography.Text>
       <MessageOutlined style={{ color: 'hsl(var(--muted-foreground))', fontSize: 14 }} />
     </div>
+  </Card>
+);
+
+/* ========== Task Detail Panel ========== */
+const TaskDetailPanel: React.FC<{ task: Task; onClose?: () => void; showBack?: boolean }> = ({ task, onClose, showBack }) => (
+  <div>
+    <Card style={{ borderRadius: 12, border: 'none', marginBottom: 16 }} styles={{ body: { padding: '16px 20px' } }}>
+      {showBack && (
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 8, padding: 0 }}>Back</Button>
+      )}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+        <div>
+          <Space size={8} wrap>
+            <Typography.Title level={5} style={{ margin: 0 }}>{task.title}</Typography.Title>
+            <Tag style={{ borderRadius: 12 }}>{task.type}</Tag>
+          </Space>
+          <div className="mt-1">
+            <a style={{ color: 'hsl(var(--info))', fontSize: 13 }}>{task.projectName}</a>
+          </div>
+        </div>
+        <Space wrap>
+          <Button type="primary" icon={<CheckSquareOutlined />} ghost style={{ borderRadius: 8 }} size="middle">Mark Completed</Button>
+          {new Date(task.dueDate) < new Date() && <Tag color="error" style={{ borderRadius: 12 }}>Overdue</Tag>}
+        </Space>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4" style={{ borderTop: '1px solid hsl(var(--border))', borderBottom: '1px solid hsl(var(--border))' }}>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>⚑ Stage</Typography.Text>
+          <div className="mt-1"><Tag color={statusColors[task.status]} style={{ borderRadius: 12 }}>{task.status}</Tag></div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Assignee</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{task.assignee}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Due Date</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{task.dueDate}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>⏱ Time Spent</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>00:00:00</div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Client Name</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{task.clientName}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Created</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{task.createdDate}</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Created By</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>Admin</div>
+        </div>
+        <div>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>✅ Completed</Typography.Text>
+          <div className="mt-1" style={{ fontSize: 13 }}>{task.status === 'Completed' ? task.dueDate : 'N/A'}</div>
+        </div>
+      </div>
+
+      {task.description && (
+        <div className="mt-2">
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>Description</Typography.Text>
+          <div className="mt-1 p-3 rounded-lg" style={{ background: 'hsl(var(--muted))' }}>
+            <Typography.Text>{task.description}</Typography.Text>
+          </div>
+        </div>
+      )}
+    </Card>
+
+    <Card style={{ borderRadius: 12, border: 'none' }} styles={{ body: { padding: '16px 20px' } }}>
+      <Typography.Title level={5} style={{ margin: 0, marginBottom: 12 }}>Comments (0) <a style={{ fontSize: 12, color: 'hsl(var(--info))', marginLeft: 8 }}>Hide</a></Typography.Title>
+      <Input.TextArea rows={2} placeholder="Add a comment..." style={{ borderRadius: 8, marginBottom: 16 }} />
+      <div className="text-center py-6">
+        <MessageOutlined style={{ fontSize: 36, color: 'hsl(var(--muted-foreground))' }} />
+        <div className="mt-2"><Typography.Text type="secondary">No comments have been made to this task yet</Typography.Text></div>
+      </div>
+    </Card>
+  </div>
+);
+
+/* ========== List Task Card ========== */
+const ListTaskCard: React.FC<{ task: Task; isSelected: boolean; onClick: () => void }> = ({ task, isSelected, onClick }) => (
+  <Card
+    size="small"
+    hoverable
+    onClick={onClick}
+    style={{
+      borderRadius: 10, marginBottom: 10, cursor: 'pointer',
+      borderLeft: `3px solid ${statusColors[task.status]}`,
+      background: isSelected ? 'hsl(var(--primary) / 0.08)' : undefined,
+      borderColor: isSelected ? 'hsl(var(--primary))' : undefined,
+      borderLeftColor: statusColors[task.status],
+    }}
+    styles={{ body: { padding: '12px 14px' } }}
+  >
+    <div className="flex items-center justify-between mb-1 gap-2">
+      <Typography.Text strong style={{ fontSize: 13, flex: 1, minWidth: 0 }} ellipsis>{task.title}</Typography.Text>
+      <Space size={4} className="flex-shrink-0">
+        <Tag style={{ borderRadius: 12, fontSize: 10 }}>{task.type}</Tag>
+        {new Date(task.dueDate) < new Date() && <Tag color="error" style={{ borderRadius: 12, fontSize: 10 }}>Overdue</Tag>}
+      </Space>
+    </div>
+    <Tag color="blue" style={{ borderRadius: 12, fontSize: 10, marginBottom: 6 }}>{task.assignee}</Tag>
+    <div className="flex items-center justify-between">
+      <div>
+        <Typography.Text type="secondary" style={{ fontSize: 11 }}>Due Date</Typography.Text>
+        <div style={{ fontSize: 11 }}>{task.dueDate}</div>
+      </div>
+      <div className="text-right">
+        <Typography.Text type="secondary" style={{ fontSize: 11 }}>Completed On</Typography.Text>
+        <div style={{ fontSize: 11 }}>{task.status === 'Completed' ? task.dueDate : 'N/A'}</div>
+      </div>
+    </div>
+    <div className="flex items-center justify-between mt-2">
+      <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> 00:00:00</Typography.Text>
+      <Tag color={statusColors[task.status]} style={{ borderRadius: 12, fontSize: 10 }}>{task.status}</Tag>
+    </div>
+    <a style={{ color: 'hsl(var(--info))', fontSize: 11, marginTop: 4, display: 'block' }}>{task.projectName}</a>
   </Card>
 );
 
@@ -200,10 +321,11 @@ const TasksPage: React.FC = () => {
 
   return (
     <div>
+      {/* Header row - responsive */}
       <PageHeader
         title="Tasks"
         actions={
-          <>
+          <div className="flex items-center gap-2 flex-wrap">
             <Segmented
               value={viewMode}
               onChange={val => dispatch(setViewMode(val as 'board' | 'list'))}
@@ -212,13 +334,15 @@ const TasksPage: React.FC = () => {
                 { value: 'list', icon: <UnorderedListOutlined /> },
               ]}
             />
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>Add Task</Button>
-          </>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
+              {isMobile ? '' : 'Add Task'}
+            </Button>
+          </div>
         }
       />
 
-      {/* Tab buttons like reference */}
-      <div className="flex items-center gap-2 mb-5">
+      {/* Tab buttons - horizontally scrollable on mobile */}
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
         {[
           { key: 'tasks' as const, label: 'All Tasks', icon: <OrderedListOutlined /> },
           { key: 'requests' as const, label: `All Requests (${mockRequests.length})`, icon: <FileTextOutlined /> },
@@ -227,13 +351,13 @@ const TasksPage: React.FC = () => {
           return (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => { setActiveTab(tab.key); setSelectedTask(null); }}
               className="settings-pill-tab"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 6,
-                padding: '8px 20px',
+                padding: '8px 16px',
                 borderRadius: 24,
                 border: isActive ? '2px solid #B19625' : '1px solid hsl(var(--border))',
                 background: isActive ? '#B1962510' : 'transparent',
@@ -243,6 +367,7 @@ const TasksPage: React.FC = () => {
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
                 whiteSpace: 'nowrap',
+                flexShrink: 0,
               }}
             >
               {tab.icon} {tab.label}
@@ -251,9 +376,10 @@ const TasksPage: React.FC = () => {
         })}
       </div>
 
+      {/* ===== ALL TASKS - BOARD VIEW ===== */}
       {activeTab === 'tasks' && viewMode === 'board' && (
         <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
+          <div className="flex gap-3 overflow-x-auto pb-4" style={{ WebkitOverflowScrolling: 'touch' }}>
             {taskStatuses.map(status => {
               const filtered = tasks.filter(t => t.status === status);
               return (
@@ -267,148 +393,57 @@ const TasksPage: React.FC = () => {
         </DndContext>
       )}
 
+      {/* ===== ALL TASKS - LIST VIEW ===== */}
       {activeTab === 'tasks' && viewMode === 'list' && (
-        <div className="animate-fade-in flex gap-4" style={{ height: 'calc(100vh - 240px)' }}>
-          {/* Left: scrollable task list */}
-          <div style={{ width: selectedTask ? '35%' : '100%', minWidth: 340, overflowY: 'auto', transition: 'width 0.3s ease' }}>
-            <Input prefix={<UserOutlined />} placeholder="Search tasks..." allowClear style={{ marginBottom: 12, borderRadius: 8 }} />
-            {tasks.map(task => {
-              const isSelected = selectedTask?.id === task.id;
-              return (
-                <Card
-                  key={task.id}
-                  size="small"
-                  hoverable
-                  onClick={() => setSelectedTask(task)}
-                  style={{
-                    borderRadius: 10, marginBottom: 10, cursor: 'pointer',
-                    borderLeft: `3px solid ${statusColors[task.status]}`,
-                    background: isSelected ? 'hsl(var(--primary) / 0.08)' : undefined,
-                    border: isSelected ? '1px solid hsl(var(--primary))' : undefined,
-                    borderLeftWidth: 3, borderLeftColor: statusColors[task.status],
-                  }}
-                  styles={{ body: { padding: '12px 14px' } }}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <Typography.Text strong style={{ fontSize: 13 }}>{task.title}</Typography.Text>
-                    <Space size={4}>
-                      <Tag style={{ borderRadius: 12, fontSize: 10 }}>{task.type}</Tag>
-                      {new Date(task.dueDate) < new Date() && <Tag color="error" style={{ borderRadius: 12, fontSize: 10 }}>Overdue</Tag>}
-                    </Space>
-                  </div>
-                  <Tag color="blue" style={{ borderRadius: 12, fontSize: 10, marginBottom: 6 }}>{task.assignee}</Tag>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Typography.Text type="secondary" style={{ fontSize: 11 }}>Due Date</Typography.Text>
-                      <div style={{ fontSize: 11 }}>{task.dueDate}</div>
-                    </div>
-                    <div className="text-right">
-                      <Typography.Text type="secondary" style={{ fontSize: 11 }}>Completed On</Typography.Text>
-                      <div style={{ fontSize: 11 }}>{task.status === 'Completed' ? task.dueDate : 'N/A'}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> 00:00:00</Typography.Text>
-                    <Tag color={statusColors[task.status]} style={{ borderRadius: 12, fontSize: 10 }}>{task.status}</Tag>
-                  </div>
-                  <a style={{ color: 'hsl(var(--info))', fontSize: 11, marginTop: 4, display: 'block' }}>{task.projectName}</a>
-                </Card>
-              );
-            })}
-          </div>
-
-          {/* Right: detail panel */}
-          {selectedTask && (
-            <div style={{ flex: 1, overflowY: 'auto' }}>
-              <Card style={{ borderRadius: 12, border: 'none', marginBottom: 16 }} styles={{ body: { padding: '20px 24px' } }}>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <Space size={8}>
-                      <Typography.Title level={5} style={{ margin: 0 }}>{selectedTask.title}</Typography.Title>
-                      <Tag style={{ borderRadius: 12 }}>{selectedTask.type}</Tag>
-                    </Space>
-                    <div className="mt-1">
-                      <a style={{ color: 'hsl(var(--info))', fontSize: 13 }}>{selectedTask.projectName}</a>
-                    </div>
-                  </div>
-                  <Space>
-                    <Button type="primary" icon={<CheckSquareOutlined />} ghost style={{ borderRadius: 8 }}>Mark Completed</Button>
-                    {new Date(selectedTask.dueDate) < new Date() && <Tag color="error" style={{ borderRadius: 12 }}>Overdue</Tag>}
-                  </Space>
+        <>
+          {/* Desktop: split panel */}
+          {!isMobile ? (
+            <div className="animate-fade-in flex gap-4" style={{ height: 'calc(100vh - 240px)' }}>
+              <div style={{ width: selectedTask ? '35%' : '100%', minWidth: 300, overflowY: 'auto', transition: 'width 0.3s ease' }}>
+                <Input prefix={<UserOutlined />} placeholder="Search tasks..." allowClear style={{ marginBottom: 12, borderRadius: 8 }} />
+                {tasks.map(task => (
+                  <ListTaskCard key={task.id} task={task} isSelected={selectedTask?.id === task.id} onClick={() => setSelectedTask(task)} />
+                ))}
+              </div>
+              {selectedTask && (
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <TaskDetailPanel task={selectedTask} />
                 </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4" style={{ borderTop: '1px solid hsl(var(--border))', borderBottom: '1px solid hsl(var(--border))' }}>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>⚑ Stage</Typography.Text>
-                    <div className="mt-1"><Tag color={statusColors[selectedTask.status]} style={{ borderRadius: 12 }}>{selectedTask.status}</Tag></div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Assignee</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>{selectedTask.assignee}</div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Due Date</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>{selectedTask.dueDate}</div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>⏱ Time Spent</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>00:00:00</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Client Name</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>{selectedTask.clientName}</div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>📅 Created</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>{selectedTask.createdDate}</div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>👤 Created By</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>Admin</div>
-                  </div>
-                  <div>
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>✅ Completed</Typography.Text>
-                    <div className="mt-1" style={{ fontSize: 13 }}>{selectedTask.status === 'Completed' ? selectedTask.dueDate : 'N/A'}</div>
-                  </div>
-                </div>
-
-                {selectedTask.description && (
-                  <div className="mt-2">
-                    <Typography.Text type="secondary" style={{ fontSize: 11 }}>Description</Typography.Text>
-                    <div className="mt-1 p-3 rounded-lg" style={{ background: 'hsl(var(--muted))' }}>
-                      <Typography.Text>{selectedTask.description}</Typography.Text>
-                    </div>
-                  </div>
-                )}
-              </Card>
-
-              {/* Comments section */}
-              <Card style={{ borderRadius: 12, border: 'none' }} styles={{ body: { padding: '20px 24px' } }}>
-                <Typography.Title level={5} style={{ margin: 0, marginBottom: 12 }}>Comments (0) <a style={{ fontSize: 12, color: 'hsl(var(--info))', marginLeft: 8 }}>Hide</a></Typography.Title>
-                <Input.TextArea rows={2} placeholder="Add a comment..." style={{ borderRadius: 8, marginBottom: 16 }} />
-                <div className="text-center py-8">
-                  <MessageOutlined style={{ fontSize: 40, color: 'hsl(var(--muted-foreground))' }} />
-                  <div className="mt-2"><Typography.Text type="secondary">No comments have been made to this task yet</Typography.Text></div>
-                </div>
-              </Card>
+              )}
+            </div>
+          ) : (
+            /* Mobile: full-width list, detail opens as Drawer */
+            <div className="animate-fade-in">
+              <Input prefix={<UserOutlined />} placeholder="Search tasks..." allowClear style={{ marginBottom: 12, borderRadius: 8 }} />
+              {tasks.map(task => (
+                <ListTaskCard key={task.id} task={task} isSelected={false} onClick={() => setSelectedTask(task)} />
+              ))}
+              <Drawer
+                title={selectedTask?.title || 'Task Detail'}
+                open={!!selectedTask}
+                onClose={() => setSelectedTask(null)}
+                placement="bottom"
+                height="90%"
+                styles={{ body: { padding: '12px' } }}
+              >
+                {selectedTask && <TaskDetailPanel task={selectedTask} />}
+              </Drawer>
             </div>
           )}
-        </div>
+        </>
       )}
 
+      {/* ===== ALL REQUESTS - BOARD VIEW ===== */}
       {activeTab === 'requests' && viewMode === 'board' && (
-        <div className="animate-fade-in" style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
+        <div className="animate-fade-in flex gap-3 overflow-x-auto pb-4" style={{ WebkitOverflowScrolling: 'touch' }}>
           {requestStatuses.map(status => {
             const items = requestsByStatus(status);
             return (
               <div
                 key={status}
                 style={{
-                  minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12,
-                  background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300,
+                  minWidth: 260, flex: '1 0 260px', borderRadius: 12, padding: 12,
+                  background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 200,
                   borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
                 }}
               >
@@ -418,7 +453,7 @@ const TasksPage: React.FC = () => {
                 </div>
                 {items.map(req => <RequestCard key={req.id} request={req} />)}
                 {items.length === 0 && (
-                  <div className="text-center py-8"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
+                  <div className="text-center py-6"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
                 )}
               </div>
             );
@@ -426,26 +461,31 @@ const TasksPage: React.FC = () => {
         </div>
       )}
 
+      {/* ===== ALL REQUESTS - LIST VIEW ===== */}
       {activeTab === 'requests' && viewMode === 'list' && (
         <Card style={{ borderRadius: 12, border: 'none' }} className="animate-fade-in">
           <Table
             dataSource={mockRequests}
             rowKey="id"
-            pagination={{ pageSize: 10, showSizeChanger: true }}
-            scroll={{ x: 800 }}
+            pagination={{ pageSize: 10, showSizeChanger: !isMobile }}
+            scroll={{ x: 700 }}
+            size={isMobile ? 'small' : 'middle'}
             columns={[
               { title: 'Title', dataIndex: 'title', render: (v: string) => <Typography.Text strong>{v}</Typography.Text> },
               { title: 'Project', dataIndex: 'projectName', render: (v: string, r: Request) => <><a style={{ color: 'hsl(var(--info))' }}>{v}</a> <Typography.Text type="secondary">({r.projectCode})</Typography.Text></> },
               { title: 'Client', dataIndex: 'clientName' },
               { title: 'Assignee', dataIndex: 'assignee', render: (v: string) => <Space><Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>{v.charAt(0)}</Avatar>{v}</Space> },
               { title: 'Status', dataIndex: 'status', render: (v: string) => <Tag color={statusColors[v]} style={{ borderRadius: 12 }}>{v}</Tag> },
-              { title: 'Created', dataIndex: 'createdDate' },
-              { title: 'Due Date', dataIndex: 'dueDate' },
+              ...(!isMobile ? [
+                { title: 'Created', dataIndex: 'createdDate' },
+                { title: 'Due Date', dataIndex: 'dueDate' },
+              ] : []),
             ]}
           />
         </Card>
       )}
 
+      {/* ===== ADD TASK MODAL ===== */}
       <Modal title="Add Task" open={modalOpen} onCancel={() => { setModalOpen(false); form.resetFields(); }} onOk={handleAdd} okText="Create Task" width={isMobile ? '95%' : 560} centered>
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item name="title" label="Title" rules={[{ required: true }]}><Input placeholder="Task title" /></Form.Item>
