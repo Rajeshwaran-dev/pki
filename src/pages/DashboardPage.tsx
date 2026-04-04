@@ -15,7 +15,6 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const { RangePicker } = DatePicker;
 const CHART_COLORS = ['#B19625', '#D4B96E', '#1677FF', '#52C41A', '#FAAD14', '#FF4D4F'];
 
 const DashboardPage: React.FC = () => {

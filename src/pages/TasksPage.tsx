@@ -133,9 +133,6 @@ const TasksPage: React.FC = () => {
         title="Tasks"
         actions={
           <>
-            <Input prefix={<SearchOutlined />} placeholder="Search tasks..." style={{ width: 200, borderRadius: 8 }} allowClear />
-            <RangePicker style={{ borderRadius: 8 }} />
-            <Button icon={<ExportOutlined />}>Export</Button>
             <Segmented
               value={viewMode}
               onChange={val => dispatch(setViewMode(val as 'board' | 'list'))}
