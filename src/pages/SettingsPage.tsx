@@ -904,8 +904,6 @@ const SettingsPage: React.FC = () => {
       case 'users': return <UsersTab />;
       case 'permissions': return <PermissionsTab />;
       case 'configuration': return <ConfigurationTab />;
-      case 'automation': return <AutomationTab />;
-      case 'hr': return <HRPoliciesTab />;
       default: return <PermissionsTab />;
     }
   };
