@@ -5,7 +5,6 @@ import {
   ProjectOutlined,
   TeamOutlined,
   CheckSquareOutlined,
-  BarChartOutlined,
   SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
