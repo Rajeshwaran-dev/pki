@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
-  ClockCircleOutlined, UserOutlined,
+  ClockCircleOutlined, UserOutlined, MessageOutlined,
+  OrderedListOutlined, FileTextOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragEndEvent, DragOverlay, DragStartEvent,
@@ -19,16 +20,38 @@ import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
 
-const { RangePicker } = DatePicker;
-
-const statusColors: Record<TaskStatus, string> = {
+const statusColors: Record<string, string> = {
   'Created': '#1677FF',
   'In Progress': '#B19625',
   'Completed': '#52C41A',
+  'Approved': '#52C41A',
   'On Hold': '#FAAD14',
+  'Rejected': '#FF4D4F',
   'Discarded': '#FF4D4F',
 };
 
+/* ========== Request Types ========== */
+interface Request {
+  id: string;
+  title: string;
+  clientName: string;
+  projectName: string;
+  projectCode: string;
+  assignee: string;
+  createdDate: string;
+  dueDate: string;
+  status: 'Created' | 'Approved' | 'Rejected' | 'On Hold' | 'Discarded';
+}
+
+const requestStatuses = ['Created', 'Approved', 'Rejected', 'On Hold', 'Discarded'] as const;
+
+const mockRequests: Request[] = [
+  { id: 'r1', title: 'Request for payment', clientName: 'Kamalesh', projectName: 'DR.KAMALESH', projectCode: 'P-103', assignee: 'Anantha Narayana', createdDate: '07 Apr, 10:47 AM', dueDate: '08 Apr, 00:00 AM', status: 'Approved' },
+  { id: 'r2', title: 'Payment from client', clientName: 'Kamalesh', projectName: 'DR.KAMALESH', projectCode: 'P-103', assignee: 'Madhu Loganathan', createdDate: '03 Apr, 15:24 PM', dueDate: '04 Apr, 00:00 AM', status: 'Approved' },
+  { id: 'r3', title: 'Petty Cash', clientName: 'Ananth', projectName: 'SRIDHAR', projectCode: 'P-102', assignee: 'Anantha Narayana', createdDate: '01 Apr, 11:53 AM', dueDate: '02 Apr, 00:00 AM', status: 'Approved' },
+];
+
+/* ========== Task Card ========== */
 const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   const style = {
@@ -63,19 +86,23 @@ const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }
   );
 };
 
-const KanbanColumn: React.FC<{ status: TaskStatus; tasks: Task[] }> = ({ status, tasks }) => {
+/* ========== Kanban Column ========== */
+const KanbanColumn: React.FC<{ status: string; tasks: { id: string }[]; children: React.ReactNode }> = ({ status, tasks, children }) => {
   const taskIds = tasks.map(t => t.id);
   return (
-    <div style={{ minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12, background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300 }}>
+    <div style={{
+      minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12,
+      background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300,
+      borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
+    }}>
       <div className="flex items-center justify-between mb-3 px-1">
         <Space>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: statusColors[status] }} />
           <Typography.Text strong style={{ fontSize: 13 }}>{status}</Typography.Text>
         </Space>
         <Tag style={{ borderRadius: 8, fontSize: 11 }}>{tasks.length}</Tag>
       </div>
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-        {tasks.map(task => <TaskCard key={task.id} task={task} />)}
+        {children}
       </SortableContext>
       {tasks.length === 0 && (
         <div className="text-center py-8"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
@@ -84,12 +111,52 @@ const KanbanColumn: React.FC<{ status: TaskStatus; tasks: Task[] }> = ({ status,
   );
 };
 
+/* ========== Request Card ========== */
+const RequestCard: React.FC<{ request: Request }> = ({ request }) => (
+  <Card
+    size="small"
+    style={{ borderRadius: 10, marginBottom: 10 }}
+    hoverable
+    styles={{ body: { padding: '14px 16px' } }}
+  >
+    <Typography.Text strong style={{ fontSize: 13, display: 'block', marginBottom: 4 }}>{request.title}</Typography.Text>
+    <a style={{ color: 'hsl(var(--info))', fontSize: 12, fontWeight: 500 }}>{request.projectName}</a>
+    <Typography.Text type="secondary" style={{ fontSize: 11 }}> ({request.projectCode})</Typography.Text>
+
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-3">
+      <div>
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Client</Typography.Text>
+        <div style={{ fontSize: 12 }}><UserOutlined style={{ fontSize: 10, marginRight: 4 }} />{request.clientName}</div>
+      </div>
+      <div>
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Assignee</Typography.Text>
+        <div style={{ fontSize: 12 }}><UserOutlined style={{ fontSize: 10, marginRight: 4 }} />{request.assignee}</div>
+      </div>
+      <div className="mt-1">
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Created date</Typography.Text>
+        <div style={{ fontSize: 11 }}>{request.createdDate}</div>
+      </div>
+      <div className="mt-1">
+        <Typography.Text type="secondary" style={{ fontSize: 10 }}>Due date</Typography.Text>
+        <div style={{ fontSize: 11 }}>{request.dueDate}</div>
+      </div>
+    </div>
+
+    <div className="flex items-center justify-between mt-3 pt-2" style={{ borderTop: '1px solid hsl(var(--border))' }}>
+      <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> 00:00:00</Typography.Text>
+      <MessageOutlined style={{ color: 'hsl(var(--muted-foreground))', fontSize: 14 }} />
+    </div>
+  </Card>
+);
+
+/* ========== Main Page ========== */
 const TasksPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { tasks, viewMode } = useAppSelector(s => s.tasks);
   const isMobile = useIsMobile();
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [activeTab, setActiveTab] = useState<'tasks' | 'requests'>('tasks');
   const [form] = Form.useForm();
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
@@ -127,6 +194,8 @@ const TasksPage: React.FC = () => {
     });
   };
 
+  const requestsByStatus = (status: string) => mockRequests.filter(r => r.status === status);
+
   return (
     <div>
       <PageHeader
@@ -146,14 +215,82 @@ const TasksPage: React.FC = () => {
         }
       />
 
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
-          {taskStatuses.map(status => (
-            <KanbanColumn key={status} status={status} tasks={tasks.filter(t => t.status === status)} />
-          ))}
+      {/* Tab buttons like reference */}
+      <div className="flex items-center gap-2 mb-5">
+        {[
+          { key: 'tasks' as const, label: 'All Tasks', icon: <OrderedListOutlined /> },
+          { key: 'requests' as const, label: `All Requests (${mockRequests.length})`, icon: <FileTextOutlined /> },
+        ].map(tab => {
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className="settings-pill-tab"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '8px 20px',
+                borderRadius: 24,
+                border: isActive ? '2px solid #B19625' : '1px solid hsl(var(--border))',
+                background: isActive ? '#B1962510' : 'transparent',
+                color: isActive ? '#B19625' : 'inherit',
+                fontWeight: isActive ? 600 : 400,
+                fontSize: 13,
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {activeTab === 'tasks' && (
+        <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
+            {taskStatuses.map(status => {
+              const filtered = tasks.filter(t => t.status === status);
+              return (
+                <KanbanColumn key={status} status={status} tasks={filtered}>
+                  {filtered.map(task => <TaskCard key={task.id} task={task} />)}
+                </KanbanColumn>
+              );
+            })}
+          </div>
+          <DragOverlay>{activeTask ? <TaskCard task={activeTask} overlay /> : null}</DragOverlay>
+        </DndContext>
+      )}
+
+      {activeTab === 'requests' && (
+        <div className="animate-fade-in" style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
+          {requestStatuses.map(status => {
+            const items = requestsByStatus(status);
+            return (
+              <div
+                key={status}
+                style={{
+                  minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12,
+                  background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300,
+                  borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
+                }}
+              >
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <Typography.Text strong style={{ fontSize: 13 }}>{status}</Typography.Text>
+                  <Tag style={{ borderRadius: 8, fontSize: 11 }}>{items.length}</Tag>
+                </div>
+                {items.map(req => <RequestCard key={req.id} request={req} />)}
+                {items.length === 0 && (
+                  <div className="text-center py-8"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
+                )}
+              </div>
+            );
+          })}
         </div>
-        <DragOverlay>{activeTask ? <TaskCard task={activeTask} overlay /> : null}</DragOverlay>
-      </DndContext>
+      )}
 
       <Modal title="Add Task" open={modalOpen} onCancel={() => { setModalOpen(false); form.resetFields(); }} onOk={handleAdd} okText="Create Task" width={isMobile ? '95%' : 560} centered>
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
