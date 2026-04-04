@@ -6,12 +6,12 @@ import {
   TeamOutlined,
   CheckSquareOutlined,
   SettingOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { setSidebarCollapsed, setMobileSidebarOpen } from '@/store/slices/uiSlice';
+import { logout } from '@/store/slices/authSlice';
 import useIsMobile from '@/hooks/useIsMobile';
 
 const { Sider } = Layout;
@@ -35,6 +35,11 @@ const AppSidebar: React.FC = () => {
 
   const siderBg = theme === 'dark' ? '#1f1f1f' : '#ffffff';
   const textColor = theme === 'dark' ? '#f5f5f5' : '#1f1f1f';
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
   const logo = (
     <div
@@ -122,6 +127,35 @@ const AppSidebar: React.FC = () => {
     </div>
   );
 
+  const logoutButton = (
+    <div style={{ position: 'absolute', bottom: 16, width: '100%', padding: '0 8px' }}>
+      <div
+        onClick={handleLogout}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: collapsed && !isMobile ? '10px 0' : '10px 16px',
+          justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+          borderRadius: 8,
+          cursor: 'pointer',
+          color: '#FF4D4F',
+          fontSize: 14,
+          transition: 'all 0.2s ease',
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLDivElement).style.background = '#FF4D4F10';
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLDivElement).style.background = 'transparent';
+        }}
+      >
+        <span style={{ fontSize: 18, display: 'flex', alignItems: 'center' }}><LogoutOutlined /></span>
+        {(!collapsed || isMobile) && <span style={{ fontWeight: 500 }}>Logout</span>}
+      </div>
+    </div>
+  );
+
   if (isMobile) {
     return (
       <Drawer
@@ -129,10 +163,11 @@ const AppSidebar: React.FC = () => {
         open={mobileOpen}
         onClose={() => dispatch(setMobileSidebarOpen(false))}
         width={260}
-        styles={{ body: { padding: 0, background: siderBg }, header: { display: 'none' } }}
+        styles={{ body: { padding: 0, background: siderBg, position: 'relative', height: '100%' }, header: { display: 'none' } }}
       >
         {logo}
         {menuContent}
+        {logoutButton}
       </Drawer>
     );
   }
@@ -158,13 +193,7 @@ const AppSidebar: React.FC = () => {
     >
       {logo}
       {menuContent}
-      <div style={{ position: 'absolute', bottom: 16, width: '100%', textAlign: 'center' }}>
-        <Button
-          type="text"
-          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          onClick={() => dispatch(setSidebarCollapsed(!collapsed))}
-        />
-      </div>
+      {logoutButton}
     </Sider>
   );
 };

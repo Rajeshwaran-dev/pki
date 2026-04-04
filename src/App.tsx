@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { ConfigProvider, theme as antTheme, App as AntApp } from "antd";
 import { store, useAppSelector } from "./store";
 import AppLayout from "./components/layout/AppLayout";
@@ -8,7 +8,14 @@ import ProjectsPage from "./pages/ProjectsPage";
 import ClientsPage from "./pages/ClientsPage";
 import TasksPage from "./pages/TasksPage";
 import SettingsPage from "./pages/SettingsPage";
+import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
+
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const isAuth = useAppSelector(s => s.auth.isAuthenticated);
+  if (!isAuth) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+};
 
 const ThemedApp = () => {
   const uiTheme = useAppSelector((s) => s.ui.theme);
@@ -35,7 +42,14 @@ const ThemedApp = () => {
       <AntApp>
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route path="/" element={<DashboardPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/clients" element={<ClientsPage />} />
