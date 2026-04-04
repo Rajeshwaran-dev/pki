@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
-  ClockCircleOutlined, UserOutlined,
+  ClockCircleOutlined, UserOutlined, SearchOutlined, ExportOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragEndEvent, DragOverlay, DragStartEvent,
@@ -18,6 +18,8 @@ import { Task, TaskStatus, taskStatuses, priorities } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
+
+const { RangePicker } = DatePicker;
 
 const statusColors: Record<TaskStatus, string> = {
   'Created': '#1677FF',
@@ -40,30 +42,20 @@ const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }
       <Card
         size="small"
         style={{
-          borderRadius: 10,
-          marginBottom: 10,
-          cursor: 'grab',
+          borderRadius: 10, marginBottom: 10, cursor: 'grab',
           borderLeft: `3px solid ${statusColors[task.status]}`,
           ...(overlay ? { boxShadow: '0 8px 24px rgba(0,0,0,0.15)', transform: 'rotate(2deg)' } : {}),
         }}
         hoverable
-        bodyStyle={{ padding: '12px 14px' }}
+        styles={{ body: { padding: '12px 14px' } }}
       >
-        <Typography.Text strong style={{ fontSize: 13, display: 'block', marginBottom: 6 }}>
-          {task.title}
-        </Typography.Text>
-        <Typography.Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 8 }}>
-          {task.projectName} • {task.clientName}
-        </Typography.Text>
+        <Typography.Text strong style={{ fontSize: 13, display: 'block', marginBottom: 6 }}>{task.title}</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 8 }}>{task.projectName} • {task.clientName}</Typography.Text>
         <div className="flex items-center justify-between">
           <StatusTag value={task.priority} type="priority" />
           <Space size={8}>
-            <Typography.Text type="secondary" style={{ fontSize: 11 }}>
-              <ClockCircleOutlined /> {task.dueDate}
-            </Typography.Text>
-            <Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>
-              {task.assignee.charAt(0)}
-            </Avatar>
+            <Typography.Text type="secondary" style={{ fontSize: 11 }}><ClockCircleOutlined /> {task.dueDate}</Typography.Text>
+            <Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>{task.assignee.charAt(0)}</Avatar>
           </Space>
         </div>
       </Card>
@@ -74,18 +66,7 @@ const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }
 const KanbanColumn: React.FC<{ status: TaskStatus; tasks: Task[] }> = ({ status, tasks }) => {
   const taskIds = tasks.map(t => t.id);
   return (
-    <div
-      style={{
-        minWidth: 280,
-        maxWidth: 320,
-        flex: '1 0 280px',
-        borderRadius: 12,
-        padding: 12,
-        background: 'hsl(var(--muted) / 0.5)',
-        height: 'fit-content',
-        minHeight: 300,
-      }}
-    >
+    <div style={{ minWidth: 280, maxWidth: 320, flex: '1 0 280px', borderRadius: 12, padding: 12, background: 'hsl(var(--muted) / 0.5)', height: 'fit-content', minHeight: 300 }}>
       <div className="flex items-center justify-between mb-3 px-1">
         <Space>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: statusColors[status] }} />
@@ -94,14 +75,10 @@ const KanbanColumn: React.FC<{ status: TaskStatus; tasks: Task[] }> = ({ status,
         <Tag style={{ borderRadius: 8, fontSize: 11 }}>{tasks.length}</Tag>
       </div>
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-        {tasks.map(task => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+        {tasks.map(task => <TaskCard key={task.id} task={task} />)}
       </SortableContext>
       {tasks.length === 0 && (
-        <div className="text-center py-8">
-          <Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text>
-        </div>
+        <div className="text-center py-8"><Typography.Text type="secondary" style={{ fontSize: 12 }}>No tasks</Typography.Text></div>
       )}
     </div>
   );
@@ -126,11 +103,9 @@ const TasksPage: React.FC = () => {
     setActiveTask(null);
     const { active, over } = event;
     if (!over) return;
-
     const activeTaskData = tasks.find(t => t.id === active.id);
     const overTaskData = tasks.find(t => t.id === over.id);
     if (!activeTaskData) return;
-
     if (overTaskData && activeTaskData.status !== overTaskData.status) {
       dispatch(moveTask({ taskId: activeTaskData.id, newStatus: overTaskData.status }));
     }
@@ -156,9 +131,11 @@ const TasksPage: React.FC = () => {
     <div>
       <PageHeader
         title="Tasks"
-        subtitle={`${tasks.length} tasks`}
         actions={
           <>
+            <Input prefix={<SearchOutlined />} placeholder="Search tasks..." style={{ width: 200, borderRadius: 8 }} allowClear />
+            <RangePicker style={{ borderRadius: 8 }} />
+            <Button icon={<ExportOutlined />}>Export</Button>
             <Segmented
               value={viewMode}
               onChange={val => dispatch(setViewMode(val as 'board' | 'list'))}
@@ -167,53 +144,23 @@ const TasksPage: React.FC = () => {
                 { value: 'list', icon: <UnorderedListOutlined /> },
               ]}
             />
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-              Add Task
-            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>Add Task</Button>
           </>
         }
       />
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div
-          style={{
-            display: 'flex',
-            gap: 16,
-            overflowX: 'auto',
-            paddingBottom: 16,
-          }}
-        >
+      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
           {taskStatuses.map(status => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              tasks={tasks.filter(t => t.status === status)}
-            />
+            <KanbanColumn key={status} status={status} tasks={tasks.filter(t => t.status === status)} />
           ))}
         </div>
-        <DragOverlay>
-          {activeTask ? <TaskCard task={activeTask} overlay /> : null}
-        </DragOverlay>
+        <DragOverlay>{activeTask ? <TaskCard task={activeTask} overlay /> : null}</DragOverlay>
       </DndContext>
 
-      <Modal
-        title="Add Task"
-        open={modalOpen}
-        onCancel={() => { setModalOpen(false); form.resetFields(); }}
-        onOk={handleAdd}
-        okText="Create Task"
-        width={isMobile ? '95%' : 560}
-        centered
-      >
+      <Modal title="Add Task" open={modalOpen} onCancel={() => { setModalOpen(false); form.resetFields(); }} onOk={handleAdd} okText="Create Task" width={isMobile ? '95%' : 560} centered>
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-            <Input placeholder="Task title" />
-          </Form.Item>
+          <Form.Item name="title" label="Title" rules={[{ required: true }]}><Input placeholder="Task title" /></Form.Item>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Form.Item name="type" label="Type" rules={[{ required: true }]}>
               <Select placeholder="Type" options={['Design', 'Site Visit', 'Meeting', 'Procurement', 'Review', 'Finance'].map(t => ({ value: t, label: t }))} />
@@ -223,24 +170,14 @@ const TasksPage: React.FC = () => {
             </Form.Item>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="projectName" label="Project">
-              <Input placeholder="Project name" />
-            </Form.Item>
-            <Form.Item name="clientName" label="Client">
-              <Input placeholder="Client name" />
-            </Form.Item>
+            <Form.Item name="projectName" label="Project"><Input placeholder="Project name" /></Form.Item>
+            <Form.Item name="clientName" label="Client"><Input placeholder="Client name" /></Form.Item>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="assignee" label="Assign To">
-              <Input placeholder="Assignee name" />
-            </Form.Item>
-            <Form.Item name="dueDate" label="Due Date">
-              <DatePicker style={{ width: '100%' }} />
-            </Form.Item>
+            <Form.Item name="assignee" label="Assign To"><Input placeholder="Assignee name" /></Form.Item>
+            <Form.Item name="dueDate" label="Due Date"><DatePicker style={{ width: '100%' }} /></Form.Item>
           </div>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea rows={3} placeholder="Task description..." />
-          </Form.Item>
+          <Form.Item name="description" label="Description"><Input.TextArea rows={3} placeholder="Task description..." /></Form.Item>
         </Form>
       </Modal>
     </div>

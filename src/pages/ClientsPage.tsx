@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Table, Button, Input, Modal, Form, Space, message, Divider, Typography,
+  Table, Button, Input, Modal, Form, Space, message, Divider, Typography, DatePicker,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, EyeOutlined, SearchOutlined,
-  DeleteOutlined, MinusCircleOutlined,
+  MinusCircleOutlined,
 } from '@ant-design/icons';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { addClient } from '@/store/slices/clientSlice';
@@ -12,6 +12,8 @@ import { Client, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import useIsMobile from '@/hooks/useIsMobile';
 import { Select } from 'antd';
+
+const { RangePicker } = DatePicker;
 
 const ClientsPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -66,13 +68,12 @@ const ClientsPage: React.FC = () => {
     <div>
       <PageHeader
         title="Clients"
-        subtitle={`${filtered.length} clients`}
         actions={
           <>
+            <Input prefix={<SearchOutlined />} placeholder="Search clients..." value={search} onChange={e => setSearch(e.target.value)} style={{ width: 200, borderRadius: 8 }} allowClear />
+            <RangePicker style={{ borderRadius: 8 }} />
             <Button icon={<ExportOutlined />}>Export</Button>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-              Add Client
-            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>Add Client</Button>
           </>
         }
       />
@@ -82,15 +83,6 @@ const ClientsPage: React.FC = () => {
         borderRadius: 12,
         padding: isMobile ? 12 : 20,
       }}>
-        <Input
-          prefix={<SearchOutlined />}
-          placeholder="Search clients..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={{ maxWidth: 300, borderRadius: 8, marginBottom: 16 }}
-          allowClear
-        />
-
         <Table
           dataSource={filtered}
           columns={columns}
@@ -114,51 +106,26 @@ const ClientsPage: React.FC = () => {
           <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Primary Details</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="clientName" label="Name" rules={[{ required: true }]}>
-              <Input placeholder="Client name" />
-            </Form.Item>
-            <Form.Item name="email" label="Email" rules={[{ type: 'email' }]}>
-              <Input placeholder="Email" />
-            </Form.Item>
+            <Form.Item name="clientName" label="Name" rules={[{ required: true }]}><Input placeholder="Client name" /></Form.Item>
+            <Form.Item name="email" label="Email" rules={[{ type: 'email' }]}><Input placeholder="Email" /></Form.Item>
           </div>
-          <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
-            <Input placeholder="Phone number" />
-          </Form.Item>
-
+          <Form.Item name="phone" label="Phone" rules={[{ required: true }]}><Input placeholder="Phone number" /></Form.Item>
           <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Address</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
-          <Form.Item name="address1" label="Address Line 1">
-            <Input placeholder="Address line 1" />
-          </Form.Item>
-          <Form.Item name="address2" label="Address Line 2">
-            <Input placeholder="Address line 2" />
-          </Form.Item>
+          <Form.Item name="address1" label="Address Line 1"><Input placeholder="Address line 1" /></Form.Item>
+          <Form.Item name="address2" label="Address Line 2"><Input placeholder="Address line 2" /></Form.Item>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
-            <Form.Item name="state" label="State">
-              <Select placeholder="State" options={indianStates.map(s => ({ value: s, label: s }))} />
-            </Form.Item>
-            <Form.Item name="city" label="City">
-              <Input placeholder="City" />
-            </Form.Item>
-            <Form.Item name="pincode" label="Pincode">
-              <Input placeholder="Pincode" />
-            </Form.Item>
+            <Form.Item name="state" label="State"><Select placeholder="State" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
+            <Form.Item name="city" label="City"><Input placeholder="City" /></Form.Item>
+            <Form.Item name="pincode" label="Pincode"><Input placeholder="Pincode" /></Form.Item>
           </div>
-
           <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Business Details</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
-            <Form.Item name="legalName" label="Legal Name" rules={[{ required: true }]}>
-              <Input placeholder="Legal name" />
-            </Form.Item>
-            <Form.Item name="pan" label="PAN">
-              <Input placeholder="PAN number" />
-            </Form.Item>
-            <Form.Item name="gst" label="GST">
-              <Input placeholder="GST number" />
-            </Form.Item>
+            <Form.Item name="legalName" label="Legal Name" rules={[{ required: true }]}><Input placeholder="Legal name" /></Form.Item>
+            <Form.Item name="pan" label="PAN"><Input placeholder="PAN number" /></Form.Item>
+            <Form.Item name="gst" label="GST"><Input placeholder="GST number" /></Form.Item>
           </div>
-
           <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Additional Contacts</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <Form.List name="contacts">
@@ -166,23 +133,13 @@ const ClientsPage: React.FC = () => {
               <>
                 {fields.map(({ key, name, ...rest }) => (
                   <div key={key} className="grid grid-cols-1 sm:grid-cols-4 gap-x-3 items-end">
-                    <Form.Item {...rest} name={[name, 'name']} label="Name">
-                      <Input placeholder="Name" />
-                    </Form.Item>
-                    <Form.Item {...rest} name={[name, 'phone']} label="Phone">
-                      <Input placeholder="Phone" />
-                    </Form.Item>
-                    <Form.Item {...rest} name={[name, 'email']} label="Email">
-                      <Input placeholder="Email" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="text" danger icon={<MinusCircleOutlined />} onClick={() => remove(name)} />
-                    </Form.Item>
+                    <Form.Item {...rest} name={[name, 'name']} label="Name"><Input placeholder="Name" /></Form.Item>
+                    <Form.Item {...rest} name={[name, 'phone']} label="Phone"><Input placeholder="Phone" /></Form.Item>
+                    <Form.Item {...rest} name={[name, 'email']} label="Email"><Input placeholder="Email" /></Form.Item>
+                    <Form.Item><Button type="text" danger icon={<MinusCircleOutlined />} onClick={() => remove(name)} /></Form.Item>
                   </div>
                 ))}
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                  Add Contact
-                </Button>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Contact</Button>
               </>
             )}
           </Form.List>

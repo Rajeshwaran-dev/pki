@@ -151,11 +151,13 @@
 .dashboard-stat-card:nth-child(3) { animation-delay: 0.15s; }
 .dashboard-stat-card:nth-child(4) { animation-delay: 0.2s; }
 
-/* Pill tabs for settings */
-.settings-pill-tab {
+/* Pill tabs */
+.settings-pill-tab,
+.pill-tab {
   outline: none;
 }
-.settings-pill-tab:hover {
+.settings-pill-tab:hover,
+.pill-tab:hover {
   background: #B1962510 !important;
   color: #B19625 !important;
   border-color: #B1962540 !important;

@@ -1,11 +1,13 @@
 import React from 'react';
-import { Row, Col, Card, Statistic, Typography, Progress } from 'antd';
+import { Row, Col, Card, Statistic, Typography, Progress, Input, DatePicker, Button, Space } from 'antd';
 import {
   ProjectOutlined,
   TeamOutlined,
   CheckSquareOutlined,
   DollarOutlined,
   ArrowUpOutlined,
+  SearchOutlined,
+  ExportOutlined,
 } from '@ant-design/icons';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
@@ -15,6 +17,7 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
+const { RangePicker } = DatePicker;
 const CHART_COLORS = ['#B19625', '#D4B96E', '#1677FF', '#52C41A', '#FAAD14', '#FF4D4F'];
 
 const DashboardPage: React.FC = () => {
@@ -38,12 +41,20 @@ const DashboardPage: React.FC = () => {
   }));
 
   const pieData = stageData.filter(d => d.count > 0);
-
   const recentProjects = projects.slice(0, 5);
 
   return (
     <div>
-      <PageHeader title="Dashboard" subtitle="Welcome back! Here's your overview." />
+      <PageHeader
+        title="Dashboard"
+        actions={
+          <>
+            <Input prefix={<SearchOutlined />} placeholder="Search..." style={{ width: 200, borderRadius: 8 }} allowClear />
+            <RangePicker style={{ borderRadius: 8 }} />
+            <Button icon={<ExportOutlined />}>Export</Button>
+          </>
+        }
+      />
 
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {stats.map((stat, i) => (
@@ -57,15 +68,10 @@ const DashboardPage: React.FC = () => {
               <div className="flex items-center justify-between mb-3">
                 <div
                   style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 10,
+                    width: 40, height: 40, borderRadius: 10,
                     background: `${stat.color}15`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 18,
-                    color: stat.color,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 18, color: stat.color,
                   }}
                 >
                   {stat.icon}
@@ -87,7 +93,6 @@ const DashboardPage: React.FC = () => {
         ))}
       </Row>
 
-      {/* Charts Row - 50/50 */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} lg={12}>
           <Card title="Projects by Stage" style={{ borderRadius: 12, border: 'none' }} className="chart-card">
@@ -106,21 +111,9 @@ const DashboardPage: React.FC = () => {
           <Card title="Stage Distribution" style={{ borderRadius: 12, border: 'none' }} className="chart-card">
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="count"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  innerRadius={50}
-                  paddingAngle={3}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                >
-                  {pieData.map((_, idx) => (
-                    <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
-                  ))}
+                <Pie data={pieData} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={100} innerRadius={50} paddingAngle={3}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+                  {pieData.map((_, idx) => <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />)}
                 </Pie>
                 <RTooltip />
                 <Legend />
@@ -134,11 +127,7 @@ const DashboardPage: React.FC = () => {
         <Col xs={24} lg={14}>
           <Card title="Recent Projects" style={{ borderRadius: 12, border: 'none' }} styles={{ body: { padding: '0 24px 16px' } }}>
             {recentProjects.map(p => (
-              <div
-                key={p.id}
-                className="flex items-center justify-between py-3"
-                style={{ borderBottom: '1px solid hsl(var(--border))' }}
-              >
+              <div key={p.id} className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
                 <div>
                   <Typography.Text strong>{p.projectName}</Typography.Text>
                   <br />
