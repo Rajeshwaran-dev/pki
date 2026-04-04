@@ -572,26 +572,40 @@ const TasksPage: React.FC = () => {
 
       {/* ===== ALL REQUESTS - LIST VIEW ===== */}
       {activeTab === 'requests' && viewMode === 'list' && (
-        <Card style={{ borderRadius: 12, border: 'none' }} className="animate-fade-in">
-          <Table
-            dataSource={mockRequests}
-            rowKey="id"
-            pagination={{ pageSize: 10, showSizeChanger: !isMobile }}
-            scroll={{ x: 700 }}
-            size={isMobile ? 'small' : 'middle'}
-            columns={[
-              { title: 'Title', dataIndex: 'title', render: (v: string) => <Typography.Text strong>{v}</Typography.Text> },
-              { title: 'Project', dataIndex: 'projectName', render: (v: string, r: Request) => <><a style={{ color: 'hsl(var(--info))' }}>{v}</a> <Typography.Text type="secondary">({r.projectCode})</Typography.Text></> },
-              { title: 'Client', dataIndex: 'clientName' },
-              { title: 'Assignee', dataIndex: 'assignee', render: (v: string) => <Space><Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>{v.charAt(0)}</Avatar>{v}</Space> },
-              { title: 'Status', dataIndex: 'status', render: (v: string) => <Tag color={statusColors[v]} style={{ borderRadius: 12 }}>{v}</Tag> },
-              ...(!isMobile ? [
-                { title: 'Created', dataIndex: 'createdDate' },
-                { title: 'Due Date', dataIndex: 'dueDate' },
-              ] : []),
-            ]}
-          />
-        </Card>
+        <>
+          {!isMobile ? (
+            <div className="animate-fade-in flex gap-4" style={{ height: 'calc(100vh - 240px)' }}>
+              <div style={{ width: selectedRequest ? '35%' : '100%', minWidth: 300, overflowY: 'auto', transition: 'width 0.3s ease' }}>
+                <Input prefix={<UserOutlined />} placeholder="Search requests..." allowClear style={{ marginBottom: 12, borderRadius: 8 }} />
+                {mockRequests.map(req => (
+                  <ListRequestCard key={req.id} request={req} isSelected={selectedRequest?.id === req.id} onClick={() => setSelectedRequest(req)} />
+                ))}
+              </div>
+              {selectedRequest && (
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <RequestDetailPanel request={selectedRequest} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="animate-fade-in">
+              <Input prefix={<UserOutlined />} placeholder="Search requests..." allowClear style={{ marginBottom: 12, borderRadius: 8 }} />
+              {mockRequests.map(req => (
+                <ListRequestCard key={req.id} request={req} isSelected={false} onClick={() => setSelectedRequest(req)} />
+              ))}
+              <Drawer
+                title={selectedRequest?.title || 'Request Detail'}
+                open={!!selectedRequest}
+                onClose={() => setSelectedRequest(null)}
+                placement="bottom"
+                height="90%"
+                styles={{ body: { padding: '12px' } }}
+              >
+                {selectedRequest && <RequestDetailPanel request={selectedRequest} />}
+              </Drawer>
+            </div>
+          )}
+        </>
       )}
 
       {/* ===== ADD TASK MODAL ===== */}
