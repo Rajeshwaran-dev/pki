@@ -36,6 +36,7 @@ const DashboardPage: React.FC = () => {
         {stats.map((stat, i) => (
           <Col xs={24} sm={12} lg={6} key={i}>
             <Card
+              className="dashboard-stat-card"
               style={{ borderRadius: 12, border: 'none' }}
               bodyStyle={{ padding: '20px 24px' }}
               hoverable
