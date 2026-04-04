@@ -1,7 +1,6 @@
 import React from 'react';
-import { Layout, Input, Badge, Avatar, Dropdown, Button, Space } from 'antd';
+import { Layout, Badge, Avatar, Dropdown, Button, Space } from 'antd';
 import {
-  SearchOutlined,
   BellOutlined,
   UserOutlined,
   MenuOutlined,
@@ -58,12 +57,6 @@ const AppHeader: React.FC = () => {
             onClick={() => dispatch(setMobileSidebarOpen(true))}
           />
         )}
-        <Input
-          prefix={<SearchOutlined style={{ color: '#bbb' }} />}
-          placeholder="Search projects, clients..."
-          style={{ width: isMobile ? 160 : 300, borderRadius: 8 }}
-          allowClear
-        />
       </Space>
 
       <Space size="middle">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Card, Typography, Input, Button, Form, Upload, Tag, Row, Col, Table, Divider } from 'antd';
+import { Card, Typography, Input, Button, Form, Upload, Tag, Row, Col, Table, Divider, DatePicker, Select, Space } from 'antd';
 import {
   CreditCardOutlined,
   BankOutlined,
@@ -18,11 +18,70 @@ import {
   EditOutlined,
   UploadOutlined,
   PlusOutlined,
+  ExportOutlined,
+  SearchOutlined,
+  FilterOutlined,
 } from '@ant-design/icons';
 import PageHeader from '@/components/shared/PageHeader';
 
 const { Text, Title } = Typography;
+const { RangePicker } = DatePicker;
 
+/* ========== Filter Bar Component ========== */
+const FilterBar: React.FC = () => (
+  <Card style={{ borderRadius: 12, border: 'none', marginBottom: 20 }} styles={{ body: { padding: '14px 20px' } }}>
+    <div className="flex flex-wrap items-center gap-3">
+      <Input
+        prefix={<SearchOutlined />}
+        placeholder="Search settings..."
+        style={{ width: 220, borderRadius: 8 }}
+        allowClear
+      />
+      <RangePicker style={{ borderRadius: 8 }} />
+      <Select
+        placeholder="Category"
+        style={{ width: 150, borderRadius: 8 }}
+        options={[
+          { value: 'all', label: 'All Categories' },
+          { value: 'billing', label: 'Billing' },
+          { value: 'org', label: 'Organization' },
+          { value: 'master', label: 'Master Data' },
+        ]}
+        allowClear
+      />
+      <div style={{ marginLeft: 'auto' }}>
+        <Button icon={<ExportOutlined />}>Export All</Button>
+      </div>
+    </div>
+  </Card>
+);
+
+/* ========== Tab Button Component ========== */
+interface TabItem {
+  key: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+const tabItems: TabItem[] = [
+  { key: 'subscription', label: 'Subscription', icon: <CreditCardOutlined /> },
+  { key: 'organization', label: 'Organization Details', icon: <BankOutlined /> },
+  { key: 'listing', label: 'Listing Page', icon: <GlobalOutlined /> },
+  { key: 'items', label: 'Item Master', icon: <AppstoreOutlined /> },
+  { key: 'materials', label: 'Materials Master', icon: <DatabaseOutlined /> },
+  { key: 'checklist', label: 'Checklist Master', icon: <CheckSquareOutlined /> },
+  { key: 'moodboard', label: 'Moodboard', icon: <PictureOutlined /> },
+  { key: 'activity', label: 'Activity', icon: <ThunderboltOutlined /> },
+  { key: 'manpower', label: 'Manpower', icon: <TeamOutlined /> },
+  { key: 'vendors', label: 'Vendors', icon: <TeamOutlined /> },
+  { key: 'users', label: 'Users', icon: <UserOutlined /> },
+  { key: 'permissions', label: 'Permissions', icon: <LockOutlined /> },
+  { key: 'configuration', label: 'Configuration', icon: <SettingOutlined /> },
+  { key: 'automation', label: 'Automation', icon: <RobotOutlined /> },
+  { key: 'hr', label: 'HR & Policies', icon: <CalendarOutlined /> },
+];
+
+/* ========== Tab Content Components ========== */
 const SubscriptionTab: React.FC = () => {
   const credits = [
     { label: 'Total Credits', value: 8, color: 'hsl(var(--info))' },
@@ -38,13 +97,12 @@ const SubscriptionTab: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <Title level={4} style={{ margin: 0 }}>Subscription Type - Per Project</Title>
         <Button type="primary" size="large">Convert to Per Seats</Button>
       </div>
       <Text type="secondary">***Please Reachout to your POC for bulk credits and discount</Text>
-
       <Row gutter={[16, 16]} className="mt-6">
         <Col xs={24} lg={14}>
           <Row gutter={[16, 16]} className="mb-6">
@@ -57,7 +115,6 @@ const SubscriptionTab: React.FC = () => {
               </Col>
             ))}
           </Row>
-
           <Title level={5}>Consumed Projects ({consumedProjects.length})</Title>
           <Table
             dataSource={consumedProjects}
@@ -90,9 +147,8 @@ const SubscriptionTab: React.FC = () => {
 };
 
 const OrganizationTab: React.FC = () => (
-  <div>
+  <div className="animate-fade-in">
     <Title level={4}>Organization details</Title>
-
     <Card style={{ borderRadius: 12, marginBottom: 24 }}>
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -134,7 +190,6 @@ const OrganizationTab: React.FC = () => (
         </div>
       </div>
     </Card>
-
     <Card style={{ borderRadius: 12, marginBottom: 24 }}>
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -176,7 +231,6 @@ const OrganizationTab: React.FC = () => (
         </Col>
       </Row>
     </Card>
-
     <Card style={{ borderRadius: 12 }}>
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -219,39 +273,29 @@ const OrganizationTab: React.FC = () => (
 );
 
 const ListingPageTab: React.FC = () => (
-  <div>
-    <Tabs defaultActiveKey="all" items={[
-      { key: 'all', label: 'All info' },
-      { key: 'preview', label: 'Preview card' },
-    ]} />
-
+  <div className="animate-fade-in">
     <div className="flex items-center gap-3 mb-1">
       <Title level={4} style={{ margin: 0 }}>Listing Page</Title>
       <Tag color="error" style={{ borderRadius: 12 }}>● Inactive</Tag>
     </div>
     <Text type="secondary" className="mb-6 block">Brand details for listing page</Text>
-
     <div className="text-right mb-4">
       <Button icon={<EditOutlined />}>Edit</Button>
     </div>
-
     <Row gutter={[24, 24]}>
       <Col xs={24} md={12}>
         <Text type="secondary" style={{ fontSize: 12 }}>Studio name</Text>
         <div className="mt-1 p-3 rounded-lg" style={{ background: 'hsl(var(--muted))' }}>
           <Text>PERSPECTIVE KITCHENS AND INTERIORS PVT LTD</Text>
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>WhatsApp number</Text>
           <Input placeholder="Enter whatsapp number" className="mt-1" />
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>Project budget starts from</Text>
           <Input placeholder="Enter starting price" className="mt-1" />
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>Select tag that suits you</Text>
           <div className="flex flex-wrap gap-2 mt-2">
@@ -261,28 +305,23 @@ const ListingPageTab: React.FC = () => (
           </div>
         </div>
       </Col>
-
       <Col xs={24} md={12}>
         <Text type="secondary" style={{ fontSize: 12 }}>Studio logo</Text>
         <div className="mt-2 p-4">
           <Title level={2} style={{ margin: 0, fontWeight: 800 }}>PK&I</Title>
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>Instagram link</Text>
           <Input placeholder="Enter Instagram profile link" className="mt-1" />
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>How many projects will you do in a year</Text>
           <Input placeholder="Enter project count" className="mt-1" />
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>Team Size</Text>
           <Input placeholder="Enter team size" className="mt-1" />
         </div>
-
         <div className="mt-4">
           <Text type="secondary" style={{ fontSize: 12 }}>Carousal Images</Text>
           <Upload.Dragger className="mt-2" style={{ borderRadius: 12 }}>
@@ -307,7 +346,7 @@ const ItemMasterTab: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="flex justify-end gap-3 mb-4">
         <Button type="primary" icon={<PlusOutlined />}>Add Item</Button>
         <Button icon={<AppstoreOutlined />}>Export Excel</Button>
@@ -350,11 +389,7 @@ const MaterialsMasterTab: React.FC = () => {
   ];
 
   return (
-    <div>
-      <Tabs defaultActiveKey="all" items={[
-        { key: 'all', label: 'All Materials' },
-        { key: 'rate', label: 'Rate contracts' },
-      ]} />
+    <div className="animate-fade-in">
       <div className="flex justify-end gap-3 mb-4">
         <Button type="primary" icon={<PlusOutlined />}>Add Material</Button>
         <Button icon={<AppstoreOutlined />}>Export Excel</Button>
@@ -389,43 +424,78 @@ const MaterialsMasterTab: React.FC = () => {
 };
 
 const PlaceholderTab: React.FC<{ title: string }> = ({ title }) => (
-  <Card style={{ borderRadius: 12, textAlign: 'center', padding: 40 }}>
+  <Card style={{ borderRadius: 12, textAlign: 'center', padding: 40 }} className="animate-fade-in">
     <SettingOutlined style={{ fontSize: 48, color: 'hsl(var(--muted-foreground))' }} />
     <Title level={4} style={{ marginTop: 16 }}>{title}</Title>
     <Text type="secondary">This section is coming soon.</Text>
   </Card>
 );
 
+/* ========== Settings Page ========== */
 const SettingsPage: React.FC = () => {
-  const tabItems = [
-    { key: 'subscription', label: <span><CreditCardOutlined /> Subscription</span>, children: <SubscriptionTab /> },
-    { key: 'organization', label: <span><BankOutlined /> Organization Details</span>, children: <OrganizationTab /> },
-    { key: 'listing', label: <span><GlobalOutlined /> Listing Page</span>, children: <ListingPageTab /> },
-    { key: 'items', label: <span><AppstoreOutlined /> Item Master</span>, children: <ItemMasterTab /> },
-    { key: 'materials', label: <span><DatabaseOutlined /> Materials Master</span>, children: <MaterialsMasterTab /> },
-    { key: 'checklist', label: <span><CheckSquareOutlined /> Checklist Master</span>, children: <PlaceholderTab title="Checklist Master" /> },
-    { key: 'moodboard', label: <span><PictureOutlined /> Moodboard</span>, children: <PlaceholderTab title="Moodboard" /> },
-    { key: 'activity', label: <span><ThunderboltOutlined /> Activity</span>, children: <PlaceholderTab title="Activity" /> },
-    { key: 'manpower', label: <span><TeamOutlined /> Manpower</span>, children: <PlaceholderTab title="Manpower" /> },
-    { key: 'vendors', label: <span><TeamOutlined /> Vendors</span>, children: <PlaceholderTab title="Vendors" /> },
-    { key: 'users', label: <span><UserOutlined /> Users</span>, children: <PlaceholderTab title="Users" /> },
-    { key: 'permissions', label: <span><LockOutlined /> Permissions</span>, children: <PlaceholderTab title="Permissions" /> },
-    { key: 'configuration', label: <span><SettingOutlined /> Configuration</span>, children: <PlaceholderTab title="Configuration" /> },
-    { key: 'automation', label: <span><RobotOutlined /> Automation</span>, children: <PlaceholderTab title="Automation" /> },
-    { key: 'hr', label: <span><CalendarOutlined /> HR & Policies</span>, children: <PlaceholderTab title="HR & Policies" /> },
-  ];
+  const [activeTab, setActiveTab] = useState('subscription');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'subscription': return <SubscriptionTab />;
+      case 'organization': return <OrganizationTab />;
+      case 'listing': return <ListingPageTab />;
+      case 'items': return <ItemMasterTab />;
+      case 'materials': return <MaterialsMasterTab />;
+      default: return <PlaceholderTab title={tabItems.find(t => t.key === activeTab)?.label || activeTab} />;
+    }
+  };
 
   return (
     <div>
       <PageHeader title="Settings" subtitle="Manage your organization settings and preferences." />
+
+      <FilterBar />
+
+      {/* Pill-style tab bar like reference */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 24,
+          padding: '12px 16px',
+          background: 'var(--ant-color-bg-container, #fff)',
+          borderRadius: 12,
+          borderBottom: '1px solid hsl(var(--border))',
+        }}
+      >
+        {tabItems.map(tab => {
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className="settings-pill-tab"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '8px 18px',
+                borderRadius: 24,
+                border: isActive ? '2px solid #B19625' : '1px solid transparent',
+                background: isActive ? '#B1962510' : 'transparent',
+                color: isActive ? '#B19625' : 'inherit',
+                fontWeight: isActive ? 600 : 400,
+                fontSize: 13,
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
       <Card style={{ borderRadius: 12, border: 'none' }}>
-        <Tabs
-          defaultActiveKey="subscription"
-          items={tabItems}
-          tabPosition="top"
-          size="middle"
-          className="settings-tabs"
-        />
+        {renderContent()}
       </Card>
     </div>
   );
