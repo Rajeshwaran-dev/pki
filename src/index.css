@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    --gold: 41 76% 55%;
-    --gold-light: 41 76% 68%;
-    --gold-dark: 41 76% 42%;
+    --gold: 43 78% 42%;
+    --gold-light: 43 78% 55%;
+    --gold-dark: 43 78% 32%;
     --dark-brown: 0 0% 8%;
     --beige: 30 25% 94%;
     --light-bg: 0 0% 100%;
