@@ -102,7 +102,7 @@ const SubscriptionTab: React.FC = () => {
         <Title level={4} style={{ margin: 0 }}>Subscription Type - Per Project</Title>
         <Button type="primary" size="large">Convert to Per Seats</Button>
       </div>
-      <Text type="secondary">***Please Reachout to your POC for bulk credits and discount</Text>
+      
       <Row gutter={[16, 16]} className="mt-6">
         <Col xs={24} lg={14}>
           <Row gutter={[16, 16]} className="mb-6">
