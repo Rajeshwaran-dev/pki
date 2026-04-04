@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 
 const stageColors: Record<string, string> = {
   Sales: '#1677FF',
-  Designing: '#C8A75D',
+  Designing: '#B19625',
   Execution: '#722ED1',
   Snags: '#FF4D4F',
   Handover: '#FAAD14',

@@ -21,7 +21,7 @@ import useIsMobile from '@/hooks/useIsMobile';
 
 const statusColors: Record<TaskStatus, string> = {
   'Created': '#1677FF',
-  'In Progress': '#C8A75D',
+  'In Progress': '#B19625',
   'Completed': '#52C41A',
   'On Hold': '#FAAD14',
   'Discarded': '#FF4D4F',
@@ -61,7 +61,7 @@ const TaskCard: React.FC<{ task: Task; overlay?: boolean }> = ({ task, overlay }
             <Typography.Text type="secondary" style={{ fontSize: 11 }}>
               <ClockCircleOutlined /> {task.dueDate}
             </Typography.Text>
-            <Avatar size={20} style={{ backgroundColor: '#C8A75D', fontSize: 10 }}>
+            <Avatar size={20} style={{ backgroundColor: '#B19625', fontSize: 10 }}>
               {task.assignee.charAt(0)}
             </Avatar>
           </Space>

@@ -111,7 +111,7 @@ const ClientsPage: React.FC = () => {
         centered
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16, maxHeight: '60vh', overflow: 'auto' }}>
-          <Typography.Text strong style={{ fontSize: 14, color: '#C8A75D' }}>Primary Details</Typography.Text>
+          <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Primary Details</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Form.Item name="clientName" label="Name" rules={[{ required: true }]}>
@@ -125,7 +125,7 @@ const ClientsPage: React.FC = () => {
             <Input placeholder="Phone number" />
           </Form.Item>
 
-          <Typography.Text strong style={{ fontSize: 14, color: '#C8A75D' }}>Address</Typography.Text>
+          <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Address</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <Form.Item name="address1" label="Address Line 1">
             <Input placeholder="Address line 1" />
@@ -145,7 +145,7 @@ const ClientsPage: React.FC = () => {
             </Form.Item>
           </div>
 
-          <Typography.Text strong style={{ fontSize: 14, color: '#C8A75D' }}>Business Details</Typography.Text>
+          <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Business Details</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
             <Form.Item name="legalName" label="Legal Name" rules={[{ required: true }]}>
@@ -159,7 +159,7 @@ const ClientsPage: React.FC = () => {
             </Form.Item>
           </div>
 
-          <Typography.Text strong style={{ fontSize: 14, color: '#C8A75D' }}>Additional Contacts</Typography.Text>
+          <Typography.Text strong style={{ fontSize: 14, color: '#B19625' }}>Additional Contacts</Typography.Text>
           <Divider style={{ margin: '8px 0 16px' }} />
           <Form.List name="contacts">
             {(fields, { add, remove }) => (
