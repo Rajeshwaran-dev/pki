@@ -108,7 +108,7 @@ const SubscriptionTab: React.FC = () => {
           <Row gutter={[16, 16]} className="mb-6">
             {credits.map((c, i) => (
               <Col xs={8} key={i}>
-                <Card className="text-center settings-stat-card" style={{ borderRadius: 12 }}>
+                <Card className="text-center settings-stat-card" style={{ borderRadius: 12, borderLeft: `3px solid ${c.color}` }}>
                   <div style={{ fontSize: 28, fontWeight: 700, color: c.color }}>{c.value}</div>
                   <Text type="secondary">{c.label}</Text>
                 </Card>
