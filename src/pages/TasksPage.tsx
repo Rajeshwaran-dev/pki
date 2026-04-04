@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
-  ClockCircleOutlined, UserOutlined, SearchOutlined, ExportOutlined,
+  ClockCircleOutlined, UserOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragEndEvent, DragOverlay, DragStartEvent,
