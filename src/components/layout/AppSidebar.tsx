@@ -22,7 +22,6 @@ const menuItems = [
   { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/clients', icon: <TeamOutlined />, label: 'Clients' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
-  { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
 ];
 
