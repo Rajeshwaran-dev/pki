@@ -276,7 +276,7 @@ const ListingPageTab: React.FC = () => (
       <Title level={4} style={{ margin: 0 }}>Listing Page</Title>
       <Tag color="error" style={{ borderRadius: 12 }}>● Inactive</Tag>
     </div>
-    <Text type="secondary" className="mb-6 block">Brand details for listing page</Text>
+    
     <div className="text-right mb-4">
       <Button icon={<EditOutlined />}>Edit</Button>
     </div>
