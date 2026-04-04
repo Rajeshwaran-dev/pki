@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, DatePicker, Space, Typography, Card, Tag, Avatar, message, Segmented, Table } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
-  ClockCircleOutlined, UserOutlined, MessageOutlined,
+  ClockCircleOutlined, UserOutlined, MessageOutlined, CheckSquareOutlined,
   OrderedListOutlined, FileTextOutlined,
 } from '@ant-design/icons';
 import {
