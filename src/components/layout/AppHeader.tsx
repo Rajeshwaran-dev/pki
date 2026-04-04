@@ -73,7 +73,7 @@ const AppHeader: React.FC = () => {
         </Badge>
         <Dropdown menu={{ items: profileItems }} placement="bottomRight" trigger={['click']}>
           <Avatar
-            style={{ background: '#C8A75D', cursor: 'pointer' }}
+            style={{ background: '#B19625', cursor: 'pointer' }}
             icon={<UserOutlined />}
           />
         </Dropdown>

@@ -54,7 +54,7 @@ const AppSidebar: React.FC = () => {
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: 'linear-gradient(135deg, #C8A75D, #D4B96E)',
+          background: 'linear-gradient(135deg, #B19625, #D4B96E)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

@@ -20,7 +20,7 @@ const DashboardPage: React.FC = () => {
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
 
   const stats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#C8A75D' },
+    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#B19625' },
     { title: 'Active Clients', value: clients.length, icon: <TeamOutlined />, color: '#1677FF' },
     { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}` },
     { title: 'Total Budget', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true },
@@ -104,7 +104,7 @@ const DashboardPage: React.FC = () => {
                     <Typography.Text style={{ fontSize: 13 }}>{stage}</Typography.Text>
                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>{count}</Typography.Text>
                   </div>
-                  <Progress percent={pct} showInfo={false} strokeColor="#C8A75D" size="small" />
+                  <Progress percent={pct} showInfo={false} strokeColor="#B19625" size="small" />
                 </div>
               );
             })}

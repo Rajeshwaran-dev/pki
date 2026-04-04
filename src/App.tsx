@@ -17,7 +17,7 @@ const ThemedApp = () => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#B19605",
+          colorPrimary: "#B19625",
           borderRadius: 8,
           fontFamily: "'Inter', sans-serif",
           colorBgContainer: isDark ? "#1f1f1f" : "#ffffff",
