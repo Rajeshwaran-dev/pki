@@ -80,8 +80,6 @@ const tabItems: TabItem[] = [
   { key: 'users', label: 'Users', icon: <UserOutlined /> },
   { key: 'permissions', label: 'Permissions', icon: <LockOutlined /> },
   { key: 'configuration', label: 'Configuration', icon: <SettingOutlined /> },
-  { key: 'automation', label: 'Automation', icon: <RobotOutlined /> },
-  { key: 'hr', label: 'HR & Policies', icon: <CalendarOutlined /> },
 ];
 
 /* ========== Tab Content Components ========== */
@@ -886,112 +884,6 @@ const ConfigurationTab: React.FC = () => {
   );
 };
 
-/* ========== Automation Tab ========== */
-const AutomationTab: React.FC = () => {
-  const automations = [
-    { key: '1', name: 'Auto-assign tasks', trigger: 'New project created', action: 'Assign default team', status: 'Active' },
-    { key: '2', name: 'Invoice reminder', trigger: 'Due date - 3 days', action: 'Send email reminder', status: 'Active' },
-    { key: '3', name: 'Status update notification', trigger: 'Task status change', action: 'Notify project manager', status: 'Inactive' },
-  ];
-
-  const columns = [
-    { title: 'Automation Name', dataIndex: 'name', key: 'name' },
-    { title: 'Trigger', dataIndex: 'trigger', key: 'trigger' },
-    { title: 'Action', dataIndex: 'action', key: 'action' },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => (
-        <Tag color={status === 'Active' ? 'green' : 'default'} style={{ borderRadius: 4 }}>{status}</Tag>
-      ),
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      width: 120,
-      render: () => (
-        <Space>
-          <Button type="text" size="small" icon={<EditOutlined />} />
-          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
-        </Space>
-      ),
-    },
-  ];
-
-  return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-4">
-        <Text type="secondary">Automate repetitive tasks and workflows</Text>
-        <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
-          Create Automation
-        </Button>
-      </div>
-      <Table
-        columns={columns}
-        dataSource={automations}
-        pagination={false}
-        style={{ borderRadius: 8 }}
-      />
-    </div>
-  );
-};
-
-/* ========== HR & Policies Tab ========== */
-const HRPoliciesTab: React.FC = () => {
-  const policies = [
-    { key: '1', name: 'Leave Policy', category: 'HR', lastUpdated: 'Mar 15, 2026', status: 'Published' },
-    { key: '2', name: 'Work From Home Policy', category: 'HR', lastUpdated: 'Feb 10, 2026', status: 'Published' },
-    { key: '3', name: 'Expense Reimbursement', category: 'Finance', lastUpdated: 'Jan 20, 2026', status: 'Draft' },
-    { key: '4', name: 'Code of Conduct', category: 'General', lastUpdated: 'Dec 01, 2025', status: 'Published' },
-  ];
-
-  const columns = [
-    { title: 'Policy Name', dataIndex: 'name', key: 'name' },
-    { title: 'Category', dataIndex: 'category', key: 'category', render: (cat: string) => <Tag style={{ borderRadius: 4 }}>{cat}</Tag> },
-    { title: 'Last Updated', dataIndex: 'lastUpdated', key: 'lastUpdated' },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => (
-        <Tag color={status === 'Published' ? 'green' : 'orange'} style={{ borderRadius: 4 }}>{status}</Tag>
-      ),
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      width: 120,
-      render: () => (
-        <Space>
-          <Button type="text" size="small" icon={<EyeOutlined />} />
-          <Button type="text" size="small" icon={<EditOutlined />} />
-          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
-        </Space>
-      ),
-    },
-  ];
-
-  return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-4">
-        <Text type="secondary">Manage company policies and HR documents</Text>
-        <Space>
-          <Button icon={<UploadOutlined />} style={{ borderRadius: 8 }}>Upload Policy</Button>
-          <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
-            Create Policy
-          </Button>
-        </Space>
-      </div>
-      <Table
-        columns={columns}
-        dataSource={policies}
-        pagination={false}
-        style={{ borderRadius: 8 }}
-      />
-    </div>
-  );
-};
 
 /* ========== Settings Page ========== */
 const SettingsPage: React.FC = () => {
@@ -1012,8 +904,6 @@ const SettingsPage: React.FC = () => {
       case 'users': return <UsersTab />;
       case 'permissions': return <PermissionsTab />;
       case 'configuration': return <ConfigurationTab />;
-      case 'automation': return <AutomationTab />;
-      case 'hr': return <HRPoliciesTab />;
       default: return <PermissionsTab />;
     }
   };
