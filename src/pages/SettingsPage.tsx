@@ -148,7 +148,7 @@ const SubscriptionTab: React.FC = () => {
 
 const OrganizationTab: React.FC = () => (
   <div className="animate-fade-in">
-    <Title level={4}>Organization details</Title>
+    
     <Card style={{ borderRadius: 12, marginBottom: 24 }}>
       <div className="flex items-center justify-between mb-4">
         <div>
