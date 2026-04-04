@@ -80,8 +80,6 @@ const tabItems: TabItem[] = [
   { key: 'users', label: 'Users', icon: <UserOutlined /> },
   { key: 'permissions', label: 'Permissions', icon: <LockOutlined /> },
   { key: 'configuration', label: 'Configuration', icon: <SettingOutlined /> },
-  { key: 'automation', label: 'Automation', icon: <RobotOutlined /> },
-  { key: 'hr', label: 'HR & Policies', icon: <CalendarOutlined /> },
 ];
 
 /* ========== Tab Content Components ========== */
