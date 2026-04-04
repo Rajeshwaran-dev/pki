@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Table, Button, Tabs, Input, Modal, Form, Select, InputNumber, Space, message, Tooltip,
+  Table, Button, Input, Modal, Form, Select, InputNumber, Tooltip, DatePicker,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, SearchOutlined,
@@ -11,6 +11,8 @@ import { stages, Project, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
+
+const { RangePicker } = DatePicker;
 
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -62,7 +64,6 @@ const ProjectsPage: React.FC = () => {
         ...values,
       };
       dispatch(addProject(newProject));
-      message.success('Project created successfully');
       setModalOpen(false);
       form.resetFields();
     });
@@ -72,13 +73,12 @@ const ProjectsPage: React.FC = () => {
     <div>
       <PageHeader
         title="Projects"
-        subtitle={`${filtered.length} projects`}
         actions={
           <>
+            <Input prefix={<SearchOutlined />} placeholder="Search projects..." value={search} onChange={e => setSearch(e.target.value)} style={{ width: 200, borderRadius: 8 }} allowClear />
+            <RangePicker style={{ borderRadius: 8 }} />
             <Button icon={<ExportOutlined />}>Export</Button>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-              New Project
-            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>New Project</Button>
           </>
         }
       />
@@ -88,23 +88,34 @@ const ProjectsPage: React.FC = () => {
         borderRadius: 12,
         padding: isMobile ? 12 : 20,
       }}>
-        <div className="flex flex-col sm:flex-row gap-3 mb-4">
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="Search projects..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{ maxWidth: 300, borderRadius: 8 }}
-            allowClear
-          />
+        {/* Pill-style tabs */}
+        <div className="flex flex-wrap gap-2 mb-4 pb-3" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
+          {stages.map(s => {
+            const isActive = activeTab === s;
+            return (
+              <button
+                key={s}
+                onClick={() => dispatch(setActiveTab(s))}
+                className="pill-tab"
+                style={{
+                  padding: '6px 20px',
+                  borderRadius: 24,
+                  border: isActive ? '2px solid #B19625' : '1px solid transparent',
+                  background: isActive ? '#B1962510' : 'transparent',
+                  color: isActive ? '#B19625' : 'inherit',
+                  fontWeight: isActive ? 600 : 400,
+                  fontSize: 13,
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  outline: 'none',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {s}
+              </button>
+            );
+          })}
         </div>
-
-        <Tabs
-          activeKey={activeTab}
-          onChange={key => dispatch(setActiveTab(key))}
-          items={stages.map(s => ({ key: s, label: s }))}
-          style={{ marginBottom: 16 }}
-        />
 
         <Table
           dataSource={filtered}
@@ -128,46 +139,28 @@ const ProjectsPage: React.FC = () => {
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item name="clientName" label="Client" rules={[{ required: true }]}>
-            <Select
-              placeholder="Select client"
-              showSearch
-              optionFilterProp="label"
-              options={clients.map(c => ({ value: c.clientName, label: c.clientName }))}
-            />
+            <Select placeholder="Select client" showSearch optionFilterProp="label" options={clients.map(c => ({ value: c.clientName, label: c.clientName }))} />
           </Form.Item>
           <Form.Item name="projectName" label="Project Name" rules={[{ required: true }]}>
             <Input placeholder="Enter project name" />
           </Form.Item>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Form.Item name="stage" label="Stage" rules={[{ required: true }]}>
-              <Select
-                placeholder="Select stage"
-                options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))}
-              />
+              <Select placeholder="Select stage" options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} />
             </Form.Item>
             <Form.Item name="budget" label="Budget (₹)" rules={[{ required: true }]}>
               <InputNumber style={{ width: '100%' }} placeholder="Enter budget" min={0} />
             </Form.Item>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="city" label="City">
-              <Input placeholder="City" />
-            </Form.Item>
-            <Form.Item name="state" label="State">
-              <Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} />
-            </Form.Item>
+            <Form.Item name="city" label="City"><Input placeholder="City" /></Form.Item>
+            <Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="phone" label="Phone">
-              <Input placeholder="Phone number" />
-            </Form.Item>
-            <Form.Item name="email" label="Email">
-              <Input placeholder="Email address" />
-            </Form.Item>
+            <Form.Item name="phone" label="Phone"><Input placeholder="Phone number" /></Form.Item>
+            <Form.Item name="email" label="Email"><Input placeholder="Email address" /></Form.Item>
           </div>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea rows={3} placeholder="Project description..." />
-          </Form.Item>
+          <Form.Item name="description" label="Description"><Input.TextArea rows={3} placeholder="Project description..." /></Form.Item>
         </Form>
       </Modal>
     </div>
