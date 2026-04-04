@@ -231,6 +231,7 @@
   75% { transform: translateX(-0.5px); }
 }
 
-.settings-pill-tab:hover {
+.settings-pill-tab:hover,
+.pill-tab:hover {
   animation: gentle-shake 0.35s ease-in-out;
 }
