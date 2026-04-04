@@ -682,13 +682,316 @@ const UsersTab: React.FC = () => {
   );
 };
 
-const PlaceholderTab: React.FC<{ title: string }> = ({ title }) => (
-  <Card style={{ borderRadius: 12, textAlign: 'center', padding: 40 }} className="animate-fade-in">
-    <SettingOutlined style={{ fontSize: 48, color: 'hsl(var(--muted-foreground))' }} />
-    <Title level={4} style={{ marginTop: 16 }}>{title}</Title>
-    <Text type="secondary">This section is coming soon.</Text>
-  </Card>
-);
+/* ========== Permissions Tab ========== */
+const PermissionsTab: React.FC = () => {
+  const columns = [
+    {
+      title: 'Role Name',
+      dataIndex: 'roleName',
+      key: 'roleName',
+      filterDropdown: () => (
+        <div style={{ padding: 8 }}>
+          <Input placeholder="Search role" size="small" prefix={<SearchOutlined />} />
+        </div>
+      ),
+      filterIcon: () => <SearchOutlined />,
+    },
+    {
+      title: 'Permissions',
+      dataIndex: 'permissions',
+      key: 'permissions',
+      filterDropdown: () => (
+        <div style={{ padding: 8 }}>
+          <Input placeholder="Search permissions" size="small" prefix={<SearchOutlined />} />
+        </div>
+      ),
+      filterIcon: () => <SearchOutlined />,
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 120,
+      render: () => (
+        <Space>
+          <Button type="text" size="small" icon={<EditOutlined />} />
+          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex justify-end mb-4">
+        <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
+          Add Role
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={[]}
+        locale={{ emptyText: 'No data available' }}
+        pagination={{
+          pageSize: 25,
+          showSizeChanger: true,
+          showTotal: (total) => <span style={{ color: 'hsl(var(--primary))' }}>{total} items</span>,
+        }}
+        style={{ borderRadius: 8 }}
+      />
+    </div>
+  );
+};
+
+/* ========== Configuration Tab ========== */
+const ConfigurationTab: React.FC = () => {
+  const [activeModule, setActiveModule] = useState('finance');
+  const modules = [
+    { key: 'finance', label: 'Finance' },
+    { key: 'orders', label: 'Orders' },
+    { key: 'invoices', label: 'Invoices' },
+    { key: 'checklist', label: 'Checklist' },
+    { key: 'tasks', label: 'Tasks' },
+    { key: 'projects', label: 'Projects' },
+  ];
+
+  const [formSettings, setFormSettings] = useState({
+    date: true,
+    amount: true,
+    type: false,
+    referenceNumber: false,
+    channel: false,
+    vendor: false,
+    fileUpload: false,
+    order: false,
+    remarks: false,
+  });
+
+  const [paymentApproved, setPaymentApproved] = useState(true);
+
+  const toggleField = (field: string) => {
+    setFormSettings(prev => ({ ...prev, [field]: !prev[field as keyof typeof prev] }));
+  };
+
+  const mandatoryFields = Object.entries(formSettings)
+    .filter(([, v]) => v)
+    .map(([k]) => k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1'));
+
+  return (
+    <div className="animate-fade-in flex gap-0" style={{ minHeight: 500 }}>
+      {/* Sidebar */}
+      <div style={{ width: 200, borderRight: '1px solid hsl(var(--border))', paddingRight: 0 }}>
+        <Title level={5} style={{ padding: '0 16px', marginBottom: 16 }}>Modules</Title>
+        {modules.map(m => (
+          <div
+            key={m.key}
+            onClick={() => setActiveModule(m.key)}
+            style={{
+              padding: '10px 16px',
+              cursor: 'pointer',
+              borderLeft: activeModule === m.key ? '3px solid hsl(var(--primary))' : '3px solid transparent',
+              background: activeModule === m.key ? 'hsl(var(--primary) / 0.06)' : 'transparent',
+              color: activeModule === m.key ? 'hsl(var(--primary))' : 'inherit',
+              fontWeight: activeModule === m.key ? 600 : 400,
+              fontSize: 14,
+              transition: 'all 0.2s',
+            }}
+          >
+            {m.label}
+          </div>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, padding: '0 24px' }}>
+        <Text type="secondary" style={{ fontSize: 13, marginBottom: 4, display: 'block' }}>Form settings</Text>
+        <Title level={5} style={{ marginBottom: 16 }}>Select Fields that are mandatory</Title>
+
+        <Card style={{ borderRadius: 12, marginBottom: 16 }}>
+          <Title level={5} style={{ marginBottom: 16, fontSize: 14 }}>Form Settings</Title>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {Object.entries(formSettings).map(([key, value]) => {
+              const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+              return (
+                <div key={key} className="flex items-center justify-between gap-2 p-3 rounded-lg" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{label}</div>
+                    <div style={{ fontSize: 11, color: 'hsl(var(--muted-foreground))' }}>{value ? 'On' : 'Off'}</div>
+                  </div>
+                  <div
+                    onClick={() => toggleField(key)}
+                    style={{
+                      width: 40, height: 22, borderRadius: 11, cursor: 'pointer',
+                      background: value ? 'hsl(var(--primary))' : '#ccc',
+                      position: 'relative', transition: 'background 0.2s',
+                    }}
+                  >
+                    <div style={{
+                      width: 18, height: 18, borderRadius: '50%', background: '#fff',
+                      position: 'absolute', top: 2, left: value ? 20 : 2, transition: 'left 0.2s',
+                    }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        <Card style={{ borderRadius: 12, marginBottom: 16 }}>
+          <Text strong style={{ color: 'hsl(var(--error))', fontSize: 13 }}>Mandatory Fields Selected:</Text>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {mandatoryFields.map(f => (
+              <Tag key={f} color="blue" style={{ borderRadius: 4 }}>{f}</Tag>
+            ))}
+            <Tag color="blue" style={{ borderRadius: 4 }}>Approved Order Vendors Flag</Tag>
+          </div>
+        </Card>
+
+        <Card style={{ borderRadius: 12, marginBottom: 16 }}>
+          <Title level={5} style={{ fontSize: 14, marginBottom: 12 }}>Payment Settings</Title>
+          <div className="flex items-center justify-between">
+            <div>
+              <div style={{ fontWeight: 500, fontSize: 14 }}>Create payments for approved orders only</div>
+              <div style={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }}>{paymentApproved ? 'Enabled' : 'Disabled'}</div>
+            </div>
+            <div
+              onClick={() => setPaymentApproved(!paymentApproved)}
+              style={{
+                width: 44, height: 24, borderRadius: 12, cursor: 'pointer',
+                background: paymentApproved ? 'hsl(var(--primary))' : '#ccc',
+                position: 'relative', transition: 'background 0.2s',
+              }}
+            >
+              <div style={{
+                width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                position: 'absolute', top: 2, left: paymentApproved ? 22 : 2, transition: 'left 0.2s',
+              }} />
+            </div>
+          </div>
+        </Card>
+
+        <Card style={{ borderRadius: 12 }}>
+          <Title level={5} style={{ fontSize: 14, marginBottom: 12 }}>Razorpay Integration</Title>
+          <div className="flex items-center justify-between">
+            <div>
+              <div style={{ fontWeight: 500, fontSize: 14 }}>Connect with Razorpay</div>
+              <div style={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }}>Not Connected</div>
+            </div>
+            <Button type="primary" style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
+              Connect
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+/* ========== Automation Tab ========== */
+const AutomationTab: React.FC = () => {
+  const automations = [
+    { key: '1', name: 'Auto-assign tasks', trigger: 'New project created', action: 'Assign default team', status: 'Active' },
+    { key: '2', name: 'Invoice reminder', trigger: 'Due date - 3 days', action: 'Send email reminder', status: 'Active' },
+    { key: '3', name: 'Status update notification', trigger: 'Task status change', action: 'Notify project manager', status: 'Inactive' },
+  ];
+
+  const columns = [
+    { title: 'Automation Name', dataIndex: 'name', key: 'name' },
+    { title: 'Trigger', dataIndex: 'trigger', key: 'trigger' },
+    { title: 'Action', dataIndex: 'action', key: 'action' },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Tag color={status === 'Active' ? 'green' : 'default'} style={{ borderRadius: 4 }}>{status}</Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 120,
+      render: () => (
+        <Space>
+          <Button type="text" size="small" icon={<EditOutlined />} />
+          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex justify-between items-center mb-4">
+        <Text type="secondary">Automate repetitive tasks and workflows</Text>
+        <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
+          Create Automation
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={automations}
+        pagination={false}
+        style={{ borderRadius: 8 }}
+      />
+    </div>
+  );
+};
+
+/* ========== HR & Policies Tab ========== */
+const HRPoliciesTab: React.FC = () => {
+  const policies = [
+    { key: '1', name: 'Leave Policy', category: 'HR', lastUpdated: 'Mar 15, 2026', status: 'Published' },
+    { key: '2', name: 'Work From Home Policy', category: 'HR', lastUpdated: 'Feb 10, 2026', status: 'Published' },
+    { key: '3', name: 'Expense Reimbursement', category: 'Finance', lastUpdated: 'Jan 20, 2026', status: 'Draft' },
+    { key: '4', name: 'Code of Conduct', category: 'General', lastUpdated: 'Dec 01, 2025', status: 'Published' },
+  ];
+
+  const columns = [
+    { title: 'Policy Name', dataIndex: 'name', key: 'name' },
+    { title: 'Category', dataIndex: 'category', key: 'category', render: (cat: string) => <Tag style={{ borderRadius: 4 }}>{cat}</Tag> },
+    { title: 'Last Updated', dataIndex: 'lastUpdated', key: 'lastUpdated' },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Tag color={status === 'Published' ? 'green' : 'orange'} style={{ borderRadius: 4 }}>{status}</Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 120,
+      render: () => (
+        <Space>
+          <Button type="text" size="small" icon={<EyeOutlined />} />
+          <Button type="text" size="small" icon={<EditOutlined />} />
+          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex justify-between items-center mb-4">
+        <Text type="secondary">Manage company policies and HR documents</Text>
+        <Space>
+          <Button icon={<UploadOutlined />} style={{ borderRadius: 8 }}>Upload Policy</Button>
+          <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, background: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))' }}>
+            Create Policy
+          </Button>
+        </Space>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={policies}
+        pagination={false}
+        style={{ borderRadius: 8 }}
+      />
+    </div>
+  );
+};
 
 /* ========== Settings Page ========== */
 const SettingsPage: React.FC = () => {
@@ -707,7 +1010,11 @@ const SettingsPage: React.FC = () => {
       case 'manpower': return <ManpowerTab />;
       case 'vendors': return <VendorsTab />;
       case 'users': return <UsersTab />;
-      default: return <PlaceholderTab title={tabItems.find(t => t.key === activeTab)?.label || activeTab} />;
+      case 'permissions': return <PermissionsTab />;
+      case 'configuration': return <ConfigurationTab />;
+      case 'automation': return <AutomationTab />;
+      case 'hr': return <HRPoliciesTab />;
+      default: return <PermissionsTab />;
     }
   };
 
