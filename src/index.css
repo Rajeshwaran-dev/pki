@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gold: 43 78% 42%;
+    --gold-light: 43 78% 55%;
+    --gold-dark: 43 78% 32%;
+    --dark-brown: 0 0% 8%;
+    --beige: 30 25% 94%;
+    --light-bg: 0 0% 100%;
+    --border-color: 0 0% 91%;
+    --success: 102 76% 44%;
+    --warning: 37 95% 53%;
+    --error: 0 100% 65%;
+    --info: 215 100% 55%;
+
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 43 78% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 25% 96%;
+    --secondary-foreground: 0 0% 8%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 30 25% 96%;
+    --accent-foreground: 0 0% 8%;
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 43 78% 42%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 43 78% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 17%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 17%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 43 78% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Ant Design overrides */
+.ant-layout {
+  background: transparent !important;
+}
+
+.ant-layout-sider {
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.ant-table-wrapper .ant-table {
+  border-radius: 12px;
+}
+
+.ant-table-thead > tr > th {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.ant-card {
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.ant-card:hover {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Chart cards should not lift on hover */
+.chart-card:hover {
+  transform: none;
+}
+
+/* Settings stat cards with animation */
+.settings-stat-card {
+  animation: stat-card-enter 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.settings-stat-card:nth-child(1) { animation-delay: 0.05s; }
+.settings-stat-card:nth-child(2) { animation-delay: 0.1s; }
+.settings-stat-card:nth-child(3) { animation-delay: 0.15s; }
+
+@keyframes stat-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+/* Dashboard stat cards */
+.dashboard-stat-card {
+  animation: stat-card-enter 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.dashboard-stat-card:nth-child(1) { animation-delay: 0.05s; }
+.dashboard-stat-card:nth-child(2) { animation-delay: 0.1s; }
+.dashboard-stat-card:nth-child(3) { animation-delay: 0.15s; }
+.dashboard-stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+/* Pill tabs */
+.settings-pill-tab,
+.pill-tab {
+  outline: none;
+}
+.settings-pill-tab:hover,
+.pill-tab:hover {
+  background: #B1962510 !important;
+  color: #B19625 !important;
+  border-color: #B1962540 !important;
+}
+
+.ant-btn {
+  transition: all 0.2s ease !important;
+}
+
+.ant-modal .ant-modal-content {
+  border-radius: 12px !important;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Kanban */
+.kanban-column {
+  min-height: 400px;
+  transition: background-color 0.2s ease;
+}
+.kanban-column.over {
+  background-color: hsl(var(--primary) / 0.05);
+}
+.task-card-dragging {
+  opacity: 0.5;
+  transform: rotate(3deg);
+}
+
+/* Dark mode Ant overrides */
+.dark .ant-table-thead > tr > th {
+  background: hsl(0 0% 15%) !important;
+  color: hsl(0 0% 85%) !important;
+  border-bottom-color: hsl(0 0% 20%) !important;
+}
+.dark .ant-table-tbody > tr > td {
+  border-bottom-color: hsl(0 0% 20%) !important;
+}
+.dark .ant-table-tbody > tr:hover > td {
+  background: hsl(0 0% 15%) !important;
+}
+.dark .ant-input, .dark .ant-select-selector, .dark .ant-picker {
+  background: hsl(0 0% 15%) !important;
+  border-color: hsl(0 0% 25%) !important;
+  color: hsl(0 0% 90%) !important;
+}
+.dark .ant-modal-content, .dark .ant-modal-header {
+  background: hsl(0 0% 12%) !important;
+}
+.dark .ant-modal-title, .dark .ant-form-item-label > label {
+  color: hsl(0 0% 90%) !important;
+}
+
+@keyframes gentle-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(1px); }
+  75% { transform: translateX(-0.5px); }
+}
+
+.settings-pill-tab:hover,
+.pill-tab:hover {
+  animation: gentle-shake 0.35s ease-in-out;
+}
