@@ -1,7 +1,7 @@
 import { Layout, Drawer, Avatar, Tooltip } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
-  CheckSquareOutlined, SettingOutlined, LogoutOutlined,
+  CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -16,6 +16,8 @@ const menuItems = [
   { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/clients', icon: <TeamOutlined />, label: 'Clients' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
+  { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
+  { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
   { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
 ];
 

@@ -9,6 +9,8 @@ import ClientsPage from './pages/ClientsPage';
 import TasksPage from './pages/TasksPage';
 import SettingsPage from './pages/SettingsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import ReportsPage from './pages/ReportsPage';
+import MessagesPage from './pages/MessagesPage';
 import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -58,6 +60,8 @@ const ThemedApp = () => {
               <Route path="/projects/:id" element={<ProjectDetailPage />} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />

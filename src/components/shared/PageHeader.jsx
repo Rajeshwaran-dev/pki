@@ -7,6 +7,8 @@ const routeNames = {
   '/projects': 'Projects',
   '/clients': 'Clients',
   '/tasks': 'Tasks',
+  '/reports': 'Reports',
+  '/messages': 'Chat',
   '/settings': 'Settings',
 };
 
