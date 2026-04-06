@@ -344,3 +344,255 @@
 .dark .ant-table-column-sorter {
   color: #8c8c8c !important;
 }
+
+/* Modal system */
+.crm-modal .ant-modal-content,
+.crm-sheet-modal .ant-modal-content {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 16px !important;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.22) !important;
+  max-height: calc(100vh - 48px);
+}
+
+.crm-modal .ant-modal-header,
+.crm-sheet-modal .ant-modal-header {
+  margin: 0 !important;
+  padding: 10px 20px !important;
+  background: #fafafa !important;
+  border-bottom: 1px solid #ededed !important;
+}
+
+.crm-modal .ant-modal-title,
+.crm-sheet-modal .ant-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #171717;
+}
+
+.crm-modal .ant-modal-body,
+.crm-sheet-modal .ant-modal-body {
+  padding: 18px 20px 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: calc(100vh - 170px);
+}
+
+.crm-modal .ant-modal-footer,
+.crm-sheet-modal .ant-modal-footer {
+  margin: 0 !important;
+  padding: 12px 20px 16px !important;
+  border-top: 1px solid #ededed !important;
+}
+
+.crm-modal .ant-modal-close,
+.crm-sheet-modal .ant-modal-close {
+  top: 10px !important;
+  inset-inline-end: 12px !important;
+  color: #111827 !important;
+}
+
+.crm-form-shell .ant-form-item {
+  margin-bottom: 18px;
+}
+
+.crm-form-shell .ant-form-item-label > label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #333 !important;
+}
+
+.crm-form-shell .ant-form-item-label > label.ant-form-item-required::before {
+  display: none !important;
+}
+
+.crm-form-shell .ant-form-item-label > label.ant-form-item-required::after {
+  content: " *";
+  color: #333;
+}
+
+.crm-form-shell .ant-input,
+.crm-form-shell .ant-input-affix-wrapper,
+.crm-form-shell .ant-input-number,
+.crm-form-shell .ant-input-number-input,
+.crm-form-shell .ant-select-selector,
+.crm-form-shell .ant-picker,
+.crm-form-shell textarea.ant-input {
+  background: #ffffff !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 10px !important;
+  min-height: 36px;
+  box-shadow: none !important;
+}
+
+.crm-form-shell textarea.ant-input {
+  min-height: 54px;
+}
+
+.crm-form-shell .ant-input-affix-wrapper .ant-input,
+.crm-form-shell .ant-input-number-input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.crm-form-shell .ant-select-selector,
+.crm-form-shell .ant-picker,
+.crm-form-shell .ant-input-number,
+.crm-form-shell .ant-input-affix-wrapper {
+  box-shadow: none !important;
+}
+
+.crm-form-shell .ant-select-selector {
+  padding-inline: 11px !important;
+}
+
+.crm-form-shell .ant-input-number {
+  width: 100%;
+}
+
+.crm-form-shell .ant-input-number-input-wrap,
+.crm-form-shell .ant-input-number .ant-input-number-input-wrap input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.crm-form-shell .ant-select-single .ant-select-selector,
+.crm-form-shell .ant-picker,
+.crm-form-shell .ant-input-affix-wrapper {
+  height: 36px !important;
+}
+
+.crm-form-shell .ant-select-selection-item,
+.crm-form-shell .ant-select-selection-placeholder,
+.crm-form-shell .ant-input,
+.crm-form-shell .ant-input-number-input {
+  font-size: 12px !important;
+}
+
+.crm-section {
+  margin-bottom: 24px;
+}
+
+.crm-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2b2b2b;
+}
+
+.crm-section-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #b19625;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.crm-primary-btn {
+  min-width: 88px;
+  border-radius: 10px !important;
+  border: none !important;
+  background: #b19625 !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+}
+
+.crm-outline-btn {
+  border-radius: 10px !important;
+  border-color: #b19625 !important;
+  color: #b19625 !important;
+  background: #fbf8ef !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.crm-panel-card {
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.crm-panel-card__head {
+  padding: 10px 14px;
+  border-bottom: 1px solid #ededed;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.crm-panel-card__body {
+  padding: 12px 14px;
+}
+
+.crm-muted-table .ant-table {
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.crm-muted-table .ant-table-thead > tr > th {
+  background: #f3f4f6 !important;
+  color: #94a3b8 !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.crm-inline-error {
+  display: inline-flex;
+  margin-top: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(244, 63, 94, 0.14);
+  color: #e11d48;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.dark .crm-modal .ant-modal-content,
+.dark .crm-sheet-modal .ant-modal-content,
+.dark .crm-panel-card {
+  background: #1f1f1f !important;
+}
+
+.dark .crm-modal .ant-modal-header,
+.dark .crm-sheet-modal .ant-modal-header,
+.dark .crm-panel-card__head {
+  background: #262626 !important;
+  border-color: #333 !important;
+}
+
+.dark .crm-modal .ant-modal-title,
+.dark .crm-sheet-modal .ant-modal-title,
+.dark .crm-section-title,
+.dark .crm-panel-card__head {
+  color: #f5f5f5 !important;
+}
+
+.dark .crm-modal .ant-modal-footer,
+.dark .crm-sheet-modal .ant-modal-footer,
+.dark .crm-panel-card,
+.dark .crm-panel-card__body {
+  border-color: #333 !important;
+}
+
+.dark .crm-form-shell .ant-input,
+.dark .crm-form-shell .ant-input-affix-wrapper,
+.dark .crm-form-shell .ant-input-number,
+.dark .crm-form-shell .ant-select-selector,
+.dark .crm-form-shell .ant-picker,
+.dark .crm-form-shell textarea.ant-input {
+  background: transparent !important;
+  border-color: #4a4a4a !important;
+}

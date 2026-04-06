@@ -1,18 +1,19 @@
 import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Select, InputNumber,
-  Tooltip, DatePicker, Avatar, Row, Col, Card, Drawer, Tag,
-  Space, Typography, Divider,
+  Tooltip, DatePicker, Avatar, Row, Col, Drawer, Tag,
+  Space, Typography, Divider, Checkbox,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, SearchOutlined,
   FilterOutlined, AppstoreOutlined, UnorderedListOutlined,
   PhoneOutlined, UserOutlined, MoreOutlined, ArrowRightOutlined,
-  CloseOutlined, InfoCircleOutlined, ClockCircleOutlined,
+  CloseOutlined, InfoCircleOutlined, ClockCircleOutlined, MailOutlined, DeleteOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { addProject, setActiveTab } from '@/store/slices/projectSlice';
+import { addProject, updateProject, setActiveTab } from '@/store/slices/projectSlice';
+import { addClient } from '@/store/slices/clientSlice';
 import { stages, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
@@ -32,6 +33,18 @@ const stageColors = {
 
 const primaryColor = '#B19625';
 const primaryLight = '#D4B96E';
+const modalAccent = '#B19625';
+const phoneCodeOptions = [{ value: '+91', label: '+91' }];
+const modalUserOptions = [
+  'Anantha Narayana',
+  'Chandra Bose',
+  'Madhu Loganathan',
+  'Praveen Kumar',
+  'Ramu',
+  'Renuga Devi',
+  'Sathish',
+];
+const vendorOptions = ['Studio Grid', 'Value Kitchens', 'Blue Stone Works'];
 
 /* ── Kanban project card ── */
 const KanbanCard = ({ project, onView, isDark }) => (
@@ -305,12 +318,23 @@ const ProjectsPage = () => {
   const isDark = theme === 'dark';
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [clientModalOpen, setClientModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+  const [editClientInviteOpen, setEditClientInviteOpen] = useState(false);
+  const [editVendorInviteOpen, setEditVendorInviteOpen] = useState(false);
+  const [editUserPickerOpen, setEditUserPickerOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [userSearch, setUserSearch] = useState('');
+  const [projectUsers, setProjectUsers] = useState([{ key: '1', name: 'Anantha Narayana', role: 'Client' }]);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'board' | 'list'
   const [filterOpen, setFilterOpen] = useState(false);
   const [overviewProject, setOverviewProject] = useState(null);
   const [appliedFilters, setAppliedFilters] = useState({});
   const [form] = Form.useForm();
+  const [clientForm] = Form.useForm();
+  const [editClientInviteForm] = Form.useForm();
+  const [editVendorInviteForm] = Form.useForm();
 
   const filtered = useMemo(() => {
     let list = projects;
@@ -328,14 +352,99 @@ const ProjectsPage = () => {
 
   const handleAdd = () => {
     form.validateFields().then(values => {
-      dispatch(addProject({
-        id: Date.now().toString(),
-        createdDate: new Date().toISOString().split('T')[0],
-        projectCode: `PRJ-${String(projects.length + 1).padStart(3, '0')}`,
-        ...values,
-      }));
+      if (editingProject) {
+        dispatch(updateProject({
+          ...editingProject,
+          ...values,
+          phone: `${values.phoneCode || '+91'} ${values.phoneNumber || ''}`.trim(),
+        }));
+      } else {
+        dispatch(addProject({
+          id: Date.now().toString(),
+          createdDate: new Date().toISOString().split('T')[0],
+          projectCode: `PRJ-${String(projects.length + 1).padStart(3, '0')}`,
+          ...values,
+        }));
+      }
       setModalOpen(false);
       form.resetFields();
+      setEditingProject(null);
+    });
+  };
+
+  const openCreateProjectModal = () => {
+    setEditingProject(null);
+    form.resetFields();
+    setModalOpen(true);
+  };
+
+  const openEditProjectModal = (project) => {
+    const matchedClient = clients.find(c => c.clientName === project.clientName);
+    const phoneText = String(project.phone || matchedClient?.phone || '').trim();
+    const phoneCode = phoneText.startsWith('+91') ? '+91' : '+91';
+    const phoneNumber = phoneText.replace(/^\+91\s*/, '');
+    setEditingProject(project);
+    form.setFieldsValue({
+      clientName: project.clientName,
+      projectName: project.projectName,
+      stage: project.stage,
+      subStage: 'BOQ Discussion',
+      budget: project.budget,
+      description: project.description || '',
+      address1: project.address1 || '',
+      address2: project.address2 || '',
+      state: project.state || '',
+      city: project.city || '',
+      location: project.location || '',
+      pincode: project.pincode || '',
+      email: project.email || matchedClient?.email || '',
+      phoneCode,
+      phoneNumber,
+      legalName: project.legalName || matchedClient?.legalName || '',
+      gst: project.gst || matchedClient?.gst || '',
+    });
+    setProjectUsers([{ key: '1', name: 'Anantha Narayana', role: 'Client' }]);
+    setModalOpen(true);
+  };
+
+  const handleEditClientInvite = () => {
+    editClientInviteForm.validateFields().then(values => {
+      setProjectUsers(prev => [...prev, { key: Date.now().toString(), name: values.username, role: values.role || 'Client' }]);
+      setEditClientInviteOpen(false);
+      editClientInviteForm.resetFields();
+    });
+  };
+
+  const handleEditVendorInvite = () => {
+    editVendorInviteForm.validateFields().then(values => {
+      setProjectUsers(prev => [...prev, { key: Date.now().toString(), name: values.username, role: values.role || 'Vendor' }]);
+      setEditVendorInviteOpen(false);
+      editVendorInviteForm.resetFields();
+    });
+  };
+
+  const handleCreateClient = () => {
+    clientForm.validateFields().then(values => {
+      const client = {
+        id: Date.now().toString(),
+        createdDate: new Date().toISOString().split('T')[0],
+        clientName: values.clientName,
+        legalName: values.legalName || values.clientName,
+        phone: `${values.phoneCode || '+91'} ${values.phone || ''}`.trim(),
+        email: values.email || '',
+        address1: values.address1 || '',
+        address2: values.address2 || '',
+        city: values.city || '',
+        state: values.state || '',
+        location: values.location || '',
+        pincode: values.pincode || '',
+        pan: values.pan || '',
+        gst: values.gst || '',
+      };
+      dispatch(addClient(client));
+      form.setFieldValue('clientName', client.clientName);
+      setClientModalOpen(false);
+      clientForm.resetFields();
     });
   };
 
@@ -369,7 +478,7 @@ const ProjectsPage = () => {
       render: (_, row) => (
         <Space size={4}>
           <Tooltip title="View"><Button type="text" size="small" icon={<ArrowRightOutlined style={{ color: primaryColor }} />} onClick={e => { e.stopPropagation(); setOverviewProject(row); }} /></Tooltip>
-          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#B19625' }} onClick={e => e.stopPropagation()} /></Tooltip>
+          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#B19625' }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
         </Space>
       ),
     },
@@ -382,6 +491,7 @@ const ProjectsPage = () => {
   const chipBg = isDark ? '#262626' : '#ffffff';
   const chipBorder = isDark ? '#3a3a3a' : '#e0e0e0';
   const boardBg = isDark ? '#1f1f1f' : '#f9f9f9';
+  const visibleUsers = modalUserOptions.filter(name => name.toLowerCase().includes(userSearch.toLowerCase()));
 
   const viewToggle = (
     <div style={{ display: 'flex', background: mutedSurface, borderRadius: 8, padding: 3, gap: 2 }}>
@@ -431,7 +541,7 @@ const ProjectsPage = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => setModalOpen(true)}
+              onClick={openCreateProjectModal}
               style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
             >
               New Project
@@ -518,7 +628,7 @@ const ProjectsPage = () => {
                     block
                     icon={<PlusOutlined />}
                     style={{ borderRadius: 8, background: primaryColor, color: 'white', border: 'none', fontWeight: 600 }}
-                    onClick={() => setModalOpen(true)}
+                    onClick={openCreateProjectModal}
                   >
                     Add Project
                   </Button>
@@ -569,50 +679,246 @@ const ProjectsPage = () => {
 
       {/* Add Project Modal */}
       <Modal
-        title={<span style={{ fontWeight: 700 }}>New Project</span>}
+        className={editingProject ? 'crm-sheet-modal' : 'crm-modal'}
+        title={<span>{editingProject ? 'Edit Project' : 'New Project'}</span>}
         open={modalOpen}
-        onCancel={() => { setModalOpen(false); form.resetFields(); }}
+        onCancel={() => {
+          setModalOpen(false);
+          form.resetFields();
+          setEditingProject(null);
+        }}
         onOk={handleAdd}
-        okText="Create Project"
-        okButtonProps={{ style: { background: primaryColor, border: 'none' } }}
-        width={isMobile ? '95%' : 640}
+        okText="Submit"
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{ className: 'crm-primary-btn' }}
+        width={isMobile ? '96%' : (editingProject ? 1080 : 860)}
         centered
       >
-        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item name="clientName" label="Client" rules={[{ required: true }]}>
-            <Select placeholder="Select client" showSearch filterOption={(input, opt) => (opt?.label ?? '').toLowerCase().includes(input.toLowerCase())} options={clients.map(c => ({ value: c.clientName, label: c.clientName }))} />
-          </Form.Item>
-          <Form.Item name="projectName" label="Project Name" rules={[{ required: true }]}>
-            <Input placeholder="Enter project name" />
-          </Form.Item>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="stage" label="Stage" rules={[{ required: true }]}>
-                <Select placeholder="Select stage" options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="budget" label="Budget (₹)" rules={[{ required: true }]}>
-                <InputNumber style={{ width: '100%' }} placeholder="Enter budget" min={0} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}><Form.Item name="city" label="City"><Input placeholder="City" /></Form.Item></Col>
-            <Col span={12}>
-              <Form.Item name="state" label="State">
-                <Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}><Form.Item name="phone" label="Phone"><Input placeholder="Phone number" /></Form.Item></Col>
-            <Col span={12}><Form.Item name="email" label="Email"><Input placeholder="Email address" /></Form.Item></Col>
-          </Row>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea rows={3} placeholder="Project description…" />
-          </Form.Item>
-        </Form>
+        {!editingProject ? (
+          <>
+            <Form form={form} layout="vertical" className="crm-form-shell">
+              <div className="crm-section">
+                <div className="crm-section-title">
+                  <span className="crm-section-badge">1</span>
+                  <span>Client Details</span>
+                </div>
+                <Row gutter={10} align="bottom">
+                  <Col flex="auto">
+                    <Form.Item name="clientName" label="Client" rules={[{ required: true, message: 'Client is required' }]}>
+                      <Select
+                        showSearch
+                        placeholder="Select client"
+                        filterOption={(input, opt) => (opt?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                        options={clients.map(c => ({ value: c.clientName, label: c.clientName }))}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    <Button className="crm-primary-btn" icon={<PlusOutlined />} style={{ marginBottom: 18, background: modalAccent }} onClick={() => setClientModalOpen(true)}>
+                      Client
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+
+              <div className="crm-section">
+                <div className="crm-section-title">
+                  <span className="crm-section-badge">2</span>
+                  <span>Project Details</span>
+                </div>
+                <Form.Item name="projectName" label="Project Name" rules={[{ required: true, message: 'Project name is required' }]}>
+                  <Input />
+                </Form.Item>
+                <Row gutter={12}>
+                  <Col span={12}><Form.Item name="stage" label="Project Stage" rules={[{ required: true, message: 'Project stage is required' }]}><Select options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                  <Col span={12}><Form.Item name="budget" label="Budget"><InputNumber min={0} style={{ width: '100%' }} /></Form.Item></Col>
+                </Row>
+                <Form.Item name="description" label="Description"><Input.TextArea rows={3} /></Form.Item>
+              </div>
+
+              <div className="crm-section" style={{ marginBottom: 8 }}>
+                <div className="crm-section-title">
+                  <span className="crm-section-badge">3</span>
+                  <span>Address Details</span>
+                </div>
+                <Form.Item name="sameAsClientAddress" valuePropName="checked" style={{ marginBottom: 12 }}><Checkbox>Same as Client Address</Checkbox></Form.Item>
+                <Row gutter={12}>
+                  <Col span={12}><Form.Item name="address1" label="Address Line 1"><Input /></Form.Item></Col>
+                  <Col span={12}><Form.Item name="address2" label="Address Line 2"><Input /></Form.Item></Col>
+                </Row>
+                <Row gutter={12}>
+                  <Col span={6}><Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                  <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
+                  <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+                  <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
+                </Row>
+              </div>
+            </Form>
+
+            <Modal className="crm-modal" title={<span>New Client</span>} open={clientModalOpen} onCancel={() => { setClientModalOpen(false); clientForm.resetFields(); }} onOk={handleCreateClient} okText="Submit" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 860} centered>
+              <Form form={clientForm} layout="vertical" className="crm-form-shell" initialValues={{ phoneCode: '+91' }}>
+                <div className="crm-section">
+                  <div className="crm-section-title"><span className="crm-section-badge">1</span><span>Primary Details</span></div>
+                  <Row gutter={12}>
+                    <Col span={12}><Form.Item name="clientName" label="Name" rules={[{ required: true }]}><Input /></Form.Item></Col>
+                    <Col span={12}><Form.Item name="email" label="Email"><Input /></Form.Item></Col>
+                  </Row>
+                  <Row gutter={12}>
+                    <Col span={6}><Form.Item name="phoneCode" label="Phone"><Select options={phoneCodeOptions} /></Form.Item></Col>
+                    <Col span={10}><Form.Item name="phone" label=" " colon={false} rules={[{ required: true }]}><Input /></Form.Item></Col>
+                  </Row>
+                </div>
+                <div className="crm-section">
+                  <div className="crm-section-title"><span className="crm-section-badge">2</span><span>Address Details</span></div>
+                  <Row gutter={12}>
+                    <Col span={12}><Form.Item name="address1" label="Address Line 1"><Input /></Form.Item></Col>
+                    <Col span={12}><Form.Item name="address2" label="Address Line 2"><Input /></Form.Item></Col>
+                  </Row>
+                  <Row gutter={12}>
+                    <Col span={6}><Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
+                  </Row>
+                </div>
+                <div className="crm-section" style={{ marginBottom: 8 }}>
+                  <div className="crm-section-title"><span className="crm-section-badge">3</span><span>Client Details</span></div>
+                  <Row gutter={12}>
+                    <Col span={8}><Form.Item name="legalName" label="Legal Name"><Input /></Form.Item></Col>
+                    <Col span={8}><Form.Item name="pan" label="PAN"><Input /></Form.Item></Col>
+                    <Col span={8}><Form.Item name="gst" label="GST Number"><Input /></Form.Item></Col>
+                  </Row>
+                </div>
+              </Form>
+            </Modal>
+          </>
+        ) : (
+          <>
+            <Form form={form} layout="vertical" className="crm-form-shell">
+              <div style={{ display: 'flex', alignItems: isMobile ? 'stretch' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', gap: 16, marginBottom: 18 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 18, fontWeight: 800, color: '#111827' }}>{editingProject.clientName} ({editingProject.projectName}) {editingProject.createdDate}</span>
+                  <EditOutlined style={{ color: '#b19625', fontSize: 14 }} />
+                  <MoreOutlined style={{ color: '#111827', fontSize: 16 }} />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(140px, 1fr))', gap: 12, width: isMobile ? '100%' : 300 }}>
+                  <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}><Select options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item>
+                  <Form.Item name="subStage" label="Sub Stage" style={{ marginBottom: 0 }}><Select options={[{ value: 'BOQ Discussion', label: 'BOQ Discussion' }, { value: 'Concept Design', label: 'Concept Design' }, { value: 'Design Approval', label: 'Design Approval' }]} /></Form.Item>
+                </div>
+              </div>
+              <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+                <div className="crm-panel-card__head">Contact Details</div>
+                <div className="crm-panel-card__body">
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1.2fr', gap: 14 }}>
+                    <Form.Item name="clientName" label="Name"><Input /></Form.Item>
+                    <Form.Item name="email" label="Email"><Input /></Form.Item>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 8 }}>Phone *</div>
+                      <Row gutter={10}>
+                        <Col span={8}><Form.Item name="phoneCode" style={{ marginBottom: 0 }}><Select options={phoneCodeOptions} /></Form.Item></Col>
+                        <Col span={16}><Form.Item name="phoneNumber" style={{ marginBottom: 0 }}><Input /></Form.Item></Col>
+                      </Row>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+                <div className="crm-panel-card__head">Project Details</div>
+                <div className="crm-panel-card__body">
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 14, marginBottom: 12 }}>
+                    <div><div style={{ fontSize: 11, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Created on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
+                    <div><div style={{ fontSize: 11, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Last updated on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
+                    <Form.Item name="budget" label="Budget"><Input /></Form.Item>
+                  </div>
+                  <Form.Item name="description" label="Description" style={{ maxWidth: 320, marginBottom: 0 }}><Input.TextArea rows={2} /></Form.Item>
+                </div>
+              </div>
+              <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+                <div className="crm-panel-card__head">Address Details</div>
+                <div className="crm-panel-card__body">
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 14 }}>
+                    <Form.Item name="address1" label="Address line 1"><Input /></Form.Item>
+                    <Form.Item name="address2" label="Address line 2"><Input /></Form.Item>
+                    <Form.Item name="city" label="City"><Input /></Form.Item>
+                    <Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
+                    <Form.Item name="pincode" label="Pincode"><Input /></Form.Item>
+                    <Form.Item name="location" label="Location"><Input /></Form.Item>
+                  </div>
+                </div>
+              </div>
+              <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+                <div className="crm-panel-card__head">Other Details</div>
+                <div className="crm-panel-card__body">
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14 }}>
+                    <Form.Item name="legalName" label="Legal name"><Input /></Form.Item>
+                    <Form.Item name="gst" label="GST number"><Input /></Form.Item>
+                  </div>
+                </div>
+              </div>
+              <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+                <div className="crm-panel-card__head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Documents</span>
+                  <Button type="link" style={{ padding: 0 }}>+ Add Documents</Button>
+                </div>
+                <div className="crm-panel-card__body" style={{ color: '#6b7280' }}>No documents found for this project.</div>
+              </div>
+              <div className="crm-panel-card">
+                <div className="crm-panel-card__head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                  <span>Project Users</span>
+                  <Space wrap>
+                    <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setEditClientInviteOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>Client</Button>
+                    <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setEditVendorInviteOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>Vendor</Button>
+                    <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setEditUserPickerOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>User</Button>
+                  </Space>
+                </div>
+                <div className="crm-panel-card__body">
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 11, fontWeight: 700, color: '#111827' }}><div>Name</div><div>Role</div><div /></div>
+                  {projectUsers.map(user => (
+                    <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, padding: '8px 0', borderTop: '1px solid #ededed' }}>
+                      <div>{user.name}</div><div>{user.role}</div>
+                      <Button type="text" danger icon={<DeleteOutlined />} onClick={() => setProjectUsers(prev => prev.filter(item => item.key !== user.key))} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Form>
+            <Modal className="crm-modal" title={<span>Add Client</span>} open={editClientInviteOpen} onCancel={() => { setEditClientInviteOpen(false); editClientInviteForm.resetFields(); }} onOk={handleEditClientInvite} okText="Submit" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 420} centered>
+              <Form form={editClientInviteForm} layout="vertical" className="crm-form-shell" initialValues={{ username: editingProject.clientName, role: 'Client', phoneCode: '+91' }}>
+                <Form.Item name="username" label="Username" rules={[{ required: true }]}><Input prefix={<UserOutlined />} /></Form.Item>
+                <Row gutter={10}><Col span={8}><Form.Item name="phoneCode" label="Phone" rules={[{ required: true }]}><Select options={phoneCodeOptions} /></Form.Item></Col><Col span={16}><Form.Item name="phone" label=" " colon={false} rules={[{ required: true }]}><Input /></Form.Item></Col></Row>
+                <Form.Item name="email" label="Email"><Input prefix={<MailOutlined />} /></Form.Item>
+                <Form.Item name="role" label="Role"><Select options={[{ value: 'Client', label: 'Client' }, { value: 'Vendor', label: 'Vendor' }, { value: 'User', label: 'User' }]} /></Form.Item>
+              </Form>
+            </Modal>
+            <Modal className="crm-modal" title={<span>Add Vendor</span>} open={editVendorInviteOpen} onCancel={() => { setEditVendorInviteOpen(false); editVendorInviteForm.resetFields(); }} onOk={handleEditVendorInvite} okText="Submit" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 420} centered>
+              <Form form={editVendorInviteForm} layout="vertical" className="crm-form-shell" initialValues={{ role: 'Vendor', phoneCode: '+91' }}>
+                <Form.Item name="vendor" label="Select Vendor" rules={[{ required: true }]}><Select options={vendorOptions.map(value => ({ value, label: value }))} /></Form.Item>
+                <Form.Item name="username" label="Username" rules={[{ required: true }]}><Input prefix={<UserOutlined />} /></Form.Item>
+                <Row gutter={10}><Col span={8}><Form.Item name="phoneCode" label="Phone" rules={[{ required: true }]}><Select options={phoneCodeOptions} /></Form.Item></Col><Col span={16}><Form.Item name="phone" label=" " colon={false} rules={[{ required: true }]}><Input /></Form.Item></Col></Row>
+                <Form.Item name="email" label="Email"><Input prefix={<MailOutlined />} /></Form.Item>
+                <Form.Item name="role" label="Role"><Select options={[{ value: 'Vendor', label: 'Vendor' }, { value: 'Client', label: 'Client' }, { value: 'User', label: 'User' }]} /></Form.Item>
+              </Form>
+            </Modal>
+            <Modal className="crm-modal" title={<span>Select Users</span>} open={editUserPickerOpen} onCancel={() => setEditUserPickerOpen(false)} onOk={() => {
+              setProjectUsers(prev => ([...prev, ...selectedUsers.filter(name => !prev.some(item => item.name === name)).map(name => ({ key: String(Date.now()) + '-' + name, name, role: 'User' }))]));
+              setEditUserPickerOpen(false);
+              setSelectedUsers([]);
+              setUserSearch('');
+            }} okText="Confirm" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 360} centered>
+              <div className="crm-form-shell">
+                <Input prefix={<SearchOutlined />} placeholder="Search users..." value={userSearch} onChange={e => setUserSearch(e.target.value)} style={{ marginBottom: 12 }} />
+                <div style={{ paddingRight: 4 }}>
+                  {visibleUsers.map(name => (
+                    <label key={name} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 2px', color: '#4b5563' }}>
+                      <Checkbox checked={selectedUsers.includes(name)} onChange={e => setSelectedUsers(prev => e.target.checked ? [...prev, name] : prev.filter(item => item !== name))} />
+                      <span>{name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </Modal>
+          </>
+        )}
       </Modal>
     </div>
   );

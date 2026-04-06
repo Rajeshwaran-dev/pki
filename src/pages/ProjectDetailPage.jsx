@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/store';
+import { useAppSelector, useAppDispatch } from '@/store';
+import { updateProject } from '@/store/slices/projectSlice';
 import useIsMobile from '@/hooks/useIsMobile';
 import {
-  Button, Tag, Avatar, Select, Space, Typography,
+  Button, Tag, Avatar, Select, Space, Modal, Form, Input, Checkbox,Row, Col, DatePicker, TimePicker, Tooltip, notification, Popover, Divider, Upload, Dropdown, Menu, Badge, Switch, Slider, Progress, Steps, Carousel, Collapse, List, Skeleton, Empty, Typography, Tabs, Table, Card, Timeline, Tree, Calendar, BackTop
 } from 'antd';
 import {
   ArrowLeftOutlined, EditOutlined, InfoCircleOutlined, UploadOutlined,
@@ -13,7 +14,8 @@ import {
   ThunderboltOutlined, LineChartOutlined, AimOutlined, TeamOutlined,
   DollarOutlined, CheckSquareOutlined, PlusOutlined, DownloadOutlined,
   ExportOutlined, MoreOutlined, SearchOutlined, FilterOutlined,
-  AudioOutlined, ReloadOutlined, FileImageOutlined,
+  AudioOutlined, ReloadOutlined, FileImageOutlined, MailOutlined,
+  DeleteOutlined, EllipsisOutlined,UserOutlined, PhoneOutlined 
 } from '@ant-design/icons';
 
 const { Text } = Typography;
@@ -43,6 +45,16 @@ const TASK_SUBTABS = ['All', 'Task', 'Snags', 'Hindrance', 'Followup'];
 const ACTIVITY_SUBTABS = ['Daily Updates', 'Details', 'Chart'];
 const CLIENT_PROGRESS_SUBTABS = ['Details', 'Chart'];
 const INVOICE_SUBTABS = ['Clients', 'Vendors'];
+const PROJECT_USER_PICKER = [
+  'Anantha Narayana',
+  'Chandra Bose',
+  'Madhu Loganathan',
+  'Praveen Kumar',
+  'Ramu',
+  'Renuga Devi',
+  'Sathish',
+];
+const VENDOR_OPTIONS = ['Studio Grid', 'Value Kitchens', 'Blue Stone Works'];
 
 const subStages = {
   Sales: ['Initial Discussion', 'Site Visit', 'Proposal Sent', 'Negotiation'],
@@ -156,8 +168,8 @@ const SelectBox = ({ label, width = 170, icon = null }) => (
   </div>
 );
 
-const ToolbarButton = ({ icon, label }) => (
-  <Button icon={icon} style={actionBtn}>
+const ToolbarButton = ({ icon, label, onClick }) => (
+  <Button icon={icon} style={actionBtn} onClick={onClick}>
     {label}
   </Button>
 );
@@ -188,7 +200,7 @@ const EmptyPanel = ({ height = 420, text = 'No Data Found', image = false, actio
     <div style={{ minHeight: height, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
       {image ? (
         <>
-          <FileImageOutlined style={{ fontSize: 82, color: '#7fb0ff', marginBottom: 18 }} />
+          <FileImageOutlined style={{ fontSize: 82, color: '#b19625', marginBottom: 18 }} />
           {action}
         </>
       ) : (
@@ -222,7 +234,7 @@ const TableShell = ({ columns, rowsText = 'No data available', footerText = '0 i
           <span style={{ color: '#b1b8c3' }}>‹</span>
           <span style={{ color: '#b1b8c3' }}>›</span>
           <SelectBox label="25" width={86} />
-          <ReloadOutlined style={{ color: '#4e7bff' }} />
+          <ReloadOutlined style={{ color: '#b19625' }} />
         </div>
       )}
     </div>
@@ -260,9 +272,32 @@ const DetailsCard = ({ title, action, children }) => (
   </div>
 );
 
+const ModalField = ({ label, value, children }) => (
+  <div>
+    <div style={{ fontSize: 11, fontWeight: 700, color: '#111827', marginBottom: 8 }}>{label}</div>
+    {children || <div style={{ color: '#111827', fontSize: 12 }}>{value || 'N/A'}</div>}
+  </div>
+);
+
+const formatDisplayDate = (value) => {
+  if (!value) return '';
+  const [year, month, day] = String(value).split('-');
+  if (!year || !month || !day) return value;
+  return `${day}-${month}-${year}`;
+};
+
+const splitPhone = (value) => {
+  const text = String(value || '').trim();
+  if (text.startsWith('+91')) {
+    return { phoneCode: '+91', phoneNumber: text.replace(/^\+91\s*/, '') };
+  }
+  return { phoneCode: '+91', phoneNumber: text };
+};
+
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const projects = useAppSelector(s => s.projects.projects);
   const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
@@ -277,6 +312,18 @@ const ProjectDetailPage = () => {
   const [invoiceSubTab, setInvoiceSubTab] = useState('Vendors');
   const [activitySubTab, setActivitySubTab] = useState('Daily Updates');
   const [clientProgressSubTab, setClientProgressSubTab] = useState('Details');
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [clientInviteOpen, setClientInviteOpen] = useState(false);
+  const [vendorInviteOpen, setVendorInviteOpen] = useState(false);
+  const [userPickerOpen, setUserPickerOpen] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [projectUsers, setProjectUsers] = useState([
+    { key: '1', name: 'Anantha Narayana', role: 'Client' },
+  ]);
+  const [editForm] = Form.useForm();
+  const [clientInviteForm] = Form.useForm();
+  const [vendorInviteForm] = Form.useForm();
 
   if (!project) return <div style={{ padding: 40 }}>Project not found</div>;
 
@@ -284,17 +331,83 @@ const ProjectDetailPage = () => {
     '--pd-page-bg': isDark ? '#141414' : '#f8fafc',
     '--pd-surface': isDark ? '#1f1f1f' : '#ffffff',
     '--pd-pill-bg': isDark ? '#262626' : '#f6f6f8',
-    '--pd-primary-soft': isDark ? 'rgba(78,123,255,0.22)' : '#dfe8ff',
-    '--pd-control-bg': isDark ? '#232b3b' : '#eef3ff',
+    '--pd-primary-soft': isDark ? 'rgba(177,150,37,0.22)' : '#f6efda',
+    '--pd-control-bg': isDark ? '#2a2418' : '#f7f3e8',
     '--pd-table-head': isDark ? '#242424' : '#f6f7f9',
     '--pd-border': isDark ? '#303030' : '#e9e9ee',
     '--pd-border-soft': isDark ? '#383838' : '#eef0f4',
     '--pd-text': isDark ? '#f3f4f6' : '#2f2f2f',
     '--pd-text-muted': isDark ? '#c7cad1' : '#4b5563',
     '--pd-text-soft': isDark ? '#98a2b3' : '#8ea0b8',
-    '--pd-primary': '#4e7bff',
+    '--pd-primary': '#b19625',
     '--pd-shadow': isDark ? 'none' : '0 1px 2px rgba(16, 24, 40, 0.04)',
   };
+
+  const openEditModal = () => {
+    const { phoneCode, phoneNumber } = splitPhone(project.phone);
+    editForm.setFieldsValue({
+      projectName: project.projectName,
+      stage: mainStage,
+      subStage,
+      clientName: project.clientName,
+      email: project.email || '',
+      phoneCode,
+      phoneNumber,
+      budget: project.budget || '',
+      description: project.description || '',
+      address1: project.address1 || '',
+      address2: project.address2 || '',
+      city: project.city || '',
+      state: project.state || '',
+      location: project.location || '',
+      pincode: project.pincode || '',
+      legalName: project.legalName || '',
+      gst: project.gst || '',
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProject = () => {
+    editForm.validateFields().then(values => {
+      dispatch(updateProject({
+        ...project,
+        ...values,
+        stage: values.stage || mainStage,
+        phone: `${values.phoneCode || '+91'} ${values.phoneNumber || ''}`.trim(),
+        budget: Number(values.budget || 0),
+      }));
+      setMainStage(values.stage || mainStage);
+      setSubStage(values.subStage || subStage);
+      setEditModalOpen(false);
+    });
+  };
+
+  const handleInviteClient = () => {
+    clientInviteForm.validateFields().then(values => {
+      setProjectUsers(prev => [
+        ...prev,
+        { key: Date.now().toString(), name: values.username, role: values.role || 'Client' },
+      ]);
+      setClientInviteOpen(false);
+      clientInviteForm.resetFields();
+    });
+  };
+
+  const handleInviteVendor = () => {
+    vendorInviteForm.validateFields().then(values => {
+      setProjectUsers(prev => [
+        ...prev,
+        { key: Date.now().toString(), name: values.username, role: values.role || 'Vendor' },
+      ]);
+      setVendorInviteOpen(false);
+      vendorInviteForm.resetFields();
+    });
+  };
+
+  const visibleUsers = PROJECT_USER_PICKER.filter(name =>
+    name.toLowerCase().includes(userSearch.toLowerCase())
+  );
+  const displayTitle = `${project.clientName} (${project.projectName}) ${formatDisplayDate(project.createdDate)}`;
 
   const renderTabContent = () => {
     if (activeTab === 'Files') {
@@ -636,52 +749,59 @@ const ProjectDetailPage = () => {
             title="Project Users"
             action={
               <Space wrap>
-                <ToolbarButton icon={<PlusOutlined />} label="Client" />
-                <ToolbarButton icon={<PlusOutlined />} label="Vendor" />
-                <ToolbarButton icon={<PlusOutlined />} label="User" />
+                <ToolbarButton icon={<PlusOutlined />} label="Client" onClick={() => setClientInviteOpen(true)} />
+                <ToolbarButton icon={<PlusOutlined />} label="Vendor" onClick={() => setVendorInviteOpen(true)} />
+                <ToolbarButton icon={<PlusOutlined />} label="User" onClick={() => setUserPickerOpen(true)} />
               </Space>
             }
           >
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 60px', gap: 16 }}>
-              <div>
-                <div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Name</div>
-                <div style={{ fontSize: 13, color: 'var(--pd-text)' }}>Thara</div>
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Role</div>
-              </div>
-              <div style={{ textAlign: 'right', color: '#ef4444' }}>🗑</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 16, marginBottom: 10 }}>
+              <div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Name</div>
+              <div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Role</div>
+              <div />
             </div>
+            {projectUsers.map(user => (
+              <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 16, padding: '8px 0', borderTop: '1px solid var(--pd-border-soft)' }}>
+                <div style={{ fontSize: 13, color: 'var(--pd-text)' }}>{user.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--pd-text)' }}>{user.role}</div>
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => setProjectUsers(prev => prev.filter(item => item.key !== user.key))}
+                />
+              </div>
+            ))}
           </DetailsCard>
 
-          <DetailsCard title="Contact Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" />}>
+          <DetailsCard title="Contact Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" onClick={openEditModal} />}>
             <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr 1fr', gap: 16 }}>
               <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Name</div><div style={{ color: 'var(--pd-text)' }}>{project.clientName}</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Email</div><div style={{ color: 'var(--pd-text)' }}>N/A</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Email</div><div style={{ color: 'var(--pd-text)' }}>{project.email || 'N/A'}</div></div>
               <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Phone</div><div style={{ color: 'var(--pd-text)' }}>{project.phone}</div></div>
             </div>
           </DetailsCard>
 
-          <DetailsCard title="Project Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" />}>
+          <DetailsCard title="Project Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" onClick={openEditModal} />}>
             <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr 1fr', gap: 16 }}>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Created on</div><div style={{ color: 'var(--pd-text)' }}>{project.createdDate}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Description</div><div style={{ color: 'var(--pd-text)' }}>{project.description || 'design completed'}</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Last updated on</div><div style={{ color: 'var(--pd-text)' }}>09 Sep, 2025</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Budget</div><div style={{ color: 'var(--pd-text)' }}>₹50000</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Created on</div><div style={{ color: 'var(--pd-text)' }}>{project.createdDate}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Description</div><div style={{ color: 'var(--pd-text)' }}>{project.description || 'N/A'}</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Last updated on</div><div style={{ color: 'var(--pd-text)' }}>{project.createdDate}</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Budget</div><div style={{ color: 'var(--pd-text)' }}>Rs {project.budget || 0}</div></div>
             </div>
           </DetailsCard>
 
-          <DetailsCard title="Address Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" />}>
+          <DetailsCard title="Address Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" onClick={openEditModal} />}>
             <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr 1fr', gap: 16 }}>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Address line 1</div><div style={{ color: 'var(--pd-text)' }}>N/A</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>State</div><div style={{ color: 'var(--pd-text)' }}>{project.state}</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Address line 2</div><div style={{ color: 'var(--pd-text)' }}>N/A</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Pincode</div><div style={{ color: 'var(--pd-text)' }}>635109</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>City</div><div style={{ color: 'var(--pd-text)' }}>{project.city}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Location</div><div style={{ color: 'var(--pd-text)' }}>N/A</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Address line 1</div><div style={{ color: 'var(--pd-text)' }}>{project.address1 || 'N/A'}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>State</div><div style={{ color: 'var(--pd-text)' }}>{project.state || 'N/A'}</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Address line 2</div><div style={{ color: 'var(--pd-text)' }}>{project.address2 || 'N/A'}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Pincode</div><div style={{ color: 'var(--pd-text)' }}>{project.pincode || 'N/A'}</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>City</div><div style={{ color: 'var(--pd-text)' }}>{project.city || 'N/A'}</div><div style={{ marginTop: 10, fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700 }}>Location</div><div style={{ color: 'var(--pd-text)' }}>{project.location || 'N/A'}</div></div>
             </div>
           </DetailsCard>
 
-          <DetailsCard title="Other Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" />}>
+          <DetailsCard title="Other Details" action={<ToolbarButton icon={<EditOutlined />} label="Edit" onClick={openEditModal} />}>
             <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr', gap: 16 }}>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Legal name</div><div style={{ color: 'var(--pd-text)' }}>N/A</div></div>
-              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>GST number</div><div style={{ color: 'var(--pd-text)' }}>N/A</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>Legal name</div><div style={{ color: 'var(--pd-text)' }}>{project.legalName || 'N/A'}</div></div>
+              <div><div style={{ fontSize: 11, color: 'var(--pd-text-muted)', fontWeight: 700, marginBottom: 8 }}>GST number</div><div style={{ color: 'var(--pd-text)' }}>{project.gst || 'N/A'}</div></div>
             </div>
           </DetailsCard>
 
@@ -702,7 +822,8 @@ const ProjectDetailPage = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => navigate('/projects')} style={{ padding: 0, color: 'var(--pd-text-muted)' }} />
             <span style={{ fontSize: isMobile ? 15 : 17, fontWeight: 800, color: 'var(--pd-text)' }}>{project.projectName}</span>
-            <Button type="text" size="small" icon={<EditOutlined style={{ color: '#4e7bff' }} />} style={{ padding: 0 }} />
+            <Button type="text" size="small" icon={<EditOutlined style={{ color: '#b19625' }} />} style={{ padding: 0 }} onClick={openEditModal} />
+            <Button type="text" size="small" icon={<EllipsisOutlined style={{ color: 'var(--pd-text-muted)' }} />} style={{ padding: 0 }} />
             <Tag color="blue" style={{ borderRadius: 999, fontWeight: 700 }}>{project.projectCode}</Tag>
             <CheckCircleOutlined style={{ color: '#52C41A', fontSize: 16 }} />
             <InfoCircleOutlined style={{ color: '#1677FF', fontSize: 16 }} />
@@ -732,10 +853,10 @@ const ProjectDetailPage = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', padding: isMobile ? '0 14px 14px' : '0 24px 14px' }}>
-          <Tag style={{ borderRadius: 999, background: '#edf3ff', borderColor: '#edf3ff', color: '#4e7bff', fontWeight: 600 }}>
+          <Tag style={{ borderRadius: 999, background: '#fbf8ef', borderColor: '#f2e5bb', color: '#b19625', fontWeight: 600 }}>
             <span style={{ marginRight: 6 }}>👤</span>{project.clientName}
           </Tag>
-          <Tag style={{ borderRadius: 999, background: '#edf3ff', borderColor: '#edf3ff', color: '#4e7bff', fontWeight: 600 }}>
+          <Tag style={{ borderRadius: 999, background: '#fbf8ef', borderColor: '#f2e5bb', color: '#b19625', fontWeight: 600 }}>
             <span style={{ marginRight: 6 }}>📞</span>{project.phone}
           </Tag>
         </div>
@@ -761,6 +882,180 @@ const ProjectDetailPage = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        className="crm-sheet-modal"
+        title={<span>Edit Project</span>}
+        open={editModalOpen}
+        onCancel={() => setEditModalOpen(false)}
+        onOk={handleSaveProject}
+        okText="Submit"
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{ className: 'crm-primary-btn' }}
+        width={isMobile ? '96%' : 1180}
+        centered
+      >
+        <Form form={editForm} layout="vertical" className="crm-form-shell">
+          <div style={{ display: 'flex', alignItems: isCompact ? 'stretch' : 'center', justifyContent: 'space-between', flexDirection: isCompact ? 'column' : 'row', gap: 18, marginBottom: 18 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: isMobile ? 18 : 21, fontWeight: 800, color: '#111827' }}>{displayTitle}</span>
+              <EditOutlined style={{ color: '#b19625', fontSize: 14 }} />
+              <EllipsisOutlined style={{ color: '#111827', fontSize: 16 }} />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : 'repeat(2, minmax(140px, 1fr))', gap: 12, width: isCompact ? '100%' : 300 }}>
+              <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}>
+                <Select
+                  onChange={value => {
+                    setMainStage(value);
+                    editForm.setFieldValue('subStage', (subStages[value] || [])[0] || '');
+                  }}
+                  options={['Sales', 'Designing', 'Execution', 'Snags', 'Handover', 'Completed'].map(value => ({ value, label: value }))}
+                />
+              </Form.Item>
+              <Form.Item name="subStage" label="Sub Stage" style={{ marginBottom: 0 }}>
+                <Select options={(subStages[mainStage] || []).map(value => ({ value, label: value }))} />
+              </Form.Item>
+            </div>
+          </div>
+
+          <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+            <div className="crm-panel-card__head">Contact Details</div>
+            <div className="crm-panel-card__body">
+              <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1.2fr 1.2fr 1.4fr', gap: 14 }}>
+                <Form.Item name="clientName" label="Name"><Input /></Form.Item>
+                <Form.Item name="email" label="Email"><Input /></Form.Item>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 8 }}>Phone *</div>
+                  <Row gutter={10}>
+                    <Col span={8}><Form.Item name="phoneCode" style={{ marginBottom: 0 }}><Select options={[{ value: '+91', label: '+91' }]} /></Form.Item></Col>
+                    <Col span={16}><Form.Item name="phoneNumber" style={{ marginBottom: 0 }}><Input /></Form.Item></Col>
+                  </Row>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+            <div className="crm-panel-card__head">Project Details</div>
+            <div className="crm-panel-card__body">
+              <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr 1fr', gap: 14, marginBottom: 12 }}>
+                <ModalField label="Created on" value={project.createdDate} />
+                <ModalField label="Last updated on" value={project.createdDate} />
+                <Form.Item name="budget" label="Budget"><Input /></Form.Item>
+              </div>
+              <Form.Item name="description" label="Description" style={{ maxWidth: 320, marginBottom: 0 }}>
+                <Input.TextArea rows={2} />
+              </Form.Item>
+            </div>
+          </div>
+
+          <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+            <div className="crm-panel-card__head">Address Details</div>
+            <div className="crm-panel-card__body">
+              <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr 1fr', gap: 14 }}>
+                <Form.Item name="address1" label="Address line 1"><Input /></Form.Item>
+                <Form.Item name="address2" label="Address line 2"><Input /></Form.Item>
+                <Form.Item name="state" label="State"><Select options={['Karnataka', 'Tamil Nadu', 'Maharashtra', 'Delhi'].map(value => ({ value, label: value }))} /></Form.Item>
+                <Form.Item name="city" label="City"><Input /></Form.Item>
+                <Form.Item name="pincode" label="Pincode"><Input /></Form.Item>
+                <Form.Item name="location" label="Location"><Input /></Form.Item>
+              </div>
+            </div>
+          </div>
+
+          <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+            <div className="crm-panel-card__head">Other Details</div>
+            <div className="crm-panel-card__body">
+              <div style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1fr 1fr', gap: 14 }}>
+                <Form.Item name="legalName" label="Legal name"><Input /></Form.Item>
+                <Form.Item name="gst" label="GST number"><Input /></Form.Item>
+              </div>
+            </div>
+          </div>
+
+          <div className="crm-panel-card" style={{ marginBottom: 12 }}>
+            <div className="crm-panel-card__head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>Documents</span>
+              <Button type="link" style={{ padding: 0 }}>+ Add Documents</Button>
+            </div>
+            <div className="crm-panel-card__body" style={{ color: '#6b7280' }}>No documents found for this project.</div>
+          </div>
+
+          <div className="crm-panel-card">
+            <div className="crm-panel-card__head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+              <span>Project Users</span>
+              <Space wrap>
+                <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setClientInviteOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>Client</Button>
+                <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setVendorInviteOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>Vendor</Button>
+                <Button className="crm-primary-btn" icon={<PlusOutlined />} onClick={() => setUserPickerOpen(true)} style={{ minWidth: 0, paddingInline: 12 }}>User</Button>
+              </Space>
+            </div>
+            <div className="crm-panel-card__body">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 11, fontWeight: 700, color: '#111827' }}>
+                <div>Name</div>
+                <div>Role</div>
+                <div />
+              </div>
+              {projectUsers.map(user => (
+                <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, padding: '8px 0', borderTop: '1px solid #ededed' }}>
+                  <div>{user.name}</div>
+                  <div>{user.role}</div>
+                  <Button type="text" danger icon={<DeleteOutlined />} onClick={() => setProjectUsers(prev => prev.filter(item => item.key !== user.key))} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Form>
+      </Modal>
+
+      <Modal className="crm-modal" title={<span>Add Client</span>} open={clientInviteOpen} onCancel={() => { setClientInviteOpen(false); clientInviteForm.resetFields(); }} onOk={handleInviteClient} okText="Submit" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 560} centered>
+        <Form form={clientInviteForm} layout="vertical" className="crm-form-shell" initialValues={{ username: project.clientName, role: 'Client', phoneCode: '+91' }}>
+          <Form.Item name="username" label="Username" rules={[{ required: true }]}><Input prefix={<UserOutlined />} /></Form.Item>
+          <Row gutter={10}>
+            <Col span={8}><Form.Item name="phoneCode" label="Phone" rules={[{ required: true }]}><Select options={[{ value: '+91', label: '+91' }]} /></Form.Item></Col>
+            <Col span={16}><Form.Item name="phone" label=" " colon={false} rules={[{ required: true }]}><Input /></Form.Item></Col>
+          </Row>
+          <Form.Item name="email" label="Email"><Input prefix={<MailOutlined />} /></Form.Item>
+          <Form.Item name="role" label="Role"><Select options={[{ value: 'Client', label: 'Client' }, { value: 'Vendor', label: 'Vendor' }, { value: 'User', label: 'User' }]} /></Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal className="crm-modal" title={<span>Add Vendor</span>} open={vendorInviteOpen} onCancel={() => { setVendorInviteOpen(false); vendorInviteForm.resetFields(); }} onOk={handleInviteVendor} okText="Submit" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 560} centered>
+        <Form form={vendorInviteForm} layout="vertical" className="crm-form-shell" initialValues={{ role: 'Vendor', phoneCode: '+91' }}>
+          <Form.Item name="vendor" label="Select Vendor" rules={[{ required: true }]}><Select options={VENDOR_OPTIONS.map(value => ({ value, label: value }))} /></Form.Item>
+          <Form.Item name="username" label="Username" rules={[{ required: true }]}><Input prefix={<UserOutlined />} /></Form.Item>
+          <Row gutter={10}>
+            <Col span={8}><Form.Item name="phoneCode" label="Phone" rules={[{ required: true }]}><Select options={[{ value: '+91', label: '+91' }]} /></Form.Item></Col>
+            <Col span={16}><Form.Item name="phone" label=" " colon={false} rules={[{ required: true }]}><Input /></Form.Item></Col>
+          </Row>
+          <Form.Item name="email" label="Email"><Input prefix={<MailOutlined />} /></Form.Item>
+          <Form.Item name="role" label="Role"><Select options={[{ value: 'Vendor', label: 'Vendor' }, { value: 'Client', label: 'Client' }, { value: 'User', label: 'User' }]} /></Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal className="crm-modal" title={<span>Select Users</span>} open={userPickerOpen} onCancel={() => setUserPickerOpen(false)} onOk={() => {
+        setProjectUsers(prev => ([
+          ...prev,
+          ...selectedUsers
+            .filter(name => !prev.some(item => item.name === name))
+            .map(name => ({ key: `${Date.now()}-${name}`, name, role: 'User' })),
+        ]));
+        setUserPickerOpen(false);
+        setSelectedUsers([]);
+        setUserSearch('');
+      }} okText="Confirm" cancelButtonProps={{ style: { display: 'none' } }} okButtonProps={{ className: 'crm-primary-btn' }} width={isMobile ? '96%' : 480} centered>
+        <div className="crm-form-shell">
+          <Input prefix={<SearchOutlined />} placeholder="Search users..." value={userSearch} onChange={e => setUserSearch(e.target.value)} style={{ marginBottom: 12 }} />
+          <div style={{ paddingRight: 4 }}>
+            {visibleUsers.map(name => (
+              <label key={name} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 2px', color: '#4b5563' }}>
+                <Checkbox checked={selectedUsers.includes(name)} onChange={e => setSelectedUsers(prev => e.target.checked ? [...prev, name] : prev.filter(item => item !== name))} />
+                <span>{name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
