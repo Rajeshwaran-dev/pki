@@ -13,57 +13,55 @@ import StatusTag from '@/components/shared/StatusTag';
 
 const CHART_COLORS = ['#B19625', '#1677FF', '#52C41A', '#722ED1', '#FAAD14', '#FF4D4F'];
 
-const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter, delay = 0 }) => (
-  <div
-    className="animate-fade-in-up"
-    style={{ animationDelay: `${delay}s` }}
-  >
+const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter }) => (
+  <div style={{ height: '100%' }}>
     <Card
       className="stat-card crm-card"
-      styles={{ body: { padding: '22px 24px' } }}
+      styles={{ body: { padding: '14px 16px' } }}
+      style={{ height: '100%' }}
       hoverable
     >
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <div
           style={{
-            width: 48, height: 48, borderRadius: 14,
+            width: 36, height: 36, borderRadius: 10,
             background: `linear-gradient(135deg, ${color}20, ${color}35)`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22, color,
-            boxShadow: `0 4px 12px ${color}25`,
+            fontSize: 17, color,
+            boxShadow: `0 2px 8px ${color}20`,
           }}
         >
           {icon}
         </div>
         <div
           style={{
-            display: 'flex', alignItems: 'center', gap: 4,
+            display: 'flex', alignItems: 'center', gap: 3,
             background: '#52C41A15', borderRadius: 20,
-            padding: '3px 10px', fontSize: 12, color: '#52C41A', fontWeight: 600,
+            padding: '2px 8px', fontSize: 11, color: '#52C41A', fontWeight: 600,
           }}
         >
-          <ArrowUpOutlined style={{ fontSize: 10 }} /> {trend || '12%'}
+          <ArrowUpOutlined style={{ fontSize: 9 }} /> {trend || '12%'}
         </div>
       </div>
       <Statistic
-        title={<span style={{ fontSize: 13, fontWeight: 500 }}>{title}</span>}
+        title={<span style={{ fontSize: 12, fontWeight: 500 }}>{title}</span>}
         value={value}
         prefix={prefix}
         suffix={suffix}
         formatter={formatter ? (v) => `${(Number(v) / 100000).toFixed(1)}L` : undefined}
-        valueStyle={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.5px', marginTop: 12 }}
+        valueStyle={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px', marginTop: 4 }}
       />
-      <div style={{ marginTop: 12, fontSize: 12, color: '#999' }}>
+      <div style={{ marginTop: 6, fontSize: 11, color: '#999' }}>
         <span style={{ color: '#52C41A' }}>↑ vs last month</span>
       </div>
     </Card>
   </div>
 );
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: '#fff', border: '1px solid #f0f0f0', borderRadius: 10, padding: '10px 14px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+    <div style={{ background: isDark ? '#1f1f1f' : '#fff', border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: '10px 14px', boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
       <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ color: p.color, fontSize: 13 }}>{p.name}: <strong>{p.value}</strong></div>
@@ -76,6 +74,8 @@ const DashboardPage = () => {
   const projects = useAppSelector(s => s.projects.projects);
   const clients = useAppSelector(s => s.clients.clients);
   const tasks = useAppSelector(s => s.tasks.tasks);
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
 
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
@@ -109,23 +109,26 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <PageHeader title="Dashboard" subtitle="Welcome back! Here's what's happening." />
+      <PageHeader title="Dashboard" />
 
       {/* Stats Row */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+      <Row gutter={[16, 16]} style={{ marginBottom: 24, alignItems: 'stretch' }}>
         {stats.map((stat, i) => (
-          <Col xs={24} sm={12} xl={6} key={i}>
-            <StatCard {...stat} delay={i * 0.08} />
+          <Col xs={24} sm={12} xl={6} key={i} style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, animationDelay: `${i * 0.08}s` }} className="animate-fade-in-up">
+              <StatCard {...stat} />
+            </div>
           </Col>
         ))}
       </Row>
 
       {/* Charts Row */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+      <Row gutter={[16, 16]} style={{ marginBottom: 24, alignItems: 'stretch' }}>
         {/* Area Trend */}
-        <Col xs={24} lg={14}>
+        <Col xs={24} lg={14} style={{ display: 'flex', flexDirection: 'column' }}>
           <Card
             className="crm-card chart-card animate-fade-in-up anim-delay-300"
+            style={{ flex: 1 }}
             title={
               <div className="flex items-center justify-between">
                 <span style={{ fontWeight: 700 }}>Activity Trend</span>
@@ -148,7 +151,7 @@ const DashboardPage = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                <RTooltip content={<CustomTooltip />} />
+                <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Area type="monotone" dataKey="projects" name="Projects" stroke="#B19625" strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: '#B19625', r: 4 }} />
                 <Area type="monotone" dataKey="tasks" name="Tasks" stroke="#1677FF" strokeWidth={2.5} fill="url(#blueGrad)" dot={{ fill: '#1677FF', r: 4 }} />
               </AreaChart>
@@ -157,10 +160,11 @@ const DashboardPage = () => {
         </Col>
 
         {/* Pie Chart */}
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={10} style={{ display: 'flex', flexDirection: 'column' }}>
           <Card
             className="crm-card chart-card animate-fade-in-up anim-delay-400"
             title={<span style={{ fontWeight: 700 }}>Stage Distribution</span>}
+            style={{ flex: 1 }}
           >
             <ResponsiveContainer width="100%" height={260}>
               <PieChart>
@@ -177,7 +181,7 @@ const DashboardPage = () => {
                     <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} stroke="none" />
                   ))}
                 </Pie>
-                <RTooltip content={<CustomTooltip />} />
+                <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 12 }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
@@ -185,20 +189,22 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
-      {/* Bar Chart + Recent Projects + Urgent Tasks */}
-      <Row gutter={[16, 16]}>
-        {/* Projects by Stage Bar */}
-        <Col xs={24} lg={12}>
+      {/* Bottom Section: 2 columns, each with 2 stacked cards */}
+      <Row gutter={[16, 16]} style={{ alignItems: 'stretch' }}>
+        {/* Left Column */}
+        <Col xs={24} lg={12} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Projects by Stage Bar */}
           <Card
             className="crm-card chart-card animate-fade-in-up anim-delay-400"
             title={<span style={{ fontWeight: 700 }}>Projects by Stage</span>}
+            style={{ flex: 1 }}
           >
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={stageData} barSize={32}>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={stageData} barSize={36}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <RTooltip content={<CustomTooltip />} />
+                <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Count" radius={[8, 8, 0, 0]}>
                   {stageData.map((_, idx) => (
                     <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
@@ -207,13 +213,43 @@ const DashboardPage = () => {
               </BarChart>
             </ResponsiveContainer>
           </Card>
+
+          {/* Stage Progress */}
+          <Card
+            className="crm-card animate-fade-in-up anim-delay-500"
+            title={<span style={{ fontWeight: 700 }}>Stage Progress</span>}
+            style={{ flex: 1 }}
+          >
+            {stageData.map(({ name, count }) => {
+              const pct = projects.length ? Math.round((count / projects.length) * 100) : 0;
+              const colors = { Sales: '#1677FF', Designing: '#B19625', Execution: '#722ED1', Snags: '#FF4D4F', Handover: '#FAAD14', Completed: '#52C41A' };
+              return (
+                <div key={name} style={{ marginBottom: 14 }}>
+                  <div className="flex justify-between mb-1">
+                    <span style={{ fontSize: 13, fontWeight: 500 }}>{name}</span>
+                    <span style={{ fontSize: 12, color: colors[name], fontWeight: 600 }}>{count} project{count !== 1 ? 's' : ''}</span>
+                  </div>
+                  <Progress
+                    percent={pct}
+                    showInfo={false}
+                    strokeColor={{ '0%': colors[name], '100%': colors[name] + 'cc' }}
+                    trailColor="#f0f0f0"
+                    strokeLinecap="round"
+                    size="small"
+                  />
+                </div>
+              );
+            })}
+          </Card>
         </Col>
 
-        {/* Recent Projects */}
-        <Col xs={24} lg={12}>
+        {/* Right Column */}
+        <Col xs={24} lg={12} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Recent Projects */}
           <Card
             className="crm-card animate-fade-in-up anim-delay-500"
             title={<span style={{ fontWeight: 700 }}>Recent Projects</span>}
+            style={{ flex: 1 }}
             styles={{ body: { padding: '0 20px 16px' } }}
           >
             {recentProjects.map((p, i) => (
@@ -245,43 +281,11 @@ const DashboardPage = () => {
               </div>
             ))}
           </Card>
-        </Col>
-      </Row>
 
-      {/* Stage Progress */}
-      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} lg={12}>
+          {/* High-Priority Tasks */}
           <Card
             className="crm-card animate-fade-in-up anim-delay-500"
-            title={<span style={{ fontWeight: 700 }}>Stage Progress</span>}
-          >
-            {stageData.map(({ name, count }) => {
-              const pct = projects.length ? Math.round((count / projects.length) * 100) : 0;
-              const colors = { Sales: '#1677FF', Designing: '#B19625', Execution: '#722ED1', Snags: '#FF4D4F', Handover: '#FAAD14', Completed: '#52C41A' };
-              return (
-                <div key={name} style={{ marginBottom: 14 }}>
-                  <div className="flex justify-between mb-1">
-                    <span style={{ fontSize: 13, fontWeight: 500 }}>{name}</span>
-                    <span style={{ fontSize: 12, color: colors[name], fontWeight: 600 }}>{count} project{count !== 1 ? 's' : ''}</span>
-                  </div>
-                  <Progress
-                    percent={pct}
-                    showInfo={false}
-                    strokeColor={{ '0%': colors[name], '100%': colors[name] + 'cc' }}
-                    trailColor="#f0f0f0"
-                    strokeLinecap="round"
-                    size="small"
-                  />
-                </div>
-              );
-            })}
-          </Card>
-        </Col>
-
-        {/* High-Priority Tasks */}
-        <Col xs={24} lg={12}>
-          <Card
-            className="crm-card animate-fade-in-up anim-delay-500"
+            style={{ flex: 1 }}
             title={
               <div className="flex items-center gap-2">
                 <FireOutlined style={{ color: '#FF4D4F' }} />

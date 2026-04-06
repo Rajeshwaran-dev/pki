@@ -1,7 +1,7 @@
 import { Layout, Badge, Avatar, Dropdown, Button, Space, Drawer, Typography, Divider } from 'antd';
 import {
   BellOutlined, UserOutlined, MenuOutlined, LogoutOutlined,
-  SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
+  MenuFoldOutlined, MenuUnfoldOutlined,
   MailOutlined, PhoneOutlined, BankOutlined, SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -120,13 +120,11 @@ const AppHeader = () => {
                 },
                 { type: 'divider' },
                 { key: 'profile', icon: <UserOutlined />, label: 'View Profile' },
-                { key: 'settings', icon: <SettingOutlined />, label: 'Settings' },
                 { type: 'divider' },
                 { key: 'logout', icon: <LogoutOutlined />, label: 'Sign Out', danger: true },
               ],
               onClick: ({ key }) => {
                 if (key === 'profile') setProfileOpen(true);
-                if (key === 'settings') navigate('/settings');
                 if (key === 'logout') handleLogout();
               },
             }}
@@ -176,7 +174,7 @@ const AppHeader = () => {
             <div style={{
               position: 'absolute', bottom: 2, right: 2,
               width: 14, height: 14, borderRadius: '50%',
-              background: '#52C41A', border: '2px solid white',
+              background: '#52C41A', border: `2px solid ${isDark ? '#1f1f1f' : 'white'}`,
             }} />
           </div>
           <Typography.Title level={4} style={{ margin: '12px 0 4px' }}>

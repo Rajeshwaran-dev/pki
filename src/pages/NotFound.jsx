@@ -2,17 +2,20 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Typography } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
+import { useAppSelector } from '@/store';
 
 const NotFound = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     console.error('404 Error: Route not found:', location.pathname);
   }, [location.pathname]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafafa' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: isDark ? '#141414' : '#fafafa' }}>
       <div className="animate-scale-in" style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{
           fontSize: 100, fontWeight: 900, lineHeight: 1,

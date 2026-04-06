@@ -16,12 +16,18 @@ const PageHeader = ({ title, subtitle, actions }) => {
 
   return (
     <div
-      className="flex items-center justify-between mb-6"
-      style={{ flexWrap: 'wrap', gap: 12 }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+        gap: 12,
+        flexWrap: 'wrap',
+      }}
     >
-      <div>
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-1 mb-1" style={{ fontSize: 12, color: '#999' }}>
+      {/* Left: breadcrumb + divider + title */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#999' }}>
           <HomeOutlined style={{ fontSize: 11 }} />
           <Link to="/" style={{ color: '#999', marginLeft: 4 }}>Home</Link>
           {pathSegments.length > 0 && (
@@ -33,18 +39,18 @@ const PageHeader = ({ title, subtitle, actions }) => {
             </>
           )}
         </div>
-        <Typography.Title
-          level={4}
-          style={{ margin: 0, fontWeight: 700, letterSpacing: '-0.3px' }}
-        >
+        <div style={{ width: 1, height: 14, background: '#e0e0e0' }} />
+        <Typography.Title level={5} style={{ margin: 0, fontWeight: 700, letterSpacing: '-0.3px' }}>
           {title}
         </Typography.Title>
         {subtitle && (
-          <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
             {subtitle}
           </Typography.Text>
         )}
       </div>
+
+      {/* Right: actions */}
       {actions && (
         <Space wrap size={8}>
           {actions}

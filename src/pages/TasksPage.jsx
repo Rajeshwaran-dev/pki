@@ -39,6 +39,9 @@ const mockRequests = [
 ];
 
 const requestStatuses = ['Created', 'Approved', 'Rejected', 'On Hold', 'Discarded'];
+const darkPanelBg = '#1f1f1f';
+const darkSurfaceBg = '#232323';
+const darkBorder = '#303030';
 
 /* ── Task Card (Kanban) ── */
 const TaskCard = ({ task, overlay }) => {
@@ -102,7 +105,7 @@ const TaskCard = ({ task, overlay }) => {
 };
 
 /* ── Kanban Column ── */
-const KanbanColumn = ({ status, tasks, children }) => {
+const KanbanColumn = ({ status, tasks, children, isDark }) => {
   const { setNodeRef, isOver } = useDroppable({ id: status });
   const taskIds = tasks.map(t => t.id);
   return (
@@ -111,7 +114,8 @@ const KanbanColumn = ({ status, tasks, children }) => {
       className="kanban-column"
       style={{
         minWidth: 260, flex: '1 0 260px', borderRadius: 14, padding: 14,
-        background: isOver ? '#fff8dc' : '#f9f9f9', minHeight: 200,
+        background: isOver ? (isDark ? '#2a2415' : '#fff8dc') : (isDark ? darkSurfaceBg : '#f9f9f9'), minHeight: 200,
+        border: isDark ? `1px solid ${darkBorder}` : 'none',
         borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
         transition: 'background 0.2s ease',
       }}
@@ -191,9 +195,9 @@ const RequestCard = ({ request, overlay }) => {
 };
 
 /* ── Detail Panel (shared for task and request) ── */
-const DetailPanel = ({ item, type = 'task', onClose, showBack }) => (
+const DetailPanel = ({ item, type = 'task', onClose, showBack, isDark }) => (
   <div>
-    <Card style={{ borderRadius: 14, border: 'none', marginBottom: 16 }} styles={{ body: { padding: '20px 24px' } }}>
+    <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', marginBottom: 16, background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       {showBack && (
         <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: '#B19625' }}>
           Back to list
@@ -218,7 +222,7 @@ const DetailPanel = ({ item, type = 'task', onClose, showBack }) => (
         </Space>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 24px', padding: '16px 0', borderTop: '1px solid #f5f5f5', borderBottom: '1px solid #f5f5f5' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 24px', padding: '16px 0', borderTop: `1px solid ${isDark ? darkBorder : '#f5f5f5'}`, borderBottom: `1px solid ${isDark ? darkBorder : '#f5f5f5'}` }}>
         {[
           ['Stage', <Tag color={statusColors[item.status]} style={{ borderRadius: 10 }}>{item.status}</Tag>],
           ['Assignee', item.assignee],
@@ -247,14 +251,14 @@ const DetailPanel = ({ item, type = 'task', onClose, showBack }) => (
       </div>
 
       {item.description && (
-        <div style={{ marginTop: 8, padding: '12px 16px', background: '#fafafa', borderRadius: 10 }}>
+        <div style={{ marginTop: 8, padding: '12px 16px', background: isDark ? darkSurfaceBg : '#fafafa', borderRadius: 10, border: isDark ? `1px solid ${darkBorder}` : 'none' }}>
           <div style={{ fontSize: 11, color: '#bbb', marginBottom: 4 }}>Description</div>
           <div style={{ fontSize: 13 }}>{item.description}</div>
         </div>
       )}
     </Card>
 
-    <Card style={{ borderRadius: 14, border: 'none' }} styles={{ body: { padding: '20px 24px' } }}>
+    <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       <Typography.Title level={5} style={{ margin: '0 0 14px' }}>
         Comments (0)
         <Button type="link" size="small" style={{ fontSize: 12, color: '#1677FF', marginLeft: 8 }}>Hide</Button>
@@ -306,7 +310,9 @@ const TasksPage = () => {
   const dispatch = useAppDispatch();
   const { tasks, viewMode } = useAppSelector(s => s.tasks);
   const projects = useAppSelector(s => s.projects.projects);
+  const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
+  const isDark = theme === 'dark';
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -410,7 +416,7 @@ const TasksPage = () => {
       />
 
       {/* Tab Bar */}
-      <div style={{ background: 'white', borderRadius: 14, padding: '12px 16px', marginBottom: 16, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+      <div style={{ background: isDark ? darkPanelBg : 'white', borderRadius: 14, padding: '12px 16px', marginBottom: 16, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', border: isDark ? `1px solid ${darkBorder}` : 'none' }}>
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           {[
             { key: 'tasks', label: `All Tasks (${tasks.length})`, icon: <OrderedListOutlined /> },
@@ -426,7 +432,7 @@ const TasksPage = () => {
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '8px 18px', borderRadius: 24,
                   border: isActive ? '2px solid #B19625' : '2px solid transparent',
-                  background: isActive ? '#B1962512' : '#f7f7f7',
+                  background: isActive ? '#B1962512' : (isDark ? darkSurfaceBg : '#f7f7f7'),
                   color: isActive ? '#B19625' : '#666',
                   fontWeight: isActive ? 700 : 400,
                   fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
@@ -446,7 +452,7 @@ const TasksPage = () => {
             {taskStatuses.map(status => {
               const filtered = tasks.filter(t => t.status === status);
               return (
-                <KanbanColumn key={status} status={status} tasks={filtered}>
+                <KanbanColumn key={status} status={status} tasks={filtered} isDark={isDark}>
                   {filtered.map(task => <TaskCard key={task.id} task={task} />)}
                 </KanbanColumn>
               );
@@ -460,16 +466,16 @@ const TasksPage = () => {
       {activeTab === 'tasks' && viewMode === 'list' && (
         <div className="animate-fade-in">
           {!isMobile ? (
-            <div style={{ display: 'flex', gap: 16, minHeight: 400, maxHeight: 'calc(100vh - 260px)' }}>
-              <div style={{ width: selectedTask ? '36%' : '100%', minWidth: 280, overflowY: 'auto', transition: 'width 0.3s ease' }}>
+            <div style={{ display: 'flex', background: isDark ? darkPanelBg : 'white', borderRadius: 14, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', minHeight: 500, maxHeight: 'calc(100vh - 240px)', border: isDark ? `1px solid ${darkBorder}` : 'none' }}>
+              <div style={{ width: selectedTask ? '37%' : '100%', minWidth: 280, overflowY: 'auto', padding: '16px 12px', transition: 'width 0.3s ease', borderRight: selectedTask ? `1px solid ${isDark ? darkBorder : '#f0f0f0'}` : 'none' }}>
                 <Input prefix={<UserOutlined />} placeholder="Search tasks…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
                 {tasks.map(task => (
                   <ListItemCard key={task.id} item={task} isSelected={selectedTask?.id === task.id} onClick={() => setSelectedTask(task)} />
                 ))}
               </div>
               {selectedTask && (
-                <div style={{ flex: 1, overflowY: 'auto' }}>
-                  <DetailPanel item={selectedTask} type="task" />
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+                  <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} showBack isDark={isDark} />
                 </div>
               )}
             </div>
@@ -480,7 +486,7 @@ const TasksPage = () => {
                 <ListItemCard key={task.id} item={task} isSelected={false} onClick={() => setSelectedTask(task)} />
               ))}
               <Drawer title={selectedTask?.title} open={!!selectedTask} onClose={() => setSelectedTask(null)} placement="bottom" styles={{ body: { padding: 12 }, wrapper: { height: '90%' } }}>
-                {selectedTask && <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} showBack />}
+                {selectedTask && <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} showBack isDark={isDark} />}
               </Drawer>
             </div>
           )}
@@ -494,7 +500,7 @@ const TasksPage = () => {
             {requestStatuses.map(status => {
               const items = requestsByStatus(status);
               return (
-                <KanbanColumn key={status} status={status} tasks={items}>
+                <KanbanColumn key={status} status={status} tasks={items} isDark={isDark}>
                   <SortableContext items={items.map(r => r.id)} strategy={verticalListSortingStrategy}>
                     {items.map(req => <RequestCard key={req.id} request={req} />)}
                   </SortableContext>
@@ -510,16 +516,16 @@ const TasksPage = () => {
       {activeTab === 'requests' && viewMode === 'list' && (
         <div className="animate-fade-in">
           {!isMobile ? (
-            <div style={{ display: 'flex', gap: 16, minHeight: 400, maxHeight: 'calc(100vh - 260px)' }}>
-              <div style={{ width: selectedRequest ? '36%' : '100%', minWidth: 280, overflowY: 'auto', transition: 'width 0.3s ease' }}>
+            <div style={{ display: 'flex', background: isDark ? darkPanelBg : 'white', borderRadius: 14, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', minHeight: 500, maxHeight: 'calc(100vh - 240px)', border: isDark ? `1px solid ${darkBorder}` : 'none' }}>
+              <div style={{ width: selectedRequest ? '37%' : '100%', minWidth: 280, overflowY: 'auto', padding: '16px 12px', transition: 'width 0.3s ease', borderRight: selectedRequest ? `1px solid ${isDark ? darkBorder : '#f0f0f0'}` : 'none' }}>
                 <Input prefix={<UserOutlined />} placeholder="Search requests…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
                 {requests.map(req => (
                   <ListItemCard key={req.id} item={req} type="request" isSelected={selectedRequest?.id === req.id} onClick={() => setSelectedRequest(req)} />
                 ))}
               </div>
               {selectedRequest && (
-                <div style={{ flex: 1, overflowY: 'auto' }}>
-                  <DetailPanel item={selectedRequest} type="request" />
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+                  <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} showBack isDark={isDark} />
                 </div>
               )}
             </div>
@@ -530,7 +536,7 @@ const TasksPage = () => {
                 <ListItemCard key={req.id} item={req} type="request" isSelected={false} onClick={() => setSelectedRequest(req)} />
               ))}
               <Drawer title={selectedRequest?.title} open={!!selectedRequest} onClose={() => setSelectedRequest(null)} placement="bottom" styles={{ body: { padding: 12 }, wrapper: { height: '90%' } }}>
-                {selectedRequest && <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} showBack />}
+                {selectedRequest && <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} showBack isDark={isDark} />}
               </Drawer>
             </div>
           )}

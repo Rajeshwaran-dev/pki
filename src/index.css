@@ -252,3 +252,95 @@
 .dark .ant-card { background: #1f1f1f; border-color: #333; }
 .dark .ant-table { background: #1f1f1f; }
 .dark .ant-modal-content { background: #1f1f1f; }
+.dark .ant-table-wrapper,
+.dark .ant-table-container,
+.dark .ant-table-content,
+.dark .ant-table-cell,
+.dark .ant-table-thead > tr > th,
+.dark .ant-table-tbody > tr > td {
+  background: #1f1f1f !important;
+  color: #f0f0f0 !important;
+  border-color: #3a3a3a !important;
+}
+.dark .ant-table-tbody > tr.ant-table-row:hover > td {
+  background: #262626 !important;
+}
+.dark .ant-pagination,
+.dark .ant-pagination .ant-pagination-total-text,
+.dark .ant-pagination .ant-select-selection-item,
+.dark .ant-pagination .ant-select-arrow,
+.dark .ant-pagination .ant-pagination-item-link {
+  color: #d6d6d6 !important;
+}
+.dark .ant-pagination .ant-pagination-item {
+  background: #232323 !important;
+  border-color: #3a3a3a !important;
+}
+.dark .ant-pagination .ant-pagination-item a {
+  color: #d6d6d6 !important;
+}
+.dark .ant-pagination .ant-pagination-item-active {
+  background: rgba(177, 150, 37, 0.18) !important;
+  border-color: #b19625 !important;
+}
+.dark .ant-pagination .ant-pagination-item-active a {
+  color: #f4df8c !important;
+}
+.dark .ant-select-selector,
+.dark .ant-input,
+.dark .ant-input-affix-wrapper,
+.dark .ant-input-number,
+.dark .ant-picker,
+.dark .ant-btn-default,
+.dark .ant-btn-color-default,
+.dark .ant-btn-variant-outlined {
+  background: #232323 !important;
+  border-color: #3a3a3a !important;
+  color: #f0f0f0 !important;
+}
+.dark .ant-input::placeholder,
+.dark .ant-input-affix-wrapper input::placeholder,
+.dark .ant-select-selection-placeholder {
+  color: #8c8c8c !important;
+}
+.dark .ant-input-affix-wrapper .ant-input-prefix,
+.dark .ant-input-affix-wrapper .ant-input-suffix,
+.dark .ant-btn-default .anticon,
+.dark .ant-btn-color-default .anticon {
+  color: #bfbfbf !important;
+}
+.dark .ant-select-dropdown,
+.dark .ant-dropdown,
+.dark .ant-dropdown-menu,
+.dark .ant-drawer-content,
+.dark .ant-drawer-header,
+.dark .ant-drawer-body,
+.dark .ant-modal-header,
+.dark .ant-modal-footer {
+  background: #1f1f1f !important;
+  border-color: #333 !important;
+}
+.dark .ant-segmented {
+  background: #232323 !important;
+}
+.dark .ant-segmented-item-selected {
+  background: rgba(177, 150, 37, 0.2) !important;
+  color: #f0f0f0 !important;
+}
+.dark .ant-empty,
+.dark .ant-empty-description,
+.dark .ant-typography,
+.dark .ant-tag:not(.ant-tag-has-color) {
+  color: #d6d6d6 !important;
+}
+.dark .ant-card-bordered,
+.dark .ant-descriptions-view,
+.dark .ant-list,
+.dark .ant-list-item {
+  border-color: #303030 !important;
+}
+.dark .ant-table-column-sorters,
+.dark .ant-table-filter-trigger,
+.dark .ant-table-column-sorter {
+  color: #8c8c8c !important;
+}

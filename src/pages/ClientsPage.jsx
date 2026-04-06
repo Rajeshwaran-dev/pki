@@ -64,7 +64,9 @@ const ClientCard = ({ client, index }) => (
 const ClientsPage = () => {
   const dispatch = useAppDispatch();
   const clients = useAppSelector(s => s.clients.clients);
+  const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
+  const isDark = theme === 'dark';
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'grid'
@@ -135,6 +137,9 @@ const ClientsPage = () => {
     });
   };
 
+  const panelBg = isDark ? '#1f1f1f' : '#ffffff';
+  const panelBorder = isDark ? '#303030' : '#f0f0f0';
+
   return (
     <div>
       <PageHeader
@@ -187,7 +192,15 @@ const ClientsPage = () => {
           ))}
         </Row>
       ) : (
-        <div style={{ background: 'white', borderRadius: 14, padding: isMobile ? 12 : 20, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+        <div
+          style={{
+            background: panelBg,
+            borderRadius: 14,
+            padding: isMobile ? 12 : 20,
+            boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)',
+            border: `1px solid ${panelBorder}`,
+          }}
+        >
           <Table
             dataSource={filtered}
             columns={columns}
