@@ -18,6 +18,8 @@ const menuItems = [
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
+  { key: '/attendance', icon: <TeamOutlined />, label: 'Attendance' },
+  { key: '/inventory', icon: <BarChartOutlined />, label: 'Inventory' },
   { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
 ];
 
