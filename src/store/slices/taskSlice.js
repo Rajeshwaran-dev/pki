@@ -16,6 +16,9 @@ const taskSlice = createSlice({
       const idx = state.tasks.findIndex(t => t.id === action.payload.id);
       if (idx !== -1) state.tasks[idx] = action.payload;
     },
+    removeTask(state, action) {
+      state.tasks = state.tasks.filter(t => t.id !== action.payload);
+    },
     moveTask(state, action) {
       const task = state.tasks.find(t => t.id === action.payload.taskId);
       if (task) task.status = action.payload.newStatus;
@@ -26,5 +29,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { addTask, updateTask, moveTask, setViewMode } = taskSlice.actions;
+export const { addTask, updateTask, removeTask, moveTask, setViewMode } = taskSlice.actions;
 export default taskSlice.reducer;

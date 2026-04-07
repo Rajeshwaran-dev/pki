@@ -16,11 +16,11 @@ import useIsMobile from '@/hooks/useIsMobile';
 ═══════════════════════════════════════════ */
 const CURRENT_USER = {
   id: 'current', name: 'Super Admin', code: 'EKA00000',
-  email: 'admin@perspective.com', initials: 'SA', color: '#B19625',
+  email: 'admin@perspective.com', initials: 'SA', color: '#0B2B44',
 };
 
 const ALL_MEMBERS = [
-  { id: 'm1', name: 'Rahul Sharma',  code: 'EKA00001', email: 'rahul@example.com',  initials: 'RS', color: '#B19625' },
+  { id: 'm1', name: 'Rahul Sharma',  code: 'EKA00001', email: 'rahul@example.com',  initials: 'RS', color: '#0B2B44' },
   { id: 'm2', name: 'Priya Patel',   code: 'EKA00002', email: 'priya@example.com',  initials: 'PP', color: '#059669' },
   { id: 'm3', name: 'Amit Gupta',    code: 'EKA00003', email: 'amit@example.com',   initials: 'AG', color: '#DB2777' },
   { id: 'm4', name: 'Sneha Reddy',   code: 'EKA00004', email: 'sneha@example.com',  initials: 'SR', color: '#DC2626' },
@@ -67,7 +67,7 @@ const INITIAL_CONVERSATIONS = [
       { id: 'm6', role: 'member' },
     ],
   },
-  { id: 'rahul', type: 'direct', name: 'Rahul Sharma',   initials: 'RS', color: '#B19625', online: true,  lastMsg: 'Sounds good, thank you!',      time: '05:58 PM', unread: 0 },
+  { id: 'rahul', type: 'direct', name: 'Rahul Sharma',   initials: 'RS', color: '#0B2B44', online: true,  lastMsg: 'Sounds good, thank you!',      time: '05:58 PM', unread: 0 },
   { id: 'priya', type: 'direct', name: 'Priya Patel',    initials: 'PP', color: '#059669', online: true,  lastMsg: 'Please review the layout.',    time: '04:45 PM', unread: 1 },
   { id: 'amit',  type: 'direct', name: 'Amit Gupta',     initials: 'AG', color: '#DB2777', online: false, lastMsg: 'Budget revision needed.',      time: '03:30 PM', unread: 0 },
   { id: 'sneha', type: 'direct', name: 'Sneha Reddy',    initials: 'SR', color: '#DC2626', online: false, lastMsg: 'Snag list sent.',              time: '01:20 PM', unread: 0 },
@@ -89,7 +89,7 @@ const INITIAL_MESSAGES = {
     { id: 'm1', type: 'system', text: 'Super Admin added Rahul Sharma' },
     { id: 'm2', type: 'system', text: 'Super Admin added Priya Patel' },
     { id: 'm3', type: 'text', text: 'Welcome to the Luxury Villa Interior project team!', sent: true, time: '09:00 AM', status: 'read' },
-    { id: 'm4', type: 'text', text: 'Design approved!', sent: false, sender: 'Rahul Sharma', senderColor: '#B19625', time: '05:17 PM' },
+    { id: 'm4', type: 'text', text: 'Design approved!', sent: false, sender: 'Rahul Sharma', senderColor: '#0B2B44', time: '05:17 PM' },
   ],
   'office-reno-team': [
     { id: 'd1', type: 'date', text: 'Mon Apr 06 2026' },
@@ -106,12 +106,12 @@ const INITIAL_MESSAGES = {
         title: 'TEAM LUNCH',
         options: [
           { label: 'NO', votes: 1, pct: 50, voters: [{ name: 'Neha Kapoor', initials: 'NK', color: '#16A34A' }] },
-          { label: 'YES', votes: 1, pct: 50, voters: [{ name: 'Rahul Sharma', initials: 'RS', color: '#B19625' }] },
+          { label: 'YES', votes: 1, pct: 50, voters: [{ name: 'Rahul Sharma', initials: 'RS', color: '#0B2B44' }] },
         ],
         totalVotes: 2,
       },
     },
-    { id: 'm3', type: 'text', text: 'Sounds good, thank you!', sent: false, sender: 'Rahul Sharma', senderColor: '#B19625', time: '05:58 PM' },
+    { id: 'm3', type: 'text', text: 'Sounds good, thank you!', sent: false, sender: 'Rahul Sharma', senderColor: '#0B2B44', time: '05:58 PM' },
   ],
   priya:  [{ id: 'd1', type: 'date', text: 'Today' }, { id: 'm1', type: 'text', text: 'Hi Priya, the Office Renovation designs are ready for review.', sent: true, time: '04:00 PM', status: 'read' }, { id: 'm2', type: 'text', text: 'Please review the layout.', sent: false, sender: 'Priya Patel', senderColor: '#059669', time: '04:45 PM' }],
   amit:   [{ id: 'd1', type: 'date', text: 'Today' }, { id: 'm1', type: 'text', text: 'Amit, shall we schedule a call for the Penthouse project?', sent: true, time: '02:00 PM', status: 'read' }, { id: 'm2', type: 'text', text: 'Budget revision needed.', sent: false, sender: 'Amit Gupta', senderColor: '#DB2777', time: '03:30 PM' }],
@@ -124,7 +124,7 @@ const INITIAL_MESSAGES = {
    POLL MESSAGE
 ═══════════════════════════════════════════ */
 const PollMessage = ({ poll, isDark }) => (
-  <div style={{ background: isDark ? '#1a3a2e' : '#fff', borderRadius: 10, padding: '10px 12px', border: `1px solid ${isDark ? '#2a4a3a' : '#e5e7eb'}`, minWidth: 220, maxWidth: 280 }}>
+  <div style={{ background: isDark ? '#1a3a2e' : '#fff', borderRadius: 10, padding: '10px 12px', border: `1px solid ${isDark ? '#2a4a3a' : '#f5f3f0'}`, minWidth: 220, maxWidth: 280 }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
       <BarChartOutlined style={{ color: '#059669', fontSize: 14 }} />
       <span style={{ fontWeight: 700, fontSize: 13, color: isDark ? '#f0f0f0' : '#1f1f1f', letterSpacing: 0.5 }}>{poll.title}</span>
@@ -135,7 +135,7 @@ const PollMessage = ({ poll, isDark }) => (
           <span style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#d0d0d0' : '#374151' }}>{opt.label}</span>
           <span style={{ fontSize: 11, color: '#6b7280' }}>{opt.votes} ({opt.pct}%)</span>
         </div>
-        <div style={{ height: 4, borderRadius: 4, background: isDark ? '#2a2a2a' : '#e5e7eb', overflow: 'hidden', marginBottom: 5 }}>
+        <div style={{ height: 4, borderRadius: 4, background: isDark ? '#0a2235' : '#f5f3f0', overflow: 'hidden', marginBottom: 5 }}>
           <div style={{ height: '100%', width: `${opt.pct}%`, borderRadius: 4, background: '#F59E0B' }} />
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -169,7 +169,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
       <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0' }}>
         <span style={{
           background: 'rgba(255, 214, 100, 0.35)',
-          border: '1px solid rgba(177,150,37,0.3)',
+          border: '1px solid rgba(11,43,68,0.3)',
           borderRadius: 20, padding: '3px 14px',
           fontSize: 11.5, color: '#7a6010', fontWeight: 500,
         }}>
@@ -180,7 +180,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
   }
 
   const isSent = msg.sent;
-  const bubbleBg = isSent ? (isDark ? '#025144' : '#d9fdd3') : (isDark ? '#202c33' : '#ffffff');
+  const bubbleBg = isSent ? (isDark ? '#0e3a5c' : '#d9fdd3') : (isDark ? '#0a2235' : '#ffffff');
 
   return (
     <div style={{ display: 'flex', justifyContent: isSent ? 'flex-end' : 'flex-start', marginBottom: 4, paddingLeft: isSent ? 48 : 0, paddingRight: isSent ? 0 : 48 }}>
@@ -205,7 +205,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
         </div>
       </div>
       {isSent && (
-        <Avatar size={28} style={{ background: userColor || '#B19625', fontSize: 11, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
+        <Avatar size={28} style={{ background: userColor || '#0B2B44', fontSize: 11, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
           {userInitials || 'SA'}
         </Avatar>
       )}
@@ -217,14 +217,14 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
    ATTACHMENT MENU
 ═══════════════════════════════════════════ */
 const AttachmentMenu = ({ isDark }) => (
-  <div style={{ position: 'absolute', bottom: 68, left: 12, background: isDark ? '#1f1f1f' : '#fff', borderRadius: 14, padding: '8px 0', boxShadow: '0 8px 32px rgba(0,0,0,0.18)', zIndex: 10, minWidth: 200 }}>
+  <div style={{ position: 'absolute', bottom: 68, left: 12, background: isDark ? '#0d3554' : '#fff', borderRadius: 14, padding: '8px 0', boxShadow: '0 8px 32px rgba(0,0,0,0.18)', zIndex: 10, minWidth: 200 }}>
     {[
       { icon: <FileTextOutlined />, label: 'Document', color: '#6366F1' },
       { icon: <PictureOutlined />, label: 'Photos & videos', color: '#8B5CF6' },
       { icon: <AudioOutlined />, label: 'Audio', color: '#F59E0B' },
     ].map((item, i) => (
       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 18px', cursor: 'pointer', fontSize: 13, fontWeight: 500, color: isDark ? '#e9edef' : '#1f1f1f' }}
-        onMouseEnter={e => e.currentTarget.style.background = isDark ? '#2a2a2a' : '#f5f5f5'}
+        onMouseEnter={e => e.currentTarget.style.background = isDark ? '#0a2235' : '#f5f5f5'}
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
       >
         <div style={{ width: 38, height: 38, borderRadius: '50%', background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16 }}>{item.icon}</div>
@@ -240,14 +240,14 @@ const AttachmentMenu = ({ isDark }) => (
 const ConversationItem = ({ conv, isActive, onClick, isDark }) => (
   <div
     onClick={onClick}
-    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', borderRadius: 10, background: isActive ? 'linear-gradient(135deg, #B19625 0%, #C4A840 100%)' : 'transparent', transition: 'background 0.18s', marginBottom: 2 }}
-    onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = isDark ? '#2a2a2a' : '#f5f3eb'; }}
+    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', borderRadius: 10, background: isActive ? '#0B2B44' : 'transparent', transition: 'background 0.18s', marginBottom: 2 }}
+    onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = isDark ? '#0a2235' : '#f5f3eb'; }}
     onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
   >
     <div style={{ position: 'relative', flexShrink: 0 }}>
       <Avatar size={42} style={{ background: conv.color, fontWeight: 700, fontSize: conv.initials?.length > 1 ? 13 : 16, color: '#fff' }}>{conv.initials}</Avatar>
       {conv.online && (
-        <div style={{ position: 'absolute', bottom: 1, right: 1, width: 10, height: 10, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isActive ? '#C4A840' : (isDark ? '#111b21' : '#fff')}` }} />
+        <div style={{ position: 'absolute', bottom: 1, right: 1, width: 10, height: 10, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isActive ? '#0B2B44' : (isDark ? '#0d3554' : '#fff')}` }} />
       )}
     </div>
     <div style={{ flex: 1, minWidth: 0 }}>
@@ -328,11 +328,11 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
     onClose();
   };
 
-  const sectionBg = isDark ? '#1f1f1f' : '#fff';
-  const borderC = isDark ? '#2a2a2a' : '#e5e7eb';
+  const sectionBg = isDark ? '#0d3554' : '#fff';
+  const borderC = isDark ? '#1a4d72' : '#f5f3f0';
   const textPrimary = isDark ? '#e9edef' : '#111827';
   const textSecondary = '#9ca3af';
-  const inputStyle = { borderRadius: 8, fontSize: 13, height: 42, background: isDark ? '#1a1a1a' : '#fff', border: `1px solid ${isDark ? '#333' : '#d1d5db'}`, color: textPrimary };
+  const inputStyle = { borderRadius: 8, fontSize: 13, height: 42, background: isDark ? '#0a2235' : '#fff', border: `1px solid ${isDark ? '#1a4d72' : '#d1d5db'}`, color: textPrimary };
 
   const tabs = [
     {
@@ -351,10 +351,10 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               </Avatar>
               <div style={{
                 position: 'absolute', bottom: 2, right: -2,
-                background: 'linear-gradient(135deg, #B19625, #C4A840)',
+                background: '#0B2B44',
                 borderRadius: 6, padding: '2px 8px',
                 fontSize: 11, fontWeight: 700, color: '#fff',
-                cursor: 'pointer', boxShadow: '0 2px 6px rgba(177,150,37,0.4)',
+                cursor: 'pointer', boxShadow: '0 2px 6px rgba(11,43,68,0.4)',
               }}>
                 Edit
               </div>
@@ -375,7 +375,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
             disabled={!groupName.trim() || groupName.trim() === conversation.name}
             style={{
               marginTop: 16, height: 40, borderRadius: 8, fontWeight: 700, fontSize: 13, paddingInline: 24,
-              background: (groupName.trim() && groupName.trim() !== conversation.name) ? 'linear-gradient(135deg, #B19625, #C4A840)' : (isDark ? '#2a2a2a' : '#e0c97a'),
+              background: (groupName.trim() && groupName.trim() !== conversation.name) ? '#0B2B44' : (isDark ? '#0a2235' : '#f9f5f0'),
               color: (groupName.trim() && groupName.trim() !== conversation.name) ? '#fff' : (isDark ? '#555' : '#7a5e00'),
               border: 'none',
             }}
@@ -408,7 +408,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                   {member.code}&nbsp;&nbsp;{member.email}
                 </div>
                 {member.role === 'admin' ? (
-                  <span style={{ fontSize: 11, color: '#B19625', fontWeight: 600, background: '#B1962518', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                  <span style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#0B2B44', fontWeight: 600, background: isDark ? 'rgba(90,181,232,0.15)' : '#0B2B4418', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
                     <span style={{ fontSize: 10 }}>⭐</span> Group admin
                   </span>
                 ) : (
@@ -417,7 +417,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               </div>
               {member.id !== 'current' && (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 12, color: '#B19625', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
                     {member.role === 'admin' ? 'Make member' : 'Make admin'}
                   </span>
                   <span onClick={() => removeMember(member.id)} style={{ fontSize: 12, color: '#EF4444', cursor: 'pointer', fontWeight: 600 }}>
@@ -457,14 +457,14 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 12px', marginBottom: 8,
-                  border: `1px solid ${addSelected.includes(member.id) ? '#B19625' : borderC}`,
+                  border: `1px solid ${addSelected.includes(member.id) ? '#0B2B44' : borderC}`,
                   borderRadius: 10, cursor: 'pointer',
-                  background: addSelected.includes(member.id) ? (isDark ? '#1a2a1a' : '#fefce8') : sectionBg,
+                  background: addSelected.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg,
                   transition: 'all 0.15s',
                   boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.04)',
                 }}
                 onMouseEnter={e => { if (!addSelected.includes(member.id)) e.currentTarget.style.background = isDark ? '#1f2a1f' : '#f9fafb'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = addSelected.includes(member.id) ? (isDark ? '#1a2a1a' : '#fefce8') : sectionBg; }}
+                onMouseLeave={e => { e.currentTarget.style.background = addSelected.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg; }}
               >
                 <Checkbox checked={addSelected.includes(member.id)} onChange={() => {}} style={{ flexShrink: 0 }} />
                 <Avatar size={38} style={{ background: isDark ? '#374151' : '#6b7280', fontWeight: 700, fontSize: 13, color: '#fff', flexShrink: 0 }}>
@@ -491,7 +491,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               onClick={handleAddMembers}
               style={{
                 height: 44, borderRadius: 8, fontWeight: 700, fontSize: 13,
-                background: addSelected.length ? 'linear-gradient(135deg, #B19625, #C4A840)' : (isDark ? '#2a2a2a' : '#e5d98a'),
+                background: addSelected.length ? '#0B2B44' : (isDark ? '#0a2235' : '#f9f5f0'),
                 color: addSelected.length ? '#fff' : (isDark ? '#555' : '#8a6c00'),
                 border: 'none', opacity: addSelected.length ? 1 : 0.7,
               }}
@@ -542,7 +542,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
       placement="right"
       width={480}
       closable={false}
-      styles={{ body: { padding: 0, background: isDark ? '#141414' : '#fff', display: 'flex', flexDirection: 'column', height: '100%' } }}
+      styles={{ body: { padding: 0, background: isDark ? '#031726' : '#fff', display: 'flex', flexDirection: 'column', height: '100%' } }}
     >
       {/* Header — fixed */}
       <div style={{ padding: '18px 24px 14px', background: sectionBg, borderBottom: `1px solid ${borderC}`, flexShrink: 0 }}>
@@ -593,9 +593,9 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
     onClose();
   };
 
-  const borderC = isDark ? '#333' : '#d1d5db';
-  const inputStyle = { borderRadius: 8, fontSize: 13, height: 42, background: isDark ? '#1f1f1f' : '#fff', border: `1px solid ${borderC}` };
-  const sectionBg = isDark ? '#1f1f1f' : '#fff';
+  const borderC = isDark ? '#1a4d72' : '#d1d5db';
+  const inputStyle = { borderRadius: 8, fontSize: 13, height: 42, background: isDark ? '#0a2235' : '#fff', border: `1px solid ${borderC}` };
+  const sectionBg = isDark ? '#0d3554' : '#fff';
 
   const tabs = [
     {
@@ -621,9 +621,9 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
             {filteredMembers.map(member => (
               <div key={member.id}
                 onClick={() => setSelectedMembers(prev => prev.includes(member.id) ? prev.filter(x => x !== member.id) : [...prev, member.id])}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', cursor: 'pointer', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f3f4f6'}`, background: selectedMembers.includes(member.id) ? (isDark ? '#1a2a1a' : '#fefce8') : sectionBg, transition: 'background 0.15s' }}
-                onMouseEnter={e => { if (!selectedMembers.includes(member.id)) e.currentTarget.style.background = isDark ? '#1f1f1f' : '#f9fafb'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = selectedMembers.includes(member.id) ? (isDark ? '#1a2a1a' : '#fefce8') : sectionBg; }}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', cursor: 'pointer', borderBottom: `1px solid ${isDark ? '#0a2235' : '#f3f4f6'}`, background: selectedMembers.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg, transition: 'background 0.15s' }}
+                onMouseEnter={e => { if (!selectedMembers.includes(member.id)) e.currentTarget.style.background = isDark ? '#0a2235' : '#f9fafb'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = selectedMembers.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg; }}
               >
                 <Checkbox checked={selectedMembers.includes(member.id)} onChange={() => {}} style={{ flexShrink: 0 }} />
                 <Avatar size={36} style={{ background: member.color, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{member.initials}</Avatar>
@@ -641,7 +641,7 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
 
   return (
     <Drawer open={open} onClose={() => { onClose(); setGroupName(''); setSelectedMembers([]); setMemberSearch(''); setActiveTab('details'); }} placement="right" width={420} closable={false}
-      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#141414' : '#f9fafb' } }}
+      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' } }}
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -655,7 +655,7 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
         <Button block disabled={!groupName.trim()} onClick={handleCreate}
-          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: groupName.trim() ? 'linear-gradient(135deg, #B19625, #C4A840)' : (isDark ? '#2a2a2a' : '#e5e7eb'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
+          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: groupName.trim() ? '#0B2B44' : (isDark ? '#0a2235' : '#f5f3f0'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
         >
           Create group
         </Button>
@@ -671,12 +671,12 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
   const [retentionDays, setRetentionDays] = useState(30);
   const [alertDays, setAlertDays] = useState(7);
   const [alertEnabled, setAlertEnabled] = useState(true);
-  const borderC = isDark ? '#333' : '#d1d5db';
-  const sectionBg = isDark ? '#1f1f1f' : '#fff';
+  const borderC = isDark ? '#1a4d72' : '#d1d5db';
+  const sectionBg = isDark ? '#0d3554' : '#fff';
 
   return (
     <Drawer open={open} onClose={onClose} placement="right" width={420} closable={false}
-      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#141414' : '#f9fafb' } }}
+      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' } }}
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -702,7 +702,7 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
         </div>
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
-        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: 'linear-gradient(135deg, #B19625, #C4A840)', color: '#fff', border: 'none' }}>
+        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: '#0B2B44', color: '#fff', border: 'none' }}>
           Save settings
         </Button>
       </div>
@@ -738,7 +738,7 @@ const MessagesPage = () => {
   const chatSearchRef = useRef(null);
 
   const userInitials = user?.avatar || 'SA';
-  const userColor = '#B19625';
+  const userColor = '#0B2B44';
 
   const activeConv = conversations.find(c => c.id === activeId);
   const activeMessages = messages[activeId] || [];
@@ -814,8 +814,8 @@ const MessagesPage = () => {
 
   const negMargin = isMobile ? '-16px -12px' : '-24px -28px';
   const panelHeight = 'calc(100vh - 64px)';
-  const leftBg = isDark ? '#111b21' : '#ffffff';
-  const borderColor = isDark ? '#2a373f' : '#e9edef';
+  const leftBg = isDark ? '#0d3554' : '#ffffff';
+  const borderColor = isDark ? '#1a4d72' : '#e9edef';
 
   /* ── LEFT PANEL ── */
   const leftPanel = (
@@ -824,8 +824,8 @@ const MessagesPage = () => {
       <div style={{ padding: '14px 16px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${borderColor}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span style={{ fontWeight: 800, fontSize: 18, color: isDark ? '#e9edef' : '#1f1f1f' }}>Chat</span>
-          <span onClick={() => setShowCreateGroup(true)} style={{ fontSize: 12, fontWeight: 600, color: '#B19625', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>New Group</span>
-          <span onClick={() => handleSelectConv('broadcast')} style={{ fontSize: 12, fontWeight: 600, color: '#B19625', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>Broadcast</span>
+          <span onClick={() => setShowCreateGroup(true)} style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>New Group</span>
+          <span onClick={() => handleSelectConv('broadcast')} style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>Broadcast</span>
         </div>
         <Tooltip title="Chat settings">
           <SettingOutlined onClick={() => setShowChatSettings(true)} style={{ fontSize: 16, color: isDark ? '#8696a0' : '#888', cursor: 'pointer' }} />
@@ -834,22 +834,22 @@ const MessagesPage = () => {
       {/* Search */}
       <div style={{ padding: '10px 12px 8px' }}>
         <Input prefix={<SearchOutlined style={{ color: '#999', fontSize: 13 }} />} placeholder="Search conversations..." value={search} onChange={e => setSearch(e.target.value)}
-          style={{ borderRadius: 20, fontSize: 13, background: isDark ? '#202c33' : '#f0f2f5', border: `1px solid ${isDark ? '#2a373f' : 'transparent'}` }} variant="outlined" />
+          style={{ borderRadius: 20, fontSize: 13, background: isDark ? '#0d3554' : '#f0f2f5', border: `1px solid ${isDark ? '#2a373f' : 'transparent'}` }} variant="outlined" />
       </div>
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: 6, padding: '0 12px 10px' }}>
         {['All', 'Unread', 'Groups'].map(tab => (
-          <div key={tab} onClick={() => setFilter(tab)} style={{ padding: '5px 14px', borderRadius: 20, fontSize: 12.5, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: filter === tab ? (isDark ? '#2a3942' : '#fff') : 'transparent', color: filter === tab ? (isDark ? '#e9edef' : '#1f1f1f') : (isDark ? '#8696a0' : '#888'), boxShadow: filter === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none', border: filter === tab ? `1px solid ${isDark ? '#3a4a52' : '#e0e0e0'}` : '1px solid transparent' }}>{tab}</div>
+          <div key={tab} onClick={() => setFilter(tab)} style={{ padding: '5px 14px', borderRadius: 20, fontSize: 12.5, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: filter === tab ? (isDark ? '#0a2235' : '#fff') : 'transparent', color: filter === tab ? (isDark ? '#e9edef' : '#1f1f1f') : (isDark ? '#8696a0' : '#888'), boxShadow: filter === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none', border: filter === tab ? `1px solid ${isDark ? '#1a4d72' : '#e0e0e0'}` : '1px solid transparent' }}>{tab}</div>
         ))}
       </div>
       {/* Conversations */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px' }}>
         {filter === 'Groups' && groupConvs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 16px' }}>
-            <UsergroupAddOutlined style={{ fontSize: 36, color: '#B19625', marginBottom: 10 }} />
+            <UsergroupAddOutlined style={{ fontSize: 36, color: isDark ? '#5ab5e8' : '#0B2B44', marginBottom: 10 }} />
             <div style={{ fontWeight: 600, fontSize: 14, color: isDark ? '#e9edef' : '#374151', marginBottom: 6 }}>No groups yet</div>
             <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 16 }}>Create a group to collaborate with your team</div>
-            <Button onClick={() => setShowCreateGroup(true)} icon={<PlusOutlined />} style={{ borderRadius: 8, fontWeight: 600, fontSize: 13, background: 'linear-gradient(135deg, #B19625, #C4A840)', color: '#fff', border: 'none' }}>Create group</Button>
+            <Button onClick={() => setShowCreateGroup(true)} icon={<PlusOutlined />} style={{ borderRadius: 8, fontWeight: 600, fontSize: 13, background: '#0B2B44', color: '#fff', border: 'none' }}>Create group</Button>
           </div>
         ) : filteredConvs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 16px', color: '#999', fontSize: 13 }}>No conversations found</div>
@@ -861,21 +861,21 @@ const MessagesPage = () => {
   );
 
   /* ── RIGHT PANEL ── */
-  const chatBg = isDark ? '#0b141a' : '#eae6df';
+  const chatBg = isDark ? '#031726' : '#eae6df';
   const rightPanel = (
     <div style={{ flex: 1, height: panelHeight, display: 'flex', flexDirection: 'column', background: chatBg, position: 'relative', overflow: 'hidden' }}>
       {/* Chat Header */}
-      <div style={{ flexShrink: 0, zIndex: 2, background: isDark ? '#202c33' : '#f0f2f5', borderBottom: `1px solid ${borderColor}` }}>
+      <div style={{ flexShrink: 0, zIndex: 2, background: isDark ? '#0d3554' : '#f0f2f5', borderBottom: `1px solid ${borderColor}` }}>
         <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px 0 16px' }}>
           {isMobile && <ArrowLeftOutlined style={{ fontSize: 17, color: isDark ? '#aaa' : '#555', marginRight: 2, cursor: 'pointer' }} onClick={() => setShowChat(false)} />}
 
           {/* Avatar */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
-            <Avatar size={36} style={{ background: activeConv?.color || '#B19625', fontWeight: 700, fontSize: activeConv?.initials?.length > 1 ? 12 : 15, color: '#fff' }}>
+            <Avatar size={36} style={{ background: activeConv?.color || '#0B2B44', fontWeight: 700, fontSize: activeConv?.initials?.length > 1 ? 12 : 15, color: '#fff' }}>
               {activeConv?.initials || '?'}
             </Avatar>
             {activeConv?.online && !isGroup && (
-              <div style={{ position: 'absolute', bottom: 1, right: 1, width: 9, height: 9, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isDark ? '#202c33' : '#f0f2f5'}` }} />
+              <div style={{ position: 'absolute', bottom: 1, right: 1, width: 9, height: 9, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isDark ? '#0d3554' : '#f0f2f5'}` }} />
             )}
           </div>
 
@@ -898,7 +898,7 @@ const MessagesPage = () => {
                 placeholder="Search messages..."
                 value={chatSearchText}
                 onChange={e => setChatSearchText(e.target.value)}
-                style={{ borderRadius: 20, fontSize: 13, height: 34, background: isDark ? '#2a3942' : '#fff', border: `1px solid ${isDark ? '#3a4a52' : '#d1d5db'}` }}
+                style={{ borderRadius: 20, fontSize: 13, height: 34, background: isDark ? '#0a2235' : '#fff', border: `1px solid ${isDark ? '#1a4d72' : '#d1d5db'}` }}
               />
               <CloseOutlined
                 onClick={() => { setShowChatSearch(false); setChatSearchText(''); }}
@@ -926,7 +926,7 @@ const MessagesPage = () => {
 
       {/* Messages Area */}
       <div
-        style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 8px', backgroundImage: 'url(/whatsapp.jpg)', backgroundRepeat: 'repeat', backgroundPosition: 'center' }}
+        style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 8px', backgroundImage: isDark ? 'none' : 'url(/whatsapp.jpg)', backgroundRepeat: 'repeat', backgroundPosition: 'center' }}
         onClick={() => setShowAttach(false)}
       >
         {displayMessages.map(msg => (
@@ -946,19 +946,19 @@ const MessagesPage = () => {
       {showAttach && <AttachmentMenu isDark={isDark} />}
 
       {/* Input Bar */}
-      <div style={{ height: 60, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: isDark ? '#202c33' : '#f0f2f5', borderTop: `1px solid ${borderColor}`, flexShrink: 0, zIndex: 2, position: 'relative' }}>
+      <div style={{ height: 60, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: isDark ? '#0d3554' : '#f0f2f5', borderTop: `1px solid ${borderColor}`, flexShrink: 0, zIndex: 2, position: 'relative' }}>
         <div onClick={e => { e.stopPropagation(); setShowAttach(v => !v); }}
-          style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: showAttach ? '#B19625' : (isDark ? '#8696a0' : '#888'), fontSize: 18 }}
-          onMouseEnter={e => e.currentTarget.style.background = isDark ? '#2a3942' : '#e0e0e0'}
+          style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: showAttach ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#8696a0' : '#888'), fontSize: 18 }}
+          onMouseEnter={e => e.currentTarget.style.background = isDark ? '#133d5e' : '#e0e0e0'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           <PaperClipOutlined />
         </div>
         <Input ref={inputRef} value={inputText} onChange={e => setInputText(e.target.value)} onPressEnter={handleSend} placeholder="Type a message..."
-          style={{ flex: 1, borderRadius: 24, fontSize: 13.5, height: 40, background: isDark ? '#2a3942' : '#ffffff', border: `1px solid ${isDark ? '#3a4a52' : 'transparent'}`, paddingLeft: 16, paddingRight: 16 }}
+          style={{ flex: 1, borderRadius: 24, fontSize: 13.5, height: 40, background: isDark ? '#0a2235' : '#ffffff', border: `1px solid ${isDark ? '#1a4d72' : 'transparent'}`, paddingLeft: 16, paddingRight: 16 }}
         />
         <div onClick={handleSend}
-          style={{ width: 38, height: 38, borderRadius: '50%', background: inputText.trim() ? 'linear-gradient(135deg, #B19625, #C4A840)' : (isDark ? '#2a3942' : '#e0e0e0'), display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: inputText.trim() ? 'pointer' : 'default', color: inputText.trim() ? '#fff' : (isDark ? '#8696a0' : '#aaa'), fontSize: 16, transition: 'all 0.2s', flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: '50%', background: inputText.trim() ? '#0B2B44' : (isDark ? '#133d5e' : '#e0e0e0'), display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: inputText.trim() ? 'pointer' : 'default', color: inputText.trim() ? '#fff' : (isDark ? '#8696a0' : '#aaa'), fontSize: 16, transition: 'all 0.2s', flexShrink: 0 }}
         >
           {inputText.trim() ? <SendOutlined /> : <AudioOutlined />}
         </div>
@@ -967,7 +967,7 @@ const MessagesPage = () => {
   );
 
   const emptyState = (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isDark ? '#0b141a' : '#f0f2f5' }}>
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isDark ? '#031726' : '#f0f2f5' }}>
       <div style={{ textAlign: 'center', color: '#999' }}>
         <div style={{ fontSize: 48, marginBottom: 12 }}>💬</div>
         <div style={{ fontWeight: 600, fontSize: 16 }}>Select a conversation</div>

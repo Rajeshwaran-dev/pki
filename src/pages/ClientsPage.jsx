@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Space,
-  DatePicker, Select, Avatar, Tag, Row, Col, Card,
+  DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, EyeOutlined,
@@ -17,9 +17,9 @@ import useIsMobile from '@/hooks/useIsMobile';
 const { RangePicker } = DatePicker;
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 
-const avatarColors = ['#B19625', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14'];
+const avatarColors = ['#0B2B44', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14'];
 
-const ClientCard = ({ client, index, onEdit }) => (
+const ClientCard = ({ client, index, onEdit, onView }) => (
   <Card
     className="crm-card animate-fade-in-up"
     style={{ animationDelay: `${index * 0.05}s` }}
@@ -45,7 +45,7 @@ const ClientCard = ({ client, index, onEdit }) => (
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <PhoneOutlined style={{ color: '#B19625' }} /> {client.phone}
+        <PhoneOutlined style={{ color: '#0B2B44' }} /> {client.phone}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
         <MailOutlined style={{ color: '#1677FF' }} /> {client.email || '—'}
@@ -55,8 +55,8 @@ const ClientCard = ({ client, index, onEdit }) => (
       </div>
     </div>
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
-      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }}>View</Button>
-      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#B19625' }} onClick={() => onEdit(client)}>Edit</Button>
+      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => onView(client)}>View</Button>
+      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={() => onEdit(client)}>Edit</Button>
     </div>
   </Card>
 );
@@ -69,6 +69,8 @@ const ClientsPage = () => {
   const isDark = theme === 'dark';
   const [modalOpen, setModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [viewClient, setViewClient] = useState(null);
   const [editingClient, setEditingClient] = useState(null);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'grid'
@@ -92,7 +94,7 @@ const ClientsPage = () => {
       width: 200,
       render: (name, row) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Avatar size={36} style={{ background: '#B1962515', color: '#B19625', fontWeight: 700, fontSize: 15 }}>
+          <Avatar size={36} style={{ background: '#0B2B4415', color: '#0B2B44', fontWeight: 700, fontSize: 15 }}>
             {name.charAt(0)}
           </Avatar>
           <div>
@@ -122,8 +124,8 @@ const ClientsPage = () => {
       width: 100,
       render: (_, row) => (
         <Space>
-          <Button type="text" size="small" icon={<EyeOutlined />} style={{ color: '#1677FF' }} />
-          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#B19625' }} onClick={() => openEditClientModal(row)} />
+          <Button type="text" size="small" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => openViewClientModal(row)} />
+          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={() => openEditClientModal(row)} />
         </Space>
       ),
     },
@@ -157,6 +159,16 @@ const ClientsPage = () => {
     form.resetFields();
     setContacts([]);
     setModalOpen(true);
+  };
+
+  const openViewClientModal = (client) => {
+    setViewClient(client);
+    setViewModalOpen(true);
+  };
+
+  const closeViewClientModal = () => {
+    setViewModalOpen(false);
+    setViewClient(null);
   };
 
   const openEditClientModal = (client) => {
@@ -197,8 +209,8 @@ const ClientsPage = () => {
     });
   };
 
-  const panelBg = isDark ? '#1f1f1f' : '#ffffff';
-  const panelBorder = isDark ? '#303030' : '#f0f0f0';
+  const panelBg = isDark ? '#0d3554' : '#ffffff';
+  const panelBorder = isDark ? '#1a4d72' : '#f0f0f0';
 
   return (
     <div>
@@ -221,13 +233,13 @@ const ClientsPage = () => {
                 icon={<span style={{ fontSize: 14 }}>☰</span>}
                 type={viewMode === 'table' ? 'primary' : 'default'}
                 onClick={() => setViewMode('table')}
-                style={viewMode === 'table' ? { background: '#B19625', border: 'none' } : {}}
+                style={viewMode === 'table' ? { background: '#0B2B44', border: 'none' } : {}}
               />
               <Button
                 icon={<span style={{ fontSize: 14 }}>⊞</span>}
                 type={viewMode === 'grid' ? 'primary' : 'default'}
                 onClick={() => setViewMode('grid')}
-                style={viewMode === 'grid' ? { background: '#B19625', border: 'none' } : {}}
+                style={viewMode === 'grid' ? { background: '#0B2B44', border: 'none' } : {}}
               />
             </Space.Compact>
             <Button icon={<ExportOutlined />}>Export</Button>
@@ -235,7 +247,7 @@ const ClientsPage = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={openCreateClientModal}
-              style={{ background: 'linear-gradient(135deg, #B19625, #C4A840)', border: 'none' }}
+              style={{ background: '#0B2B44', border: 'none' }}
             >
               Add Client
             </Button>
@@ -247,7 +259,7 @@ const ClientsPage = () => {
         <Row gutter={[16, 16]}>
           {filtered.map((client, i) => (
             <Col key={client.id} xs={24} sm={12} lg={8} xl={6}>
-              <ClientCard client={client} index={i} onEdit={openEditClientModal} />
+              <ClientCard client={client} index={i} onEdit={openEditClientModal} onView={openViewClientModal} />
             </Col>
           ))}
         </Row>
@@ -271,6 +283,41 @@ const ClientsPage = () => {
           />
         </div>
       )}
+
+      <Modal
+        className="crm-modal"
+        title={<span>Client Details</span>}
+        open={viewModalOpen}
+        onCancel={closeViewClientModal}
+        footer={null}
+        width={isMobile ? '96%' : 720}
+        centered
+      >
+        {viewClient ? (
+          <Descriptions
+            column={1}
+            size="small"
+            bordered
+            layout={isMobile ? 'vertical' : 'horizontal'}
+            labelStyle={{ width: 140, fontWeight: 600 }}
+          >
+            <Descriptions.Item label="Client Name">{viewClient.clientName}</Descriptions.Item>
+            <Descriptions.Item label="Legal Name">{viewClient.legalName || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Email">{viewClient.email || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Phone">{viewClient.phone || '—'}</Descriptions.Item>
+            <Descriptions.Item label="City">{viewClient.city || '—'}</Descriptions.Item>
+            <Descriptions.Item label="State">{viewClient.state || '—'}</Descriptions.Item>
+            <Descriptions.Item label="PAN">{viewClient.pan || '—'}</Descriptions.Item>
+            <Descriptions.Item label="GST">{viewClient.gst || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Created Date">{viewClient.createdDate || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Address Line 1">{viewClient.address1 || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Address Line 2">{viewClient.address2 || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Location">{viewClient.location || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Pincode">{viewClient.pincode || '—'}</Descriptions.Item>
+            <Descriptions.Item label="Remarks">{viewClient.remarks || '—'}</Descriptions.Item>
+          </Descriptions>
+        ) : null}
+      </Modal>
 
       {/* Add Modal */}
       <Modal

@@ -37,7 +37,7 @@ const LoginPage = () => {
         className="hide-mobile"
         style={{
           flex: '0 0 48%',
-          background: 'linear-gradient(145deg, #1a1410 0%, #2d2010 40%, #1f1a0e 100%)',
+          background: 'linear-gradient(145deg, #020d1a 0%, #041c2e 40%, #031726 100%)',
           position: 'relative',
           overflow: 'hidden',
           display: 'flex',
@@ -47,25 +47,25 @@ const LoginPage = () => {
         }}
       >
         {/* Blobs */}
-        <div className="login-blob" style={{ width: 350, height: 350, background: 'rgba(177,150,37,0.18)', top: -80, left: -80, animationDelay: '0s' }} />
-        <div className="login-blob" style={{ width: 250, height: 250, background: 'rgba(212,185,110,0.12)', bottom: 100, right: -60, animationDelay: '2s' }} />
-        <div className="login-blob" style={{ width: 180, height: 180, background: 'rgba(177,150,37,0.08)', top: '45%', left: '50%', animationDelay: '4s' }} />
+        <div className="login-blob" style={{ width: 350, height: 350, background: 'rgba(90,181,232,0.12)', top: -80, left: -80, animationDelay: '0s' }} />
+        <div className="login-blob" style={{ width: 250, height: 250, background: 'rgba(90,181,232,0.08)', bottom: 100, right: -60, animationDelay: '2s' }} />
+        <div className="login-blob" style={{ width: 180, height: 180, background: 'rgba(90,181,232,0.06)', top: '45%', left: '50%', animationDelay: '4s' }} />
 
         {/* Top: Logo */}
         <div className="animate-fade-in-up" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
               width: 48, height: 48, borderRadius: 14,
-              background: 'linear-gradient(135deg, #B19625, #D4B96E)',
+              background: '#1a4d72',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontWeight: 800, fontSize: 22,
-              boxShadow: '0 8px 24px rgba(177,150,37,0.5)',
+              boxShadow: '0 8px 24px rgba(26,77,114,0.6)',
             }}>
               P
             </div>
             <div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.2 }}>Perspective</div>
-              <div style={{ color: '#B19625', fontSize: 11, fontWeight: 600, letterSpacing: '1.5px' }}>Interiour CRM</div>
+              <div style={{ color: '#7ec8e3', fontSize: 11, fontWeight: 600, letterSpacing: '1.5px' }}>Interiour CRM</div>
             </div>
           </div>
         </div>
@@ -74,17 +74,17 @@ const LoginPage = () => {
         <div className="animate-fade-in-up anim-delay-200" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(177,150,37,0.15)', borderRadius: 30,
+            background: 'rgba(90,181,232,0.12)', borderRadius: 30,
             padding: '6px 16px', marginBottom: 24,
-            border: '1px solid rgba(177,150,37,0.25)',
+            border: '1px solid rgba(90,181,232,0.25)',
           }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#52C41A' }} />
-            <span style={{ color: '#D4B96E', fontSize: 12, fontWeight: 500 }}>Trusted by 200+ Interior Studios</span>
+            <span style={{ color: '#7ec8e3', fontSize: 12, fontWeight: 500 }}>Trusted by 200+ Interior Studios</span>
           </div>
 
           <Typography.Title style={{ color: '#ffffff', margin: '0 0 16px', fontSize: 38, fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.5px' }}>
             Manage Projects<br />
-            <span className="gradient-text" style={{ background: 'linear-gradient(90deg, #B19625, #E8D080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <span style={{ color: '#7ec8e3' }}>
               Like a Pro
             </span>
           </Typography.Title>
@@ -102,9 +102,9 @@ const LoginPage = () => {
               >
                 <div style={{
                   width: 38, height: 38, borderRadius: 10,
-                  background: 'rgba(177,150,37,0.2)', border: '1px solid rgba(177,150,37,0.3)',
+                  background: 'rgba(90,181,232,0.12)', border: '1px solid rgba(90,181,232,0.25)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#D4B96E', fontSize: 16,
+                  color: '#7ec8e3', fontSize: 16,
                 }}>
                   {f.icon}
                 </div>
@@ -131,10 +131,10 @@ const LoginPage = () => {
             Perspective CRM transformed how we manage our studio. Projects are delivered on time, every time.
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #B19625, #D4B96E)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>A</div>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#1a4d72', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>A</div>
             <div>
               <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>Ananya Das</div>
-              <div style={{ color: '#B19625', fontSize: 11 }}>Principal Designer, Kolkata</div>
+              <div style={{ color: '#7ec8e3', fontSize: 11 }}>Principal Designer, Kolkata</div>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ const LoginPage = () => {
           <div className="hide-desktop" style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{
               width: 52, height: 52, borderRadius: 14,
-              background: 'linear-gradient(135deg, #B19625, #D4B96E)',
+              background: '#0B2B44',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontWeight: 800, fontSize: 22, marginBottom: 12,
             }}>P</div>
@@ -209,7 +209,7 @@ const LoginPage = () => {
 
             <div className="flex items-center justify-between" style={{ marginBottom: 24 }}>
               <Checkbox style={{ fontSize: 13 }}>Remember me</Checkbox>
-              <Button type="link" style={{ padding: 0, fontSize: 13, color: '#B19625' }}>
+              <Button type="link" style={{ padding: 0, fontSize: 13, color: '#0B2B44' }}>
                 Forgot password?
               </Button>
             </div>
@@ -224,9 +224,9 @@ const LoginPage = () => {
                 borderRadius: 12,
                 fontWeight: 700,
                 fontSize: 15,
-                background: 'linear-gradient(135deg, #B19625, #C4A840)',
+                background: '#0B2B44',
                 border: 'none',
-                boxShadow: '0 6px 20px rgba(177,150,37,0.4)',
+                boxShadow: '0 6px 20px rgba(11,43,68,0.4)',
               }}
             >
               {loading ? 'Signing in…' : 'Sign In'}
@@ -237,13 +237,13 @@ const LoginPage = () => {
             style={{
               marginTop: 24,
               padding: '12px 16px',
-              background: '#faf8f3',
+              background: '#e8f2fa',
               borderRadius: 10,
-              border: '1px solid rgba(177,150,37,0.2)',
+              border: '1px solid rgba(11,43,68,0.2)',
               textAlign: 'center',
             }}
           >
-            <Typography.Text style={{ fontSize: 12, color: '#B19625', fontWeight: 500 }}>
+            <Typography.Text style={{ fontSize: 12, color: '#0B2B44', fontWeight: 500 }}>
               Demo: superadmin@gmail.com · 123456
             </Typography.Text>
           </div>

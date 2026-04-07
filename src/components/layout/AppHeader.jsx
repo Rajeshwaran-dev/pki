@@ -18,9 +18,9 @@ const InfoRow = ({ icon, label, value, isDark }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <div style={{
       width: 38, height: 38, borderRadius: 10,
-      background: isDark ? '#2a2a2a' : '#faf8f3',
+      background: isDark ? '#0b2f4f' : '#e8f2fa',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#B19625', flexShrink: 0,
+      color: isDark ? '#5ab5e8' : '#0B2B44', flexShrink: 0,
     }}>
       {icon}
     </div>
@@ -41,7 +41,8 @@ const AppHeader = () => {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const isDark = theme === 'dark';
-  const bg = isDark ? '#141414' : '#ffffff';
+  const bg = isDark ? '#031726' : '#ffffff';
+  const buffColor = '#0B2B44';
   const marginLeft = isMobile ? 0 : collapsed ? 72 : 240;
 
   const handleLogout = () => {
@@ -61,7 +62,7 @@ const AppHeader = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0f0f0'}`,
+          borderBottom: `1px solid ${isDark ? '#0b2f4f' : '#f0f0f0'}`,
           position: 'fixed',
           top: 0, right: 0,
           left: marginLeft,
@@ -96,7 +97,7 @@ const AppHeader = () => {
           <Badge
             count={3}
             size="small"
-            style={{ background: '#B19625' }}
+            style={{ background: isDark ? '#1e6fa8' : '#0B2B44' }}
           >
             <Button
               type="text"
@@ -113,7 +114,7 @@ const AppHeader = () => {
                   label: (
                     <div style={{ padding: '4px 0', minWidth: 160 }}>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>{user?.name || 'Super Admin'}</div>
-                      <div style={{ fontSize: 12, color: '#B19625' }}>{user?.role}</div>
+                      <div style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#0B2B44' }}>{user?.role}</div>
                     </div>
                   ),
                   disabled: true,
@@ -134,14 +135,14 @@ const AppHeader = () => {
             <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2 }}>
               <Avatar
                 size={34}
-                style={{ background: 'linear-gradient(135deg, #B19625, #D4B96E)', cursor: 'pointer', fontWeight: 700 }}
+                style={{ background: buffColor, cursor: 'pointer', fontWeight: 700 }}
               >
                 {user?.avatar || 'SA'}
               </Avatar>
               {!isMobile && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{user?.name}</div>
-                  <div style={{ fontSize: 11, color: '#B19625', lineHeight: 1.1 }}>{user?.role}</div>
+                  <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#0B2B44', lineHeight: 1.1 }}>{user?.role}</div>
                 </div>
               )}
             </div>
@@ -164,9 +165,9 @@ const AppHeader = () => {
             <Avatar
               size={80}
               style={{
-                background: 'linear-gradient(135deg, #B19625, #D4B96E)',
+                background: isDark ? '#0B2B44' : '#0B2B44',
                 fontSize: 30, fontWeight: 700,
-                boxShadow: '0 8px 24px rgba(177,150,37,0.35)',
+                boxShadow: '0 8px 24px rgba(11,43,68,0.35)',
               }}
             >
               {user?.avatar || 'SA'}
@@ -174,7 +175,7 @@ const AppHeader = () => {
             <div style={{
               position: 'absolute', bottom: 2, right: 2,
               width: 14, height: 14, borderRadius: '50%',
-              background: '#52C41A', border: `2px solid ${isDark ? '#1f1f1f' : 'white'}`,
+              background: '#52C41A', border: `2px solid ${isDark ? '#031726' : 'white'}`,
             }} />
           </div>
           <Typography.Title level={4} style={{ margin: '12px 0 4px' }}>
@@ -184,8 +185,8 @@ const AppHeader = () => {
             display: 'inline-block',
             padding: '3px 14px',
             borderRadius: 20,
-            background: 'rgba(177,150,37,0.1)',
-            color: '#B19625',
+            background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(11,43,68,0.1)',
+            color: isDark ? '#5ab5e8' : '#0B2B44',
             fontSize: 12,
             fontWeight: 600,
           }}>

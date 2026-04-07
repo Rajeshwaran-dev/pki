@@ -35,7 +35,7 @@ const PageHeader = ({ title, subtitle, actions }) => {
           {pathSegments.length > 0 && (
             <>
               <RightOutlined style={{ fontSize: 9, margin: '0 2px' }} />
-              <span style={{ color: '#B19625', fontWeight: 500 }}>
+              <span style={{ color: 'var(--gold)', fontWeight: 500 }}>
                 {routeNames[`/${pathSegments[0]}`] || pathSegments[0]}
               </span>
             </>

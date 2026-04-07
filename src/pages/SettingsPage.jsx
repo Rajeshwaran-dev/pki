@@ -15,13 +15,13 @@ import { useAppSelector } from '@/store';
 
 const { Text, Title } = Typography;
 
-const goldBtn = { background: 'linear-gradient(135deg, #B19625, #C4A840)', border: 'none', borderRadius: 8 };
+const goldBtn = { background: '#0B2B44', border: 'none', borderRadius: 8 };
 const getTableCard = (isDark) => ({
-  background: isDark ? '#1f1f1f' : 'white',
+  background: isDark ? '#0d3554' : 'white',
   borderRadius: 14,
   boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)',
   overflow: 'hidden',
-  border: isDark ? '1px solid #303030' : 'none',
+  border: isDark ? '1px solid #1a4d72' : 'none',
 });
 const tableCard = getTableCard(false);
 
@@ -36,9 +36,9 @@ const SubTabs = ({ tabs, active, onChange, isDark }) => (
           onClick={() => onChange(t.key)}
           style={{
             padding: '5px 16px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
-            border: isActive ? '1.5px solid #B19625' : '1.5px solid #e0e0e0',
-            background: isActive ? '#B1962512' : (isDark ? '#232323' : 'white'),
-            color: isActive ? '#B19625' : '#555',
+            border: isActive ? `1.5px solid ${isDark ? '#2980b9' : '#0B2B44'}` : `1.5px solid ${isDark ? '#1a4d72' : '#e0e0e0'}`,
+            background: isActive ? (isDark ? 'rgba(41,128,185,0.18)' : '#0B2B4412') : (isDark ? '#0a2235' : 'white'),
+            color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#a8b0ba' : '#555'),
             fontWeight: isActive ? 600 : 400,
           }}
         >
@@ -61,7 +61,7 @@ const ActionBtns = () => (
 const InfoField = ({ label, value, muted, isDark }) => (
   <div>
     <Text type="secondary" style={{ fontSize: 12 }}>{label}</Text>
-    <div style={{ marginTop: 6, padding: '10px 14px', borderRadius: 10, background: isDark ? '#232323' : (muted ? '#f7f7f7' : '#faf8f3'), border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, fontSize: 13, fontWeight: 500 }}>
+    <div style={{ marginTop: 6, padding: '10px 14px', borderRadius: 10, background: isDark ? '#0a2235' : (muted ? '#f7f7f7' : '#e8f2fa'), border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, fontSize: 13, fontWeight: 500 }}>
       {value || <Text type="secondary">Not set</Text>}
     </div>
   </div>
@@ -83,8 +83,8 @@ const OrganizationTab = ({ isDark }) => (
       </Row>
       <div style={{ marginTop: 20 }}>
         <Text type="secondary" style={{ fontSize: 12 }}>Company Logo</Text>
-        <div style={{ marginTop: 8, padding: '28px 0', borderRadius: 12, background: isDark ? '#232323' : '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px dashed ${isDark ? '#3a3a3a' : '#e0e0e0'}` }}>
-          <div style={{ width: 80, height: 80, borderRadius: 16, background: 'linear-gradient(135deg, #B19625, #D4B96E)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 22 }}>PK&I</div>
+        <div style={{ marginTop: 8, padding: '28px 0', borderRadius: 12, background: isDark ? '#0a2235' : '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px dashed ${isDark ? '#1a4d72' : '#e0e0e0'}` }}>
+          <div style={{ width: 80, height: 80, borderRadius: 16, background: '#1a4d72', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 22 }}>PK&I</div>
         </div>
         <Button icon={<UploadOutlined />} style={{ marginTop: 10, borderRadius: 8 }}>Upload Logo</Button>
       </div>
@@ -216,8 +216,8 @@ const MaterialsTab = () => {
 const ChecklistTab = () => (
   <div className="animate-fade-in">
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-      <Button style={{ borderRadius: 8, borderColor: '#B19625', color: '#B19625' }}>+ Create Design Checklist</Button>
-      <Button style={{ borderRadius: 8, borderColor: '#B19625', color: '#B19625' }}>+ Add Handover Checklist</Button>
+      <Button style={{ borderRadius: 8, borderColor: '#0B2B44', color: '#0B2B44' }}>+ Create Design Checklist</Button>
+      <Button style={{ borderRadius: 8, borderColor: '#0B2B44', color: '#0B2B44' }}>+ Add Handover Checklist</Button>
     </div>
     <div style={{ ...tableCard, padding: '48px 24px', textAlign: 'center' }}>
       <CheckSquareOutlined style={{ fontSize: 40, color: '#d0d0d0', display: 'block', marginBottom: 12 }} />
@@ -471,11 +471,11 @@ const FinanceConfig = ({ isDark }) => {
   return (
     <>
       <Title level={5} style={{ margin: '0 0 16px' }}>Select Fields that are mandatory</Title>
-      <div style={{ border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: 20, marginBottom: 16, background: isDark ? '#1f1f1f' : 'transparent' }}>
+      <div style={{ border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: 20, marginBottom: 16, background: isDark ? '#0d3554' : 'transparent' }}>
         <Text style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 16 }}>Form Settings</Text>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 16 }}>
           {fields.map(f => (
-            <div key={f.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: toggles[f.key] ? (isDark ? 'rgba(22,119,255,0.18)' : '#EEF4FF') : (isDark ? '#232323' : '#fafafa'), borderRadius: 8, padding: '10px 14px' }}>
+            <div key={f.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: toggles[f.key] ? (isDark ? 'rgba(22,119,255,0.18)' : '#EEF4FF') : (isDark ? '#0a2235' : '#fafafa'), borderRadius: 8, padding: '10px 14px' }}>
               <div>
                 <div style={{ fontSize: 13 }}>{f.label}</div>
                 <div style={{ fontSize: 11, color: toggles[f.key] ? '#1677FF' : '#999' }}>{toggles[f.key] ? 'On' : 'Off'}</div>
@@ -485,11 +485,11 @@ const FinanceConfig = ({ isDark }) => {
           ))}
         </div>
       </div>
-      <div style={{ border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: 16, marginBottom: 16, background: isDark ? '#1f1f1f' : 'transparent' }}>
+      <div style={{ border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: 16, marginBottom: 16, background: isDark ? '#0d3554' : 'transparent' }}>
         <Text style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 10 }}>Mandatory Fields Selected:</Text>
         <Space wrap>{Object.entries(toggles).filter(([, v]) => v).map(([k]) => <Tag key={k} color="blue" style={{ borderRadius: 6 }}>{fields.find(f => f.key === k)?.label}</Tag>)}</Space>
       </div>
-      <div style={{ border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: 16, marginBottom: 16, background: isDark ? '#1f1f1f' : 'transparent' }}>
+      <div style={{ border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: 16, marginBottom: 16, background: isDark ? '#0d3554' : 'transparent' }}>
         <Text style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 12 }}>Payment Settings</Text>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isDark ? 'rgba(22,119,255,0.18)' : '#EEF4FF', borderRadius: 8, padding: '12px 16px' }}>
           <div>
@@ -499,9 +499,9 @@ const FinanceConfig = ({ isDark }) => {
           <Switch defaultChecked />
         </div>
       </div>
-      <div style={{ border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: 16, background: isDark ? '#1f1f1f' : 'transparent' }}>
+      <div style={{ border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: 16, background: isDark ? '#0d3554' : 'transparent' }}>
         <Text style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 12 }}>Razorpay Integration</Text>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isDark ? '#232323' : '#fafafa', borderRadius: 8, padding: '12px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isDark ? '#0a2235' : '#fafafa', borderRadius: 8, padding: '12px 16px' }}>
           <div>
             <div style={{ fontSize: 13, fontWeight: 500 }}>Connect with Razorpay</div>
             <div style={{ fontSize: 11, color: '#999' }}>Not Connected</div>
@@ -516,9 +516,9 @@ const FinanceConfig = ({ isDark }) => {
 const OrdersConfig = ({ isDark }) => (
   <>
     <Title level={5} style={{ margin: '0 0 16px' }}>Order Settings</Title>
-    <div style={{ border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: 16, background: isDark ? '#1f1f1f' : 'transparent' }}>
+    <div style={{ border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: 16, background: isDark ? '#0d3554' : 'transparent' }}>
       <Text style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 12 }}>Permissions</Text>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isDark ? '#232323' : '#fafafa', borderRadius: 8, padding: '12px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isDark ? '#0a2235' : '#fafafa', borderRadius: 8, padding: '12px 16px' }}>
         <div>
           <div style={{ fontSize: 13, fontWeight: 500 }}>Can edit order if approved</div>
           <div style={{ fontSize: 11, color: '#999' }}>Disabled</div>
@@ -563,10 +563,10 @@ const moduleContent = {
 const ConfigurationTab = ({ isDark }) => {
   const [activeModule, setActiveModule] = useState('Finance');
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: 0, background: isDark ? '#1f1f1f' : 'white', borderRadius: 14, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', minHeight: 400, border: isDark ? '1px solid #303030' : 'none' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', gap: 0, background: isDark ? '#0d3554' : 'white', borderRadius: 14, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', minHeight: 400, border: isDark ? '1px solid #1a4d72' : 'none' }}>
       {/* Left module list */}
-      <div style={{ width: 180, flexShrink: 0, borderRight: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, padding: '20px 0' }}>
-        <div style={{ fontSize: 14, fontWeight: 700, padding: '0 20px 14px', color: isDark ? '#f0f0f0' : '#1f1f1f' }}>Modules</div>
+      <div style={{ width: 180, flexShrink: 0, borderRight: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, padding: '20px 0' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, padding: '0 20px 14px', color: isDark ? '#f0f0f0' : '#0d3554' }}>Modules</div>
         {configModules.map(m => (
           <div
             key={m}
@@ -579,7 +579,7 @@ const ConfigurationTab = ({ isDark }) => {
               borderLeft: activeModule === m ? '3px solid #1677FF' : '3px solid transparent',
               transition: 'all 0.15s ease',
             }}
-            onMouseEnter={e => { if (activeModule !== m) e.currentTarget.style.background = isDark ? '#232323' : '#fafafa'; }}
+            onMouseEnter={e => { if (activeModule !== m) e.currentTarget.style.background = isDark ? '#0a2235' : '#fafafa'; }}
             onMouseLeave={e => { if (activeModule !== m) e.currentTarget.style.background = 'transparent'; }}
           >
             {m}
@@ -639,7 +639,7 @@ const SettingsPage = () => {
     <div>
       <PageHeader title="Settings" />
 
-      <div style={{ background: isDark ? '#1f1f1f' : 'white', borderRadius: 14, padding: '10px 16px', marginBottom: 16, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', border: isDark ? '1px solid #303030' : 'none' }}>
+      <div style={{ background: isDark ? '#0d3554' : 'white', borderRadius: 14, padding: '10px 16px', marginBottom: 16, boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.06)', border: isDark ? '1px solid #1a4d72' : 'none' }}>
         <div style={{ display: 'flex', gap: 6, overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: 2 }}>
           {tabs.map(tab => {
             const isActive = activeTab === tab.key;
@@ -651,9 +651,9 @@ const SettingsPage = () => {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 14px', borderRadius: 24,
-                  border: isActive ? '2px solid #B19625' : '2px solid transparent',
-                  background: isActive ? '#B1962512' : (isDark ? '#232323' : '#f7f7f7'),
-                  color: isActive ? '#B19625' : '#666',
+                  border: isActive ? `2px solid ${isDark ? '#2980b9' : '#0B2B44'}` : '2px solid transparent',
+                  background: isActive ? (isDark ? 'rgba(41,128,185,0.2)' : '#0B2B4412') : (isDark ? 'rgba(255,255,255,0.04)' : '#f7f7f7'),
+                  color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#8c9baf' : '#666'),
                   fontWeight: isActive ? 700 : 400,
                   fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 }}

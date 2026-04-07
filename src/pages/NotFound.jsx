@@ -19,8 +19,7 @@ const NotFound = () => {
       <div className="animate-scale-in" style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{
           fontSize: 100, fontWeight: 900, lineHeight: 1,
-          background: 'linear-gradient(135deg, #B19625, #D4B96E)',
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          color: '#0B2B44',
           marginBottom: 16,
         }}>
           404
@@ -38,7 +37,7 @@ const NotFound = () => {
             icon={<HomeOutlined />}
             onClick={() => navigate('/')}
             style={{
-              background: 'linear-gradient(135deg, #B19625, #C4A840)',
+              background: '#0B2B44',
               border: 'none', borderRadius: 12,
               height: 48, padding: '0 32px',
               fontWeight: 600, fontSize: 15,

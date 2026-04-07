@@ -32,9 +32,10 @@ const AppSidebar = () => {
   const isMobile = useIsMobile();
 
   const isDark = theme === 'dark';
-  const siderBg = isDark ? '#141414' : '#ffffff';
-  const borderColor = isDark ? '#2a2a2a' : '#f0f0f0';
-  const logoContainerBg = 'linear-gradient(135deg, #B19625 0%, #D4B96E 100%)';
+  const siderBg = isDark ? '#031726' : '#ffffff';
+  const borderColor = isDark ? '#0a2e4a' : '#f0f0f0';
+  const buffColor = '#0B2B44';
+  const logoContainerBg = buffColor;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -80,7 +81,7 @@ const AppSidebar = () => {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: logoContainerBg,
+              background: buffColor,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -89,7 +90,7 @@ const AppSidebar = () => {
               fontSize: 17,
               flexShrink: 0,
               overflow: 'hidden',
-              boxShadow: '0 4px 12px rgba(177,150,37,0.28)',
+              boxShadow: `0 4px 12px ${buffColor}45`,
             }}
           >
             P
@@ -100,7 +101,7 @@ const AppSidebar = () => {
             <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.2, color: isDark ? '#f5f5f5' : '#1f1f1f' }}>
               Perspective
             </div>
-            <div style={{ fontSize: 10, color: '#B19625', fontWeight: 500, letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: 10, color: buffColor, fontWeight: 500, letterSpacing: '0.5px' }}>
               Interiour CRM
             </div>
           </div>
@@ -130,18 +131,19 @@ const AppSidebar = () => {
                   borderRadius: 10,
                   cursor: 'pointer',
                   background: isActive
-                    ? 'linear-gradient(135deg, #B19625 0%, #C4A840 100%)'
+                    ? (isDark ? '#133d5e' : buffColor)
                     : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#9a9a9a' : '#666'),
+                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#666'),
+                  border: isActive ? `1px solid ${isDark ? '#1e5c8a' : buffColor}` : 'none',
                   fontWeight: isActive ? 600 : 400,
                   fontSize: 13.5,
-                  transition: 'background 0.2s ease, color 0.2s ease',
-                  boxShadow: isActive ? '0 4px 12px rgba(177,150,37,0.3)' : 'none',
+                  transition: 'background 0.2s ease, color 0.2s ease, border 0.2s ease',
+                  boxShadow: isActive ? `0 4px 12px ${isDark ? 'rgba(30,92,138,0.45)' : buffColor + '40'}` : 'none',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
-                    e.currentTarget.style.background = isDark ? '#2a2a2a' : '#f8f5eb';
-                    e.currentTarget.style.color = '#B19625';
+                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : `${buffColor}20`;
+                    e.currentTarget.style.color = isDark ? '#7ec8e3' : buffColor;
                   }
                 }}
                 onMouseLeave={e => {
@@ -170,13 +172,13 @@ const AppSidebar = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px', borderRadius: 10,
-              background: isDark ? '#1f1f1f' : '#faf8f3',
+              background: isDark ? '#081b2f' : `${buffColor}15`,
               marginBottom: 8,
             }}
           >
             <Avatar
               size={34}
-              style={{ background: 'linear-gradient(135deg, #B19625, #D4B96E)', fontWeight: 700, fontSize: 13, flexShrink: 0 }}
+              style={{ background: buffColor, fontWeight: 700, fontSize: 13, flexShrink: 0 }}
             >
               {user?.avatar || 'SA'}
             </Avatar>
@@ -184,7 +186,7 @@ const AppSidebar = () => {
               <div style={{ fontSize: 13, fontWeight: 600, color: isDark ? '#f0f0f0' : '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.name || 'Super Admin'}
               </div>
-              <div style={{ fontSize: 11, color: '#B19625', fontWeight: 500 }}>
+              <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>
                 {user?.role || 'Super Admin'}
               </div>
             </div>

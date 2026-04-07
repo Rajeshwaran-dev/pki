@@ -12,15 +12,15 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const CHART_COLORS = ['#B19625', '#1677FF', '#52C41A', '#722ED1', '#FAAD14', '#FF4D4F'];
-const primaryColor = '#B19625';
+const CHART_COLORS = ['#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#0ea5e9'];
+const primaryColor = '#0B2B44';
 
 const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: isDark ? '#1f1f1f' : '#fff',
-      border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+      background: isDark ? '#0d3554' : '#fff',
+      border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`,
       borderRadius: 10, padding: '10px 14px',
       boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)',
     }}>
@@ -223,7 +223,7 @@ const TasksReport = ({ tasks, isDark }) => {
     completed: tasks.filter(t => t.assignee === a && t.status === 'Completed').length,
   }));
 
-  const statusColors = { Created: '#1677FF', 'In Progress': '#B19625', Completed: '#52C41A', 'On Hold': '#FAAD14', Discarded: '#999' };
+  const statusColors = { Created: '#1677FF', 'In Progress': '#0ea5e9', Completed: '#52C41A', 'On Hold': '#FAAD14', Discarded: '#999' };
   const priorityColors = { Low: '#52C41A', Medium: '#1677FF', High: '#FAAD14', Urgent: '#FF4D4F' };
 
   const columns = [
@@ -291,7 +291,7 @@ const TasksReport = ({ tasks, isDark }) => {
                     <span style={{ fontSize: 11, color: '#52C41A', fontWeight: 600 }}>{a.completed}/{a.total}</span>
                   </div>
                   <Progress percent={pct} size="small" showInfo={false}
-                    strokeColor={{ '0%': primaryColor, '100%': '#D4B96E' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" />
+                    strokeColor={{ '0%': primaryColor, '100%': '#0B2B44' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" />
                 </div>
               );
             })}
@@ -364,7 +364,7 @@ const FinancialReport = ({ projects, isDark }) => {
     { title: 'Share', dataIndex: 'budget', key: 'share', render: v => {
       const pct = totalBudget ? Math.round((v / totalBudget) * 100) : 0;
       return <Progress percent={pct} size="small" showInfo={false}
-        strokeColor={{ '0%': primaryColor, '100%': '#D4B96E' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" style={{ width: 80 }} />;
+        strokeColor={{ '0%': primaryColor, '100%': '#0B2B44' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" style={{ width: 80 }} />;
     }},
   ];
 
@@ -375,7 +375,7 @@ const FinancialReport = ({ projects, isDark }) => {
           <ReportStatCard title="Total Portfolio" value={`₹${(totalBudget / 100000).toFixed(1)}L`} icon={<DollarOutlined />} color="#722ED1" />
         </Col>
         <Col xs={24} sm={8}>
-          <ReportStatCard title="Avg. Project Budget" value={`₹${(avgBudget / 100000).toFixed(1)}L`} icon={<BarChartOutlined />} color="#B19625" />
+          <ReportStatCard title="Avg. Project Budget" value={`₹${(avgBudget / 100000).toFixed(1)}L`} icon={<BarChartOutlined />} color="#1677FF" />
         </Col>
         <Col xs={24} sm={8}>
           <ReportStatCard title="Largest Project" value={maxProject?.projectName || '-'} icon={<ProjectOutlined />} color="#52C41A" />
@@ -464,7 +464,7 @@ const ReportsPage = () => {
   const completedProjects = projects.filter(p => p.stage === 'Completed').length;
 
   const summaryStats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#B19625', trend: '8%' },
+    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#1677FF', trend: '8%' },
     { title: 'Total Clients', value: clients.length, icon: <TeamOutlined />, color: '#1677FF', trend: '15%' },
     { title: 'Tasks Completed', value: `${completedTasks} / ${tasks.length}`, icon: <CheckSquareOutlined />, color: '#52C41A', trend: '24%' },
     { title: 'Total Portfolio', value: `₹${(totalBudget / 100000).toFixed(1)}L`, icon: <DollarOutlined />, color: '#722ED1', trend: '18%' },

@@ -2,7 +2,7 @@ import { Tag } from 'antd';
 
 const stageColors = {
   Sales: '#1677FF',
-  Designing: '#B19625',
+  Designing: '#0ea5e9',
   Execution: '#722ED1',
   Snags: '#FF4D4F',
   Handover: '#FAAD14',

@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 import {
-  Button, Modal, Drawer, Form, Input, Select, DatePicker, Space, Typography,
-  Card, Tag, Avatar, Row, Col, message, Segmented,
+  Button, Modal, Drawer, Form, Input, Select, DatePicker, TimePicker, Space, Typography,
+  Card, Tag, Avatar, Row, Col, message, Segmented, Dropdown,
 } from 'antd';
 import {
   PlusOutlined, UnorderedListOutlined, AppstoreOutlined,
   ClockCircleOutlined, UserOutlined, MessageOutlined,
-  CheckSquareOutlined, OrderedListOutlined, FileTextOutlined, ArrowLeftOutlined,
+  CheckSquareOutlined, OrderedListOutlined, FileTextOutlined, ArrowLeftOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import {
   DndContext, closestCorners, DragOverlay,
@@ -16,7 +17,7 @@ import {
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { addTask, moveTask, setViewMode } from '@/store/slices/taskSlice';
+import { addTask, updateTask, removeTask, moveTask, setViewMode } from '@/store/slices/taskSlice';
 import { taskStatuses, priorities } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
@@ -24,13 +25,32 @@ import useIsMobile from '@/hooks/useIsMobile';
 
 const statusColors = {
   'Created': '#1677FF',
-  'In Progress': '#B19625',
+  'In Progress': '#0ea5e9',
   'Completed': '#52C41A',
   'Approved': '#52C41A',
   'On Hold': '#FAAD14',
   'Rejected': '#FF4D4F',
   'Discarded': '#FF4D4F',
 };
+
+const getMoreMenuItems = (type) => (
+  type === 'task'
+    ? [
+        { key: 'start', label: 'Start' },
+        { key: 'hold', label: 'Hold' },
+        { key: 'discard', label: 'Discard' },
+        { key: 'complete', label: 'Complete' },
+        { key: 'subtask', label: 'Add Subtask' },
+        { key: 'edit', label: 'Edit' },
+        { key: 'delete', label: 'Delete' },
+      ]
+    : [
+        { key: 'view', label: 'View Details' },
+        { key: 'edit', label: 'Edit' },
+        { key: 'approve', label: 'Approve' },
+        { key: 'delete', label: 'Delete' },
+      ]
+);
 
 const mockRequests = [
   { id: 'r1', title: 'Request for payment', clientName: 'Kamalesh', projectName: 'DR.KAMALESH', projectCode: 'P-103', assignee: 'Anantha Narayana', createdDate: '07 Apr, 10:47 AM', dueDate: '08 Apr, 00:00 AM', status: 'Approved' },
@@ -39,12 +59,12 @@ const mockRequests = [
 ];
 
 const requestStatuses = ['Created', 'Approved', 'Rejected', 'On Hold', 'Discarded'];
-const darkPanelBg = '#1f1f1f';
-const darkSurfaceBg = '#232323';
-const darkBorder = '#303030';
+const darkPanelBg = '#0d3554';
+const darkSurfaceBg = '#0a2235';
+const darkBorder = '#1a4d72';
 
 /* ── Task Card (Kanban) ── */
-const TaskCard = ({ task, overlay }) => {
+const TaskCard = ({ task, overlay, onEdit }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,13 +85,20 @@ const TaskCard = ({ task, overlay }) => {
         }}
         styles={{ body: { padding: '12px 14px' } }}
       >
-        <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{task.title}</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
+          <Tag color={statusColors[task.status] || '#ccc'} style={{ borderRadius: 10, fontSize: 10 }}>
+            {task.status}
+          </Tag>
+        </div>
         <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <StatusTag value={task.priority} type="priority" />
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> {task.dueDate}</span>
-            <Avatar size={20} style={{ background: '#B19625', fontSize: 10 }}>{task.assignee.charAt(0)}</Avatar>
+            <span style={{ fontSize: 11, color: '#bbb' }}>
+              <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
+            </span>
+            <Avatar size={20} style={{ background: '#0B2B44', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
       </Card>
@@ -90,15 +117,29 @@ const TaskCard = ({ task, overlay }) => {
         }}
         styles={{ body: { padding: '12px 14px' } }}
       >
-        <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{task.title}</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
+          <Tag color={statusColors[task.status] || '#ccc'} style={{ borderRadius: 10, fontSize: 10 }}>
+            {task.status}
+          </Tag>
+        </div>
         <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <StatusTag value={task.priority} type="priority" />
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> {task.dueDate}</span>
-            <Avatar size={20} style={{ background: '#B19625', fontSize: 10 }}>{task.assignee.charAt(0)}</Avatar>
+            <span style={{ fontSize: 11, color: '#bbb' }}>
+              <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
+            </span>
+            <Avatar size={20} style={{ background: '#0B2B44', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
+        {onEdit && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 10 }}>
+            <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(task); }}>
+              Edit
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );
@@ -114,7 +155,7 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
       className="kanban-column"
       style={{
         minWidth: 260, flex: '1 0 260px', borderRadius: 14, padding: 14,
-        background: isOver ? (isDark ? '#2a2415' : '#fff8dc') : (isDark ? darkSurfaceBg : '#f9f9f9'), minHeight: 200,
+        background: isOver ? (isDark ? '#133d5e' : '#e8f4fd') : (isDark ? darkSurfaceBg : '#f9f9f9'), minHeight: 200,
         border: isDark ? `1px solid ${darkBorder}` : 'none',
         borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
         transition: 'background 0.2s ease',
@@ -142,7 +183,7 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
 };
 
 /* ── Request Card ── */
-const RequestCard = ({ request, overlay }) => {
+const RequestCard = ({ request, overlay, onEdit }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: request.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -163,9 +204,16 @@ const RequestCard = ({ request, overlay }) => {
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
-          <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
-          <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
+          <Space size={8}>
+            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
+            <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+          </Space>
+          {onEdit && (
+            <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(request); }}>
+              Edit
+            </Button>
+          )}
         </div>
       </Card>
     );
@@ -185,9 +233,16 @@ const RequestCard = ({ request, overlay }) => {
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
-          <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
-          <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
+          <Space size={8}>
+            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
+            <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+          </Space>
+          {onEdit && (
+            <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(request); }}>
+              Edit
+            </Button>
+          )}
         </div>
       </Card>
     </div>
@@ -195,15 +250,15 @@ const RequestCard = ({ request, overlay }) => {
 };
 
 /* ── Detail Panel (shared for task and request) ── */
-const DetailPanel = ({ item, type = 'task', onClose, showBack, isDark }) => (
+const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark }) => (
   <div>
     <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', marginBottom: 16, background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       {showBack && (
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: '#B19625' }}>
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: '#0B2B44' }}>
           Back to list
         </Button>
       )}
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <Space size={8} wrap>
             <Typography.Title level={5} style={{ margin: 0 }}>{item.title}</Typography.Title>
@@ -215,6 +270,17 @@ const DetailPanel = ({ item, type = 'task', onClose, showBack, isDark }) => (
           </div>
         </div>
         <Space wrap>
+          {type === 'task' && (
+            <Button type="default" icon={<PlusOutlined />} ghost style={{ borderRadius: 8 }} onClick={() => onEdit?.(item)}>
+              Edit
+            </Button>
+          )}
+          <Dropdown
+            menu={{ items: getMoreMenuItems(type), onClick: ({ key }) => handleMoreAction(key, item, type) }}
+            trigger={['click']}
+          >
+            <Button type="default" icon={<MoreOutlined />} ghost style={{ borderRadius: 8 }} />
+          </Dropdown>
           <Button type="primary" icon={<CheckSquareOutlined />} ghost style={{ borderRadius: 8 }}>
             {type === 'task' ? 'Mark Completed' : 'Approve'}
           </Button>
@@ -273,7 +339,7 @@ const DetailPanel = ({ item, type = 'task', onClose, showBack, isDark }) => (
 );
 
 /* ── List Item Card ── */
-const ListItemCard = ({ item, isSelected, onClick }) => (
+const ListItemCard = ({ item, type = 'task', isSelected, onClick, onEdit, onMore }) => (
   <Card
     size="small"
     hoverable
@@ -281,8 +347,8 @@ const ListItemCard = ({ item, isSelected, onClick }) => (
     style={{
       borderRadius: 12, marginBottom: 8, cursor: 'pointer',
       borderLeft: `3px solid ${statusColors[item.status] || '#ccc'}`,
-      background: isSelected ? 'rgba(177,150,37,0.06)' : undefined,
-      outline: isSelected ? '2px solid #B19625' : 'none',
+      background: isSelected ? 'rgba(11,43,68,0.06)' : undefined,
+      outline: isSelected ? '2px solid #0B2B44' : 'none',
       transition: 'all 0.2s ease',
     }}
     styles={{ body: { padding: '12px 14px' } }}
@@ -301,7 +367,22 @@ const ListItemCard = ({ item, isSelected, onClick }) => (
         <ClockCircleOutlined style={{ marginRight: 3 }} />{item.dueDate}
       </span>
     </div>
-    <a style={{ color: '#1677FF', fontSize: 11, display: 'block', marginTop: 4 }}>{item.projectName}</a>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+      <a style={{ color: '#1677FF', fontSize: 11 }}>{item.projectName}</a>
+      <Space size={8}>
+        <Dropdown
+          menu={{ items: getMoreMenuItems(type), onClick: ({ key }) => onMore?.(key, item) }}
+          trigger={['click']}
+        >
+          <Button type="text" size="small" icon={<MoreOutlined />} onClick={e => e.stopPropagation()} />
+        </Dropdown>
+        {onEdit && (
+          <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(item); }}>
+            Edit
+          </Button>
+        )}
+      </Space>
+    </div>
   </Card>
 );
 
@@ -314,6 +395,9 @@ const TasksPage = () => {
   const isMobile = useIsMobile();
   const isDark = theme === 'dark';
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
+  const [editingRequest, setEditingRequest] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -371,22 +455,184 @@ const TasksPage = () => {
     }
   };
 
-  const handleAdd = () => {
+  const resetModal = () => {
+    setModalOpen(false);
+    setEditingTask(null);
+    form.resetFields();
+  };
+
+  const resetRequestModal = () => {
+    setRequestModalOpen(false);
+    setEditingRequest(null);
+    form.resetFields();
+  };
+
+  const openEditTaskModal = (task) => {
+    setEditingTask(task);
+    setRequestModalOpen(false);
+    setModalOpen(true);
+    form.setFieldsValue({
+      title: task.title,
+      type: task.type,
+      priority: task.priority,
+      status: task.status,
+      projectName: task.projectName,
+      clientName: task.clientName,
+      assignee: task.assignee,
+      cc: task.cc,
+      dueDate: task.dueDate ? dayjs(task.dueDate, 'YYYY-MM-DD') : null,
+      dueTime: task.dueTime ? dayjs(task.dueTime, 'hh:mm A') : null,
+      description: task.description,
+    });
+  };
+
+  const openEditRequestModal = (request) => {
+    setEditingRequest(request);
+    setModalOpen(false);
+    setRequestModalOpen(true);
+    form.setFieldsValue({
+      title: request.title,
+      type: request.type,
+      priority: request.priority,
+      status: request.status,
+      projectName: request.projectName,
+      clientName: request.clientName,
+      assignee: request.assignee,
+      cc: request.cc,
+      dueDate: request.dueDate ? dayjs(request.dueDate, 'YYYY-MM-DD') : null,
+      dueTime: request.dueTime ? dayjs(request.dueTime, 'hh:mm A') : null,
+      description: request.description,
+    });
+  };
+
+  const handleSave = () => {
     form.validateFields().then(values => {
-      dispatch(addTask({
-        id: Date.now().toString(),
-        createdDate: new Date().toISOString().split('T')[0],
+      const payload = {
+        id: editingTask ? editingTask.id : Date.now().toString(),
+        createdDate: editingTask ? editingTask.createdDate : new Date().toISOString().split('T')[0],
+        title: values.title,
+        type: values.type,
+        priority: values.priority,
+        status: values.status || 'Created',
+        projectName: values.projectName,
+        clientName: values.clientName || '',
+        assignee: values.assignee,
+        cc: values.cc || '',
         dueDate: values.dueDate?.format('YYYY-MM-DD') || '',
-        status: 'Created',
-        ...values,
-      }));
-      message.success('Task created!');
-      setModalOpen(false);
-      form.resetFields();
+        dueTime: values.dueTime?.format('hh:mm A') || '',
+        description: values.description || '',
+      };
+
+      if (editingTask) {
+        dispatch(updateTask(payload));
+        message.success('Task updated!');
+      } else {
+        dispatch(addTask(payload));
+        message.success('Task created!');
+      }
+
+      resetModal();
+    });
+  };
+
+  const handleSaveRequest = () => {
+    form.validateFields().then(values => {
+      const payload = {
+        id: editingRequest ? editingRequest.id : Date.now().toString(),
+        createdDate: editingRequest ? editingRequest.createdDate : new Date().toISOString().split('T')[0],
+        title: values.title,
+        type: values.type,
+        priority: values.priority,
+        status: values.status || 'Created',
+        projectName: values.projectName,
+        clientName: values.clientName || '',
+        assignee: values.assignee,
+        cc: values.cc || '',
+        dueDate: values.dueDate?.format('YYYY-MM-DD') || '',
+        dueTime: values.dueTime?.format('hh:mm A') || '',
+        description: values.description || '',
+      };
+
+      if (editingRequest) {
+        setRequests(prev => prev.map(r => r.id === payload.id ? payload : r));
+        message.success('Request updated!');
+      } else {
+        setRequests(prev => [payload, ...prev]);
+        message.success('Request created!');
+      }
+
+      resetRequestModal();
     });
   };
 
   const requestsByStatus = (status) => requests.filter(r => r.status === status);
+
+  const handleMoreAction = (action, item, type) => {
+    if (type === 'task') {
+      if (action === 'edit') {
+        openEditTaskModal(item);
+        return;
+      }
+      if (action === 'complete') {
+        const payload = { ...item, status: 'Completed' };
+        dispatch(updateTask(payload));
+        if (selectedTask?.id === item.id) setSelectedTask(payload);
+        message.success('Task marked complete');
+        return;
+      }
+      if (action === 'start') {
+        const payload = { ...item, status: 'In Progress' };
+        dispatch(updateTask(payload));
+        if (selectedTask?.id === item.id) setSelectedTask(payload);
+        message.success('Task started');
+        return;
+      }
+      if (action === 'hold') {
+        const payload = { ...item, status: 'On Hold' };
+        dispatch(updateTask(payload));
+        if (selectedTask?.id === item.id) setSelectedTask(payload);
+        message.success('Task put on hold');
+        return;
+      }
+      if (action === 'discard') {
+        const payload = { ...item, status: 'Discarded' };
+        dispatch(updateTask(payload));
+        if (selectedTask?.id === item.id) setSelectedTask(payload);
+        message.success('Task discarded');
+        return;
+      }
+      if (action === 'subtask') {
+        message.info('Add Subtask selected — implement subtask flow later');
+        return;
+      }
+      if (action === 'delete') {
+        dispatch(removeTask(item.id));
+        if (selectedTask?.id === item.id) setSelectedTask(null);
+        message.success('Task deleted');
+        return;
+      }
+      setSelectedTask(item);
+      return;
+    }
+
+    if (action === 'edit') {
+      openEditRequestModal(item);
+      return;
+    }
+    if (action === 'approve') {
+      setRequests(prev => prev.map(r => r.id === item.id ? { ...r, status: 'Approved' } : r));
+      if (selectedRequest?.id === item.id) setSelectedRequest(prev => prev ? { ...prev, status: 'Approved' } : prev);
+      message.success('Request approved');
+      return;
+    }
+    if (action === 'delete') {
+      setRequests(prev => prev.filter(r => r.id !== item.id));
+      if (selectedRequest?.id === item.id) setSelectedRequest(null);
+      message.success('Request deleted');
+      return;
+    }
+    setSelectedRequest(item);
+  };
 
   return (
     <div>
@@ -406,10 +652,19 @@ const TasksPage = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => setModalOpen(true)}
-              style={{ background: 'linear-gradient(135deg, #B19625, #C4A840)', border: 'none' }}
+              onClick={() => {
+                form.resetFields();
+                if (activeTab === 'tasks') {
+                  setEditingTask(null);
+                  setModalOpen(true);
+                } else {
+                  setEditingRequest(null);
+                  setRequestModalOpen(true);
+                }
+              }}
+              style={{ background: '#0B2B44', border: 'none' }}
             >
-              {!isMobile && 'Add Task'}
+              {!isMobile && (activeTab === 'tasks' ? 'Add Task' : 'Add Request')}
             </Button>
           </div>
         }
@@ -431,9 +686,9 @@ const TasksPage = () => {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '8px 18px', borderRadius: 24,
-                  border: isActive ? '2px solid #B19625' : '2px solid transparent',
-                  background: isActive ? '#B1962512' : (isDark ? darkSurfaceBg : '#f7f7f7'),
-                  color: isActive ? '#B19625' : '#666',
+                  border: isActive ? `2px solid ${isDark ? '#2980b9' : '#0B2B44'}` : '2px solid transparent',
+                  background: isActive ? (isDark ? 'rgba(41,128,185,0.18)' : '#0B2B4412') : (isDark ? darkSurfaceBg : '#f7f7f7'),
+                  color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#a8b0ba' : '#666'),
                   fontWeight: isActive ? 700 : 400,
                   fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 }}
@@ -453,7 +708,7 @@ const TasksPage = () => {
               const filtered = tasks.filter(t => t.status === status);
               return (
                 <KanbanColumn key={status} status={status} tasks={filtered} isDark={isDark}>
-                  {filtered.map(task => <TaskCard key={task.id} task={task} />)}
+                  {filtered.map(task => <TaskCard key={task.id} task={task} onEdit={openEditTaskModal} />)}
                 </KanbanColumn>
               );
             })}
@@ -470,12 +725,20 @@ const TasksPage = () => {
               <div style={{ width: selectedTask ? '37%' : '100%', minWidth: 280, overflowY: 'auto', padding: '16px 12px', transition: 'width 0.3s ease', borderRight: selectedTask ? `1px solid ${isDark ? darkBorder : '#f0f0f0'}` : 'none' }}>
                 <Input prefix={<UserOutlined />} placeholder="Search tasks…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
                 {tasks.map(task => (
-                  <ListItemCard key={task.id} item={task} isSelected={selectedTask?.id === task.id} onClick={() => setSelectedTask(task)} />
+                  <ListItemCard
+                    key={task.id}
+                    item={task}
+                    type="task"
+                    isSelected={selectedTask?.id === task.id}
+                    onClick={() => setSelectedTask(task)}
+                    onEdit={openEditTaskModal}
+                    onMore={(action, item) => handleMoreAction(action, item, 'task')}
+                  />
                 ))}
               </div>
               {selectedTask && (
                 <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
-                  <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} showBack isDark={isDark} />
+                  <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} onEdit={openEditTaskModal} showBack isDark={isDark} />
                 </div>
               )}
             </div>
@@ -483,10 +746,18 @@ const TasksPage = () => {
             <div>
               <Input prefix={<UserOutlined />} placeholder="Search tasks…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
               {tasks.map(task => (
-                <ListItemCard key={task.id} item={task} isSelected={false} onClick={() => setSelectedTask(task)} />
+                <ListItemCard
+                  key={task.id}
+                  item={task}
+                  type="task"
+                  isSelected={false}
+                  onClick={() => setSelectedTask(task)}
+                  onEdit={openEditTaskModal}
+                  onMore={(action, item) => handleMoreAction(action, item, 'task')}
+                />
               ))}
               <Drawer title={selectedTask?.title} open={!!selectedTask} onClose={() => setSelectedTask(null)} placement="bottom" styles={{ body: { padding: 12 }, wrapper: { height: '90%' } }}>
-                {selectedTask && <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} showBack isDark={isDark} />}
+                {selectedTask && <DetailPanel item={selectedTask} type="task" onClose={() => setSelectedTask(null)} onEdit={openEditTaskModal} showBack isDark={isDark} />}
               </Drawer>
             </div>
           )}
@@ -502,7 +773,7 @@ const TasksPage = () => {
               return (
                 <KanbanColumn key={status} status={status} tasks={items} isDark={isDark}>
                   <SortableContext items={items.map(r => r.id)} strategy={verticalListSortingStrategy}>
-                    {items.map(req => <RequestCard key={req.id} request={req} />)}
+                    {items.map(req => <RequestCard key={req.id} request={req} onEdit={openEditRequestModal} />)}
                   </SortableContext>
                 </KanbanColumn>
               );
@@ -520,12 +791,20 @@ const TasksPage = () => {
               <div style={{ width: selectedRequest ? '37%' : '100%', minWidth: 280, overflowY: 'auto', padding: '16px 12px', transition: 'width 0.3s ease', borderRight: selectedRequest ? `1px solid ${isDark ? darkBorder : '#f0f0f0'}` : 'none' }}>
                 <Input prefix={<UserOutlined />} placeholder="Search requests…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
                 {requests.map(req => (
-                  <ListItemCard key={req.id} item={req} type="request" isSelected={selectedRequest?.id === req.id} onClick={() => setSelectedRequest(req)} />
+                  <ListItemCard
+                    key={req.id}
+                    item={req}
+                    type="request"
+                    isSelected={selectedRequest?.id === req.id}
+                    onClick={() => setSelectedRequest(req)}
+                    onEdit={openEditRequestModal}
+                    onMore={(action, item) => handleMoreAction(action, item, 'request')}
+                  />
                 ))}
               </div>
               {selectedRequest && (
                 <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
-                  <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} showBack isDark={isDark} />
+                  <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} onEdit={openEditRequestModal} showBack isDark={isDark} />
                 </div>
               )}
             </div>
@@ -533,10 +812,18 @@ const TasksPage = () => {
             <div>
               <Input prefix={<UserOutlined />} placeholder="Search requests…" allowClear style={{ marginBottom: 12, borderRadius: 10 }} />
               {requests.map(req => (
-                <ListItemCard key={req.id} item={req} type="request" isSelected={false} onClick={() => setSelectedRequest(req)} />
+                <ListItemCard
+                  key={req.id}
+                  item={req}
+                  type="request"
+                  isSelected={false}
+                  onClick={() => setSelectedRequest(req)}
+                  onEdit={openEditRequestModal}
+                  onMore={(action, item) => handleMoreAction(action, item, 'request')}
+                />
               ))}
               <Drawer title={selectedRequest?.title} open={!!selectedRequest} onClose={() => setSelectedRequest(null)} placement="bottom" styles={{ body: { padding: 12 }, wrapper: { height: '90%' } }}>
-                {selectedRequest && <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} showBack isDark={isDark} />}
+                {selectedRequest && <DetailPanel item={selectedRequest} type="request" onClose={() => setSelectedRequest(null)} onEdit={openEditRequestModal} showBack isDark={isDark} />}
               </Drawer>
             </div>
           )}
@@ -545,57 +832,155 @@ const TasksPage = () => {
 
       {/* Add Task Modal */}
       <Modal
-        title={<span style={{ fontWeight: 700 }}>Create New Task</span>}
+        title={<span style={{ fontWeight: 700 }}>{editingTask ? 'Edit Task' : 'New Task'}</span>}
         open={modalOpen}
-        onCancel={() => { setModalOpen(false); form.resetFields(); }}
-        onOk={handleAdd}
-        okText="Create Task"
-        okButtonProps={{ style: { background: 'linear-gradient(135deg, #B19625, #C4A840)', border: 'none' } }}
-        width={isMobile ? '95%' : 560}
+        onCancel={resetModal}
+        onOk={handleSave}
+        okText={editingTask ? 'Update Task' : 'Submit'}
+        okButtonProps={{ style: { background: '#0B2B44', border: 'none' } }}
+        width={isMobile ? '95%' : 620}
         centered
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="Task Title" rules={[{ required: true }]}>
-            <Input placeholder="Enter task title" />
-          </Form.Item>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="type" label="Type" rules={[{ required: true }]}>
-                <Select placeholder="Type" options={['Design', 'Site Visit', 'Meeting', 'Procurement', 'Review', 'Finance'].map(t => ({ value: t, label: t }))} />
+              <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 
+                <Select placeholder="Select type" options={['Design', 'Site Visit', 'Meeting', 'Procurement', 'Review', 'Finance'].map(t => ({ value: t, label: t }))} />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="priority" label="Priority" rules={[{ required: true }]}>
-                <Select placeholder="Priority" options={priorities.map(p => ({ value: p, label: p }))} />
+              <Form.Item name="priority" label="Priority" rules={[{ required: true, message: 'Priority is required' }]}> 
+                <Select placeholder="Select priority" options={priorities.map(p => ({ value: p, label: p }))} />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="projectName" label="Project">
+              <Form.Item name="projectName" label="Project" rules={[{ required: true, message: 'Project is required' }]}> 
                 <Select placeholder="Select project" options={projects.map(p => ({ value: p.projectName, label: p.projectName }))} showSearch />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="clientName" label="Client">
-                <Input placeholder="Client name" />
+              <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Title is required' }]}> 
+                <Input placeholder="Task title" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="assignee" label="Assign To">
+              <Form.Item name="assignee" label="Assigned To" rules={[{ required: true, message: 'Assignee is required' }]}> 
                 <Input placeholder="Assignee name" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="dueDate" label="Due Date">
+              <Form.Item name="cc" label="CC">
+                <Input placeholder="CC email or name" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="dueDate" label="Due Date" rules={[{ required: true, message: 'Due date is required' }]}> 
                 <DatePicker style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="dueTime" label="Due Time" rules={[{ required: true, message: 'Due time is required' }]}> 
+                <TimePicker style={{ width: '100%' }} format="hh:mm A" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="status" label="Status" rules={[{ required: true, message: 'Status is required' }]}> 
+                <Select placeholder="Select status" options={taskStatuses.map(s => ({ value: s, label: s }))} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="clientName" label="Client"> 
+                <Input placeholder="Client name" />
               </Form.Item>
             </Col>
           </Row>
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={3} placeholder="Task description…" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={<span style={{ fontWeight: 700 }}>{editingRequest ? 'Edit Request' : 'New Request'}</span>}
+        open={requestModalOpen}
+        onCancel={resetRequestModal}
+        onOk={handleSaveRequest}
+        okText={editingRequest ? 'Update Request' : 'Submit'}
+        okButtonProps={{ style: { background: '#0B2B44', border: 'none' } }}
+        width={isMobile ? '95%' : 620}
+        centered
+      >
+        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 
+                <Select placeholder="Select type" options={['Request', 'Payment', 'Approval', 'Followup', 'Issue'].map(t => ({ value: t, label: t }))} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="status" label="Status" rules={[{ required: true, message: 'Status is required' }]}> 
+                <Select placeholder="Select status" options={requestStatuses.map(s => ({ value: s, label: s }))} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="projectName" label="Project" rules={[{ required: true, message: 'Project is required' }]}> 
+                <Select placeholder="Select project" options={projects.map(p => ({ value: p.projectName, label: p.projectName }))} showSearch />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Title is required' }]}> 
+                <Input placeholder="Request title" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="assignee" label="Assigned To" rules={[{ required: true, message: 'Assignee is required' }]}> 
+                <Input placeholder="Assignee name" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="cc" label="CC">
+                <Input placeholder="CC email or name" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="dueDate" label="Due Date" rules={[{ required: true, message: 'Due date is required' }]}> 
+                <DatePicker style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="dueTime" label="Due Time" rules={[{ required: true, message: 'Due time is required' }]}> 
+                <TimePicker style={{ width: '100%' }} format="hh:mm A" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="clientName" label="Client"> 
+                <Input placeholder="Client name" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="priority" label="Priority">
+                <Select placeholder="Select priority" options={priorities.map(p => ({ value: p, label: p }))} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea rows={3} placeholder="Request description…" />
           </Form.Item>
         </Form>
       </Modal>

@@ -6,16 +6,16 @@
 
 @layer base {
   :root {
-    --gold: #B19625;
-    --gold-light: #D4B96E;
-    --gold-dark: #8B7620;
-    --gold-soft: rgba(177, 150, 37, 0.08);
+    --gold: #0B2B44;
+    --gold-light: #0B2B44;
+    --gold-dark: #0B2B44;
+    --gold-soft: rgba(11, 43, 68, 0.08);
 
     --background: 0 0% 100%;
     --foreground: 0 0% 5%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 5%;
-    --primary: 43 78% 42%;
+    --primary: 206 72% 15%;
     --primary-foreground: 0 0% 100%;
     --secondary: 30 25% 96%;
     --secondary-foreground: 0 0% 8%;
@@ -27,11 +27,12 @@
   }
 
   .dark {
-    --background: 0 0% 8%;
+    --gold: #5ab5e8;
+    --background: 206 85% 8%;
     --foreground: 0 0% 96%;
-    --card: 0 0% 12%;
+    --card: 205 70% 16%;
     --card-foreground: 0 0% 96%;
-    --primary: 43 78% 42%;
+    --primary: 206 72% 15%;
     --primary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 64%;
@@ -192,7 +193,7 @@
   transition: background 0.2s ease;
 }
 .kanban-column:hover {
-  background: rgba(177, 150, 37, 0.03) !important;
+  background: rgba(11, 43, 68, 0.03) !important;
 }
 
 /* Login blobs */
@@ -218,22 +219,19 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0B2B44;
 }
 
 /* Status badge glow */
 .status-glow-green { box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.15); }
 .status-glow-blue { box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.15); }
-.status-glow-gold { box-shadow: 0 0 0 3px rgba(177, 150, 37, 0.15); }
+.status-glow-gold { box-shadow: 0 0 0 3px rgba(11, 43, 68, 0.15); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(177, 150, 37, 0.25); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(177, 150, 37, 0.45); }
+::-webkit-scrollbar-thumb { background: rgba(11, 43, 68, 0.25); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(11, 43, 68, 0.45); }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
@@ -249,42 +247,42 @@
 }
 
 /* Dark mode Ant Design overrides */
-.dark .ant-card { background: #1f1f1f; border-color: #333; }
-.dark .ant-table { background: #1f1f1f; }
-.dark .ant-modal-content { background: #1f1f1f; }
+.dark .ant-card { background: #0d3554; border-color: #1a4d72; }
+.dark .ant-table { background: #0d3554; }
+.dark .ant-modal-content { background: #0d3554; }
 .dark .ant-table-wrapper,
 .dark .ant-table-container,
 .dark .ant-table-content,
 .dark .ant-table-cell,
 .dark .ant-table-thead > tr > th,
 .dark .ant-table-tbody > tr > td {
-  background: #1f1f1f !important;
-  color: #f0f0f0 !important;
-  border-color: #3a3a3a !important;
+  background: #0d3554 !important;
+  color: #f2f5f8 !important;
+  border-color: #1a4d72 !important;
 }
 .dark .ant-table-tbody > tr.ant-table-row:hover > td {
-  background: #262626 !important;
+  background: #10384e !important;
 }
 .dark .ant-pagination,
 .dark .ant-pagination .ant-pagination-total-text,
 .dark .ant-pagination .ant-select-selection-item,
 .dark .ant-pagination .ant-select-arrow,
 .dark .ant-pagination .ant-pagination-item-link {
-  color: #d6d6d6 !important;
+  color: #c8d0db !important;
 }
 .dark .ant-pagination .ant-pagination-item {
-  background: #232323 !important;
-  border-color: #3a3a3a !important;
+  background: #0d3048 !important;
+  border-color: #164a69 !important;
 }
 .dark .ant-pagination .ant-pagination-item a {
-  color: #d6d6d6 !important;
+  color: #c8d0db !important;
 }
 .dark .ant-pagination .ant-pagination-item-active {
-  background: rgba(177, 150, 37, 0.18) !important;
-  border-color: #b19625 !important;
+  background: rgba(41, 128, 185, 0.22) !important;
+  border-color: #2980b9 !important;
 }
 .dark .ant-pagination .ant-pagination-item-active a {
-  color: #f4df8c !important;
+  color: #a8cce8 !important;
 }
 .dark .ant-select-selector,
 .dark .ant-input,
@@ -294,20 +292,20 @@
 .dark .ant-btn-default,
 .dark .ant-btn-color-default,
 .dark .ant-btn-variant-outlined {
-  background: #232323 !important;
-  border-color: #3a3a3a !important;
-  color: #f0f0f0 !important;
+  background: #0b304d !important;
+  border-color: #164a69 !important;
+  color: #f2f5f8 !important;
 }
 .dark .ant-input::placeholder,
 .dark .ant-input-affix-wrapper input::placeholder,
 .dark .ant-select-selection-placeholder {
-  color: #8c8c8c !important;
+  color: #8c9baf !important;
 }
 .dark .ant-input-affix-wrapper .ant-input-prefix,
 .dark .ant-input-affix-wrapper .ant-input-suffix,
 .dark .ant-btn-default .anticon,
 .dark .ant-btn-color-default .anticon {
-  color: #bfbfbf !important;
+  color: #c4cdd9 !important;
 }
 .dark .ant-select-dropdown,
 .dark .ant-dropdown,
@@ -317,15 +315,15 @@
 .dark .ant-drawer-body,
 .dark .ant-modal-header,
 .dark .ant-modal-footer {
-  background: #1f1f1f !important;
-  border-color: #333 !important;
+  background: #0d3554 !important;
+  border-color: #1a4d72 !important;
 }
 .dark .ant-segmented {
-  background: #232323 !important;
+  background: #0b304d !important;
 }
 .dark .ant-segmented-item-selected {
-  background: rgba(177, 150, 37, 0.2) !important;
-  color: #f0f0f0 !important;
+  background: rgba(41, 128, 185, 0.22) !important;
+  color: #f2f5f8 !important;
 }
 .dark .ant-empty,
 .dark .ant-empty-description,
@@ -337,7 +335,7 @@
 .dark .ant-descriptions-view,
 .dark .ant-list,
 .dark .ant-list-item {
-  border-color: #303030 !important;
+  border-color: #164a69 !important;
 }
 .dark .ant-table-column-sorters,
 .dark .ant-table-filter-trigger,
@@ -409,6 +407,14 @@
 .crm-form-shell .ant-form-item-label > label.ant-form-item-required::after {
   content: " *";
   color: #333;
+}
+
+.dark .crm-form-shell .ant-form-item-label > label {
+  color: #a8cce8 !important;
+}
+
+.dark .crm-form-shell .ant-form-item-label > label.ant-form-item-required::after {
+  color: #a8cce8 !important;
 }
 
 .crm-form-shell .ant-input,
@@ -489,7 +495,7 @@
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #b19625;
+  background: #0B2B44;
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -503,16 +509,16 @@
   min-width: 88px;
   border-radius: 10px !important;
   border: none !important;
-  background: #b19625 !important;
+  background: #0B2B44 !important;
   box-shadow: none !important;
   font-weight: 700 !important;
 }
 
 .crm-outline-btn {
   border-radius: 10px !important;
-  border-color: #b19625 !important;
-  color: #b19625 !important;
-  background: #fbf8ef !important;
+  border-color: #0B2B44 !important;
+  color: #0B2B44 !important;
+  background: #e8f0f7 !important;
   font-weight: 700 !important;
   box-shadow: none !important;
 }
@@ -563,14 +569,14 @@
 .dark .crm-modal .ant-modal-content,
 .dark .crm-sheet-modal .ant-modal-content,
 .dark .crm-panel-card {
-  background: #1f1f1f !important;
+  background: #0d3554 !important;
 }
 
 .dark .crm-modal .ant-modal-header,
 .dark .crm-sheet-modal .ant-modal-header,
 .dark .crm-panel-card__head {
-  background: #262626 !important;
-  border-color: #333 !important;
+  background: #0a2235 !important;
+  border-color: #1a4d72 !important;
 }
 
 .dark .crm-modal .ant-modal-title,
@@ -584,7 +590,7 @@
 .dark .crm-sheet-modal .ant-modal-footer,
 .dark .crm-panel-card,
 .dark .crm-panel-card__body {
-  border-color: #333 !important;
+  border-color: #1a4d72 !important;
 }
 
 .dark .crm-form-shell .ant-input,
@@ -593,6 +599,42 @@
 .dark .crm-form-shell .ant-select-selector,
 .dark .crm-form-shell .ant-picker,
 .dark .crm-form-shell textarea.ant-input {
+  background: #0a2235 !important;
+  border-color: #1a4d72 !important;
+  color: #e9edef !important;
+}
+
+.dark .crm-form-shell .ant-input::placeholder,
+.dark .crm-form-shell textarea.ant-input::placeholder {
+  color: #5a7a90 !important;
+}
+
+.dark .crm-form-shell .ant-input-number-input {
   background: transparent !important;
-  border-color: #4a4a4a !important;
+  color: #e9edef !important;
+}
+
+.dark .crm-form-shell .ant-select-selection-item,
+.dark .crm-form-shell .ant-select-selection-placeholder {
+  color: #e9edef !important;
+}
+
+.dark .crm-form-shell .ant-select-arrow,
+.dark .crm-form-shell .ant-picker-suffix {
+  color: #5ab5e8 !important;
+}
+
+.dark .crm-form-shell .ant-picker-input > input {
+  color: #e9edef !important;
+  background: transparent !important;
+}
+
+.dark .ant-select-dropdown .ant-select-item {
+  color: #e9edef !important;
+}
+
+.dark .ant-select-dropdown .ant-select-item-option-active,
+.dark .ant-select-dropdown .ant-select-item-option-selected {
+  background: #133d5e !important;
+  color: #e9edef !important;
 }

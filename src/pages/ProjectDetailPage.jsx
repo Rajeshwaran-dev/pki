@@ -329,10 +329,10 @@ const ProjectDetailPage = () => {
 
   const responsiveVars = {
     '--pd-page-bg': isDark ? '#141414' : '#f8fafc',
-    '--pd-surface': isDark ? '#1f1f1f' : '#ffffff',
-    '--pd-pill-bg': isDark ? '#262626' : '#f6f6f8',
-    '--pd-primary-soft': isDark ? 'rgba(177,150,37,0.22)' : '#f6efda',
-    '--pd-control-bg': isDark ? '#2a2418' : '#f7f3e8',
+    '--pd-surface': isDark ? '#0d3554' : '#ffffff',
+    '--pd-pill-bg': isDark ? '#0a2235' : '#f6f6f8',
+    '--pd-primary-soft': isDark ? 'rgba(11,43,68,0.22)' : '#e8f0f7',
+    '--pd-control-bg': isDark ? '#0d2a3e' : '#e8f0f7',
     '--pd-table-head': isDark ? '#242424' : '#f6f7f9',
     '--pd-border': isDark ? '#303030' : '#e9e9ee',
     '--pd-border-soft': isDark ? '#383838' : '#eef0f4',
@@ -853,10 +853,10 @@ const ProjectDetailPage = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', padding: isMobile ? '0 14px 14px' : '0 24px 14px' }}>
-          <Tag style={{ borderRadius: 999, background: '#fbf8ef', borderColor: '#f2e5bb', color: '#b19625', fontWeight: 600 }}>
+          <Tag style={{ borderRadius: 999, background: '#e8f0f7', borderColor: '#b8d0e8', color: '#0B2B44', fontWeight: 600 }}>
             <span style={{ marginRight: 6 }}>👤</span>{project.clientName}
           </Tag>
-          <Tag style={{ borderRadius: 999, background: '#fbf8ef', borderColor: '#f2e5bb', color: '#b19625', fontWeight: 600 }}>
+          <Tag style={{ borderRadius: 999, background: '#e8f0f7', borderColor: '#b8d0e8', color: '#0B2B44', fontWeight: 600 }}>
             <span style={{ marginRight: 6 }}>📞</span>{project.phone}
           </Tag>
         </div>

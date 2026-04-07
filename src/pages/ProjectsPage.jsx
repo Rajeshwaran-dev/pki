@@ -24,16 +24,16 @@ const { Text, Title } = Typography;
 
 const stageColors = {
   Sales: '#1677FF',
-  Designing: '#B19625',
+  Designing: '#0ea5e9',
   Execution: '#722ED1',
   Snags: '#FF4D4F',
   Handover: '#FAAD14',
   Completed: '#52C41A',
 };
 
-const primaryColor = '#B19625';
-const primaryLight = '#D4B96E';
-const modalAccent = '#B19625';
+const primaryColor = '#0B2B44';
+const primaryLight = '#0B2B44';
+const modalAccent = '#0B2B44';
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 const modalUserOptions = [
   'Anantha Narayana',
@@ -50,9 +50,9 @@ const vendorOptions = ['Studio Grid', 'Value Kitchens', 'Blue Stone Works'];
 const KanbanCard = ({ project, onView, isDark }) => (
   <div
     style={{
-      background: isDark ? '#262626' : 'white', borderRadius: 10, padding: '12px 14px', marginBottom: 8,
+      background: isDark ? '#0d3554' : 'white', borderRadius: 10, padding: '12px 14px', marginBottom: 8,
       boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.07)', cursor: 'pointer',
-      border: `1px solid ${isDark ? '#3a3a3a' : '#f0f0f0'}`, transition: 'box-shadow 0.2s ease',
+      border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, transition: 'box-shadow 0.2s ease',
     }}
     onClick={() => onView(project)}
     onMouseEnter={e => { if (!isDark) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)'; }}
@@ -456,18 +456,18 @@ const ProjectsPage = () => {
           style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
           onClick={() => navigate(`/projects/${row.id}`)}
         >
-          <Avatar size={36} style={{ background: '#B1962515', color: '#B19625', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : '#0B2B4415', color: isDark ? '#5ab5e8' : '#0B2B44', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
             {name.charAt(0)}
           </Avatar>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 13, color: primaryColor }}>{name}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: isDark ? '#a8cce8' : primaryColor }}>{name}</div>
             <div style={{ fontSize: 11, color: '#999' }}>{row.projectCode}</div>
           </div>
         </div>
       ),
     },
     { title: 'Client', dataIndex: 'clientName', width: 140, render: v => <span style={{ fontWeight: 500 }}>{v}</span> },
-    { title: 'Budget', dataIndex: 'budget', width: 110, render: v => <span style={{ color: '#B19625', fontWeight: 600 }}>₹{(v / 100000).toFixed(1)}L</span>, sorter: (a, b) => a.budget - b.budget },
+    { title: 'Budget', dataIndex: 'budget', width: 110, render: v => <span style={{ color: isDark ? '#a8cce8' : '#0B2B44', fontWeight: 600 }}>₹{(v / 100000).toFixed(1)}L</span>, sorter: (a, b) => a.budget - b.budget },
     { title: 'City', dataIndex: 'city', width: 100 },
     { title: 'State', dataIndex: 'state', width: 130 },
     { title: 'Stage', dataIndex: 'stage', width: 120, render: v => <StatusTag value={v} />, filters: stages.filter(s => s !== 'All').map(s => ({ text: s, value: s })), onFilter: (v, r) => r.stage === v },
@@ -478,19 +478,19 @@ const ProjectsPage = () => {
       render: (_, row) => (
         <Space size={4}>
           <Tooltip title="View"><Button type="text" size="small" icon={<ArrowRightOutlined style={{ color: primaryColor }} />} onClick={e => { e.stopPropagation(); setOverviewProject(row); }} /></Tooltip>
-          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#B19625' }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
+          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
         </Space>
       ),
     },
   ];
 
   const activeStages = stages.filter(s => s !== 'All');
-  const pageCardBg = isDark ? '#1f1f1f' : '#ffffff';
-  const pageCardBorder = isDark ? '#303030' : '#f0f0f0';
-  const mutedSurface = isDark ? '#232323' : '#f0f0f0';
-  const chipBg = isDark ? '#262626' : '#ffffff';
-  const chipBorder = isDark ? '#3a3a3a' : '#e0e0e0';
-  const boardBg = isDark ? '#1f1f1f' : '#f9f9f9';
+  const pageCardBg = isDark ? '#0d3554' : '#ffffff';
+  const pageCardBorder = isDark ? '#1a4d72' : '#f0f0f0';
+  const mutedSurface = isDark ? '#0a2235' : '#f0f0f0';
+  const chipBg = isDark ? '#0d3554' : '#ffffff';
+  const chipBorder = isDark ? '#1a4d72' : '#e0e0e0';
+  const boardBg = isDark ? '#0d3554' : '#f9f9f9';
   const visibleUsers = modalUserOptions.filter(name => name.toLowerCase().includes(userSearch.toLowerCase()));
 
   const viewToggle = (
@@ -499,7 +499,7 @@ const ProjectsPage = () => {
         onClick={() => setViewMode('list')}
         style={{
           padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'list' ? '#B19625' : 'transparent',
+          background: viewMode === 'list' ? (isDark ? '#133d5e' : '#0B2B44') : 'transparent',
           color: viewMode === 'list' ? 'white' : '#888',
           fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
           transition: 'all 0.2s ease',
@@ -511,7 +511,7 @@ const ProjectsPage = () => {
         onClick={() => setViewMode('board')}
         style={{
           padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'board' ? '#B19625' : 'transparent',
+          background: viewMode === 'board' ? (isDark ? '#133d5e' : '#0B2B44') : 'transparent',
           color: viewMode === 'board' ? 'white' : '#888',
           fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
           transition: 'all 0.2s ease',
@@ -565,18 +565,18 @@ const ProjectsPage = () => {
               onClick={() => dispatch(setActiveTab(s))}
               style={{
                 padding: '5px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
-                border: isActive ? 'none' : `1.5px solid ${s === 'All' ? primaryLight : chipBorder}`,
-                background: isActive ? primaryColor : chipBg,
-                color: isActive ? 'white' : (s === 'All' ? primaryColor : '#555'),
+                border: isActive ? 'none' : `1.5px solid ${s === 'All' ? (isDark ? '#2980b9' : primaryLight) : chipBorder}`,
+                background: isActive ? (isDark ? '#133d5e' : primaryColor) : chipBg,
+                color: isActive ? 'white' : (s === 'All' ? (isDark ? '#5ab5e8' : primaryColor) : (isDark ? '#a8b0ba' : '#555')),
                 fontWeight: isActive ? 600 : 400, whiteSpace: 'nowrap', flexShrink: 0,
-                boxShadow: isActive ? '0 6px 16px rgba(177,150,37,0.22)' : 'none',
+                boxShadow: isActive ? (isDark ? '0 4px 14px rgba(19,61,94,0.55)' : '0 6px 16px rgba(11,43,68,0.22)') : 'none',
               }}
             >
               {s} ({count})
             </button>
           );
         })}
-        <button style={{ padding: '5px 10px', borderRadius: 20, border: `1.5px solid ${primaryLight}`, background: chipBg, cursor: 'pointer', fontSize: 14, color: primaryColor, flexShrink: 0 }}>+</button>
+        <button style={{ padding: '5px 10px', borderRadius: 20, border: `1.5px solid ${isDark ? '#2980b9' : primaryLight}`, background: chipBg, cursor: 'pointer', fontSize: 14, color: isDark ? '#5ab5e8' : primaryColor, flexShrink: 0 }}>+</button>
       </div>
 
       {/* BOARD VIEW */}
@@ -797,9 +797,9 @@ const ProjectsPage = () => {
             <Form form={form} layout="vertical" className="crm-form-shell">
               <div style={{ display: 'flex', alignItems: isMobile ? 'stretch' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', gap: 16, marginBottom: 18 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: '#111827' }}>{editingProject.clientName} ({editingProject.projectName}) {editingProject.createdDate}</span>
-                  <EditOutlined style={{ color: '#b19625', fontSize: 14 }} />
-                  <MoreOutlined style={{ color: '#111827', fontSize: 16 }} />
+                  <span style={{ fontSize: 18, fontWeight: 800, color: isDark ? '#e9edef' : '#111827' }}>{editingProject.clientName} ({editingProject.projectName}) {editingProject.createdDate}</span>
+                  <EditOutlined style={{ color: isDark ? '#5ab5e8' : '#0B2B44', fontSize: 14 }} />
+                  <MoreOutlined style={{ color: isDark ? '#8696a0' : '#111827', fontSize: 16 }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(140px, 1fr))', gap: 12, width: isMobile ? '100%' : 300 }}>
                   <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}><Select options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item>
@@ -813,7 +813,7 @@ const ProjectsPage = () => {
                     <Form.Item name="clientName" label="Name"><Input /></Form.Item>
                     <Form.Item name="email" label="Email"><Input /></Form.Item>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 8 }}>Phone *</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: isDark ? '#a8cce8' : '#333', marginBottom: 8 }}>Phone *</div>
                       <Row gutter={10}>
                         <Col span={8}><Form.Item name="phoneCode" style={{ marginBottom: 0 }}><Select options={phoneCodeOptions} /></Form.Item></Col>
                         <Col span={16}><Form.Item name="phoneNumber" style={{ marginBottom: 0 }}><Input /></Form.Item></Col>
@@ -826,8 +826,8 @@ const ProjectsPage = () => {
                 <div className="crm-panel-card__head">Project Details</div>
                 <div className="crm-panel-card__body">
                   <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 14, marginBottom: 12 }}>
-                    <div><div style={{ fontSize: 11, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Created on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
-                    <div><div style={{ fontSize: 11, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Last updated on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
+                    <div><div style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Created on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
+                    <div><div style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Last updated on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
                     <Form.Item name="budget" label="Budget"><Input /></Form.Item>
                   </div>
                   <Form.Item name="description" label="Description" style={{ maxWidth: 320, marginBottom: 0 }}><Input.TextArea rows={2} /></Form.Item>
@@ -872,9 +872,9 @@ const ProjectsPage = () => {
                   </Space>
                 </div>
                 <div className="crm-panel-card__body">
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 11, fontWeight: 700, color: '#111827' }}><div>Name</div><div>Role</div><div /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827' }}><div>Name</div><div>Role</div><div /></div>
                   {projectUsers.map(user => (
-                    <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, padding: '8px 0', borderTop: '1px solid #ededed' }}>
+                    <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, padding: '8px 0', borderTop: `1px solid ${isDark ? '#1a4d72' : '#ededed'}` }}>
                       <div>{user.name}</div><div>{user.role}</div>
                       <Button type="text" danger icon={<DeleteOutlined />} onClick={() => setProjectUsers(prev => prev.filter(item => item.key !== user.key))} />
                     </div>

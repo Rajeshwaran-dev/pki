@@ -11,7 +11,7 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const CHART_COLORS = ['#B19625', '#1677FF', '#52C41A', '#722ED1', '#FAAD14', '#FF4D4F'];
+const CHART_COLORS = ['#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#0ea5e9'];
 
 const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter }) => (
   <div style={{ height: '100%' }}>
@@ -61,7 +61,7 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter 
 const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: isDark ? '#1f1f1f' : '#fff', border: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`, borderRadius: 10, padding: '10px 14px', boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
+    <div style={{ background: isDark ? '#0d3554' : '#fff', border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: '10px 14px', boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
       <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ color: p.color, fontSize: 13 }}>{p.name}: <strong>{p.value}</strong></div>
@@ -81,7 +81,7 @@ const DashboardPage = () => {
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
 
   const stats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#B19625', trend: '8%' },
+    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#1677FF', trend: '8%' },
     { title: 'Active Clients', value: clients.length, icon: <TeamOutlined />, color: '#1677FF', trend: '15%' },
     { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}`, trend: '24%' },
     { title: 'Total Portfolio', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true, trend: '18%' },
@@ -140,8 +140,8 @@ const DashboardPage = () => {
               <AreaChart data={trendData}>
                 <defs>
                   <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#B19625" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#B19625" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#1677FF" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#1677FF" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#1677FF" stopOpacity={0.2} />
@@ -152,7 +152,7 @@ const DashboardPage = () => {
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Area type="monotone" dataKey="projects" name="Projects" stroke="#B19625" strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: '#B19625', r: 4 }} />
+                <Area type="monotone" dataKey="projects" name="Projects" stroke="#1677FF" strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: '#1677FF', r: 4 }} />
                 <Area type="monotone" dataKey="tasks" name="Tasks" stroke="#1677FF" strokeWidth={2.5} fill="url(#blueGrad)" dot={{ fill: '#1677FF', r: 4 }} />
               </AreaChart>
             </ResponsiveContainer>
@@ -222,7 +222,7 @@ const DashboardPage = () => {
           >
             {stageData.map(({ name, count }) => {
               const pct = projects.length ? Math.round((count / projects.length) * 100) : 0;
-              const colors = { Sales: '#1677FF', Designing: '#B19625', Execution: '#722ED1', Snags: '#FF4D4F', Handover: '#FAAD14', Completed: '#52C41A' };
+              const colors = { Sales: '#1677FF', Designing: '#0ea5e9', Execution: '#722ED1', Snags: '#FF4D4F', Handover: '#FAAD14', Completed: '#52C41A' };
               return (
                 <div key={name} style={{ marginBottom: 14 }}>
                   <div className="flex justify-between mb-1">
@@ -312,7 +312,7 @@ const DashboardPage = () => {
                     {task.title}
                   </div>
                   <div style={{ fontSize: 11, color: '#999' }}>
-                    {task.projectName} · <span style={{ color: '#B19625' }}>{task.assignee}</span>
+                    {task.projectName} · <span style={{ color: '#0B2B44' }}>{task.assignee}</span>
                   </div>
                 </div>
                 <Space size={6} direction="vertical" style={{ alignItems: 'flex-end', flexShrink: 0 }}>
