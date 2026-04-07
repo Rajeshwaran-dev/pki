@@ -31,9 +31,6 @@ const stageColors = {
   Completed: '#52C41A',
 };
 
-const primaryColor = '#0B2B44';
-const primaryLight = '#0B2B44';
-const modalAccent = '#0B2B44';
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 const modalUserOptions = [
   'Anantha Narayana',
@@ -47,7 +44,9 @@ const modalUserOptions = [
 const vendorOptions = ['Studio Grid', 'Value Kitchens', 'Blue Stone Works'];
 
 /* ── Kanban project card ── */
-const KanbanCard = ({ project, onView, isDark }) => (
+const KanbanCard = ({ project, onView, isDark }) => {
+  const primaryColor = isDark ? '#0B2B44' : '#D69F6D';
+  return (
   <div
     style={{
       background: isDark ? '#0d3554' : 'white', borderRadius: 10, padding: '12px 14px', marginBottom: 8,
@@ -80,10 +79,13 @@ const KanbanCard = ({ project, onView, isDark }) => (
       </div>
     )}
   </div>
-);
+  );
+};
 
 /* ── Project Overview Drawer ── */
 const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
+  const isDark = useAppSelector(s => s.ui.theme) === 'dark';
+  const primaryColor = isDark ? '#0B2B44' : '#D69F6D';
   const [tab, setTab] = useState('Details');
   if (!project) return null;
   const color = stageColors[project.stage] || '#666';
@@ -237,6 +239,8 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
 
 /* ── Filter Drawer ── */
 const FilterDrawer = ({ open, onClose, onApply }) => {
+  const isDark = useAppSelector(s => s.ui.theme) === 'dark';
+  const primaryColor = isDark ? '#0B2B44' : '#D69F6D';
   const clients = useAppSelector(s => s.clients.clients);
   const [filters, setFilters] = useState({});
   const set = (key, val) => setFilters(p => ({ ...p, [key]: val }));
@@ -316,6 +320,9 @@ const ProjectsPage = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
   const isDark = theme === 'dark';
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  const primaryLight = isDark ? '#5ab5e8' : '#D69F6D';
+  const modalAccent = isDark ? '#5ab5e8' : '#D69F6D';
 
   const [modalOpen, setModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
@@ -456,7 +463,7 @@ const ProjectsPage = () => {
           style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
           onClick={() => navigate(`/projects/${row.id}`)}
         >
-          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : '#0B2B4415', color: isDark ? '#5ab5e8' : '#0B2B44', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: isDark ? '#5ab5e8' : primaryColor, fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
             {name.charAt(0)}
           </Avatar>
           <div>
@@ -467,7 +474,7 @@ const ProjectsPage = () => {
       ),
     },
     { title: 'Client', dataIndex: 'clientName', width: 140, render: v => <span style={{ fontWeight: 500 }}>{v}</span> },
-    { title: 'Budget', dataIndex: 'budget', width: 110, render: v => <span style={{ color: isDark ? '#a8cce8' : '#0B2B44', fontWeight: 600 }}>₹{(v / 100000).toFixed(1)}L</span>, sorter: (a, b) => a.budget - b.budget },
+    { title: 'Budget', dataIndex: 'budget', width: 110, render: v => <span style={{ color: isDark ? '#a8cce8' : '#D69F6D', fontWeight: 600 }}>₹{(v / 100000).toFixed(1)}L</span>, sorter: (a, b) => a.budget - b.budget },
     { title: 'City', dataIndex: 'city', width: 100 },
     { title: 'State', dataIndex: 'state', width: 130 },
     { title: 'Stage', dataIndex: 'stage', width: 120, render: v => <StatusTag value={v} />, filters: stages.filter(s => s !== 'All').map(s => ({ text: s, value: s })), onFilter: (v, r) => r.stage === v },
@@ -478,7 +485,7 @@ const ProjectsPage = () => {
       render: (_, row) => (
         <Space size={4}>
           <Tooltip title="View"><Button type="text" size="small" icon={<ArrowRightOutlined style={{ color: primaryColor }} />} onClick={e => { e.stopPropagation(); setOverviewProject(row); }} /></Tooltip>
-          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
+          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: primaryColor }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
         </Space>
       ),
     },
@@ -499,7 +506,7 @@ const ProjectsPage = () => {
         onClick={() => setViewMode('list')}
         style={{
           padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'list' ? (isDark ? '#133d5e' : '#0B2B44') : 'transparent',
+          background: viewMode === 'list' ? (isDark ? '#133d5e' : '#D69F6D') : 'transparent',
           color: viewMode === 'list' ? 'white' : '#888',
           fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
           transition: 'all 0.2s ease',
@@ -511,7 +518,7 @@ const ProjectsPage = () => {
         onClick={() => setViewMode('board')}
         style={{
           padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'board' ? (isDark ? '#133d5e' : '#0B2B44') : 'transparent',
+          background: viewMode === 'board' ? (isDark ? '#133d5e' : '#D69F6D') : 'transparent',
           color: viewMode === 'board' ? 'white' : '#888',
           fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
           transition: 'all 0.2s ease',

@@ -15,7 +15,7 @@ import { useAppSelector } from '@/store';
 
 const { Text, Title } = Typography;
 
-const goldBtn = { background: '#0B2B44', border: 'none', borderRadius: 8 };
+const getGoldBtn = (isDark) => ({ background: isDark ? '#5ab5e8' : '#D69F6D', border: 'none', borderRadius: 8 });
 const getTableCard = (isDark) => ({
   background: isDark ? '#0d3554' : 'white',
   borderRadius: 14,
@@ -36,9 +36,9 @@ const SubTabs = ({ tabs, active, onChange, isDark }) => (
           onClick={() => onChange(t.key)}
           style={{
             padding: '5px 16px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
-            border: isActive ? `1.5px solid ${isDark ? '#2980b9' : '#0B2B44'}` : `1.5px solid ${isDark ? '#1a4d72' : '#e0e0e0'}`,
-            background: isActive ? (isDark ? 'rgba(41,128,185,0.18)' : '#0B2B4412') : (isDark ? '#0a2235' : 'white'),
-            color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#a8b0ba' : '#555'),
+            border: isActive ? `1.5px solid ${isDark ? '#5ab5e8' : '#D69F6D'}` : `1.5px solid ${isDark ? '#1a4d72' : '#e0e0e0'}`,
+            background: isActive ? (isDark ? 'rgba(90,181,232,0.18)' : 'rgba(214,159,109,0.12)') : (isDark ? '#0a2235' : 'white'),
+            color: isActive ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#a8b0ba' : '#555'),
             fontWeight: isActive ? 600 : 400,
           }}
         >
@@ -131,7 +131,7 @@ const itemData = [
 const ItemMasterTab = () => (
   <div className="animate-fade-in">
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-      <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Item</Button>
+      <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Item</Button>
       <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Export Excel</Button>
     </div>
     <div style={tableCard}>
@@ -180,7 +180,7 @@ const MaterialsTab = () => {
       {sub === 'all' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-            <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Material</Button>
+            <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Material</Button>
             <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Export Excel</Button>
           </div>
           <div style={tableCard}><Table dataSource={materialData} columns={matCols} size="small" scroll={{ x: 900 }} pagination={{ showTotal: (t, r) => `Showing ${r[0]} to ${r[1]} of ${t} items` }} /></div>
@@ -189,7 +189,7 @@ const MaterialsTab = () => {
       {sub === 'rate' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-            <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Rate Contract</Button>
+            <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Rate Contract</Button>
           </div>
           <div style={tableCard}>
             <Table dataSource={[]} size="small" locale={{ emptyText: 'No data available' }}
@@ -216,8 +216,8 @@ const MaterialsTab = () => {
 const ChecklistTab = () => (
   <div className="animate-fade-in">
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-      <Button style={{ borderRadius: 8, borderColor: '#0B2B44', color: '#0B2B44' }}>+ Create Design Checklist</Button>
-      <Button style={{ borderRadius: 8, borderColor: '#0B2B44', color: '#0B2B44' }}>+ Add Handover Checklist</Button>
+      <Button style={{ borderRadius: 8, borderColor: '#D69F6D', color: '#D69F6D' }}>+ Create Design Checklist</Button>
+      <Button style={{ borderRadius: 8, borderColor: '#D69F6D', color: '#D69F6D' }}>+ Add Handover Checklist</Button>
     </div>
     <div style={{ ...tableCard, padding: '48px 24px', textAlign: 'center' }}>
       <CheckSquareOutlined style={{ fontSize: 40, color: '#d0d0d0', display: 'block', marginBottom: 12 }} />
@@ -233,7 +233,7 @@ const MoodboardTab = ({ isDark }) => {
     <div className="animate-fade-in">
       <SubTabs tabs={[{ key: 'items', label: 'Items' }, { key: 'groups', label: 'Groups' }]} active={sub} onChange={setSub} isDark={isDark} />
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-        <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add New</Button>
+        <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add New</Button>
       </div>
       <div style={{ ...getTableCard(isDark), padding: '48px 24px', textAlign: 'center' }}>
         <PictureOutlined style={{ fontSize: 40, color: '#d0d0d0', display: 'block', marginBottom: 12 }} />
@@ -266,7 +266,7 @@ const ActivityTab = () => {
       {sub === 'tags' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-            <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Tag</Button>
+            <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Tag</Button>
           </div>
           <div style={tableCard}>
             <Table dataSource={tagData} size="small" pagination={{ showTotal: t => `${t} items` }}
@@ -281,7 +281,7 @@ const ActivityTab = () => {
       {sub === 'master' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-            <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Activity</Button>
+            <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Activity</Button>
             <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Import Excel</Button>
           </div>
           <div style={tableCard}>
@@ -312,7 +312,7 @@ const manpowerData = [
 const ManpowerTab = () => (
   <div className="animate-fade-in">
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 12 }}>
-      <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Manpower</Button>
+      <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Manpower</Button>
       <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Import Excel</Button>
     </div>
     <div style={tableCard}>
@@ -348,7 +348,7 @@ const VendorsTab = () => {
           active={sub} onChange={setSub}
         />
         <Space>
-          <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add Vendor</Button>
+          <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Vendor</Button>
           <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Export Excel</Button>
         </Space>
       </div>
@@ -400,7 +400,7 @@ const UsersTab = () => {
           ]}
           active={sub} onChange={setSub}
         />
-        <Button type="primary" icon={<PlusOutlined />} style={goldBtn}>Add User</Button>
+        <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add User</Button>
       </div>
       <div style={tableCard}>
         <Table
@@ -437,7 +437,7 @@ const PermissionsTab = () => {
   return (
     <div className="animate-fade-in">
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-        <Button type="primary" style={goldBtn}>Save Changes</Button>
+        <Button type="primary" style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Save Changes</Button>
       </div>
       <div style={tableCard}>
         <Table size="small" pagination={false}
@@ -573,7 +573,7 @@ const ConfigurationTab = ({ isDark }) => {
             onClick={() => setActiveModule(m)}
             style={{
               padding: '10px 20px', cursor: 'pointer', fontSize: 13,
-              color: activeModule === m ? '#1677FF' : '#555',
+              color: activeModule === m ? '#1677FF' : (isDark ? '#a8b0ba' : '#555'),
               background: activeModule === m ? (isDark ? 'rgba(22,119,255,0.18)' : '#EEF4FF') : 'transparent',
               fontWeight: activeModule === m ? 600 : 400,
               borderLeft: activeModule === m ? '3px solid #1677FF' : '3px solid transparent',
@@ -651,9 +651,9 @@ const SettingsPage = () => {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 14px', borderRadius: 24,
-                  border: isActive ? `2px solid ${isDark ? '#2980b9' : '#0B2B44'}` : '2px solid transparent',
-                  background: isActive ? (isDark ? 'rgba(41,128,185,0.2)' : '#0B2B4412') : (isDark ? 'rgba(255,255,255,0.04)' : '#f7f7f7'),
-                  color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#8c9baf' : '#666'),
+                  border: isActive ? `2px solid ${isDark ? '#5ab5e8' : '#D69F6D'}` : '2px solid transparent',
+                  background: isActive ? (isDark ? 'rgba(90,181,232,0.2)' : 'rgba(214,159,109,0.12)') : (isDark ? 'rgba(255,255,255,0.04)' : '#f7f7f7'),
+                  color: isActive ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#8c9baf' : '#666'),
                   fontWeight: isActive ? 700 : 400,
                   fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 }}

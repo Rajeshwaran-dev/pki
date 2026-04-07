@@ -13,7 +13,6 @@ import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
 const CHART_COLORS = ['#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#0ea5e9'];
-const primaryColor = '#0B2B44';
 
 const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
@@ -92,6 +91,7 @@ const exportCSV = (rows, columns, filename) => {
    PROJECTS REPORT TAB
 ════════════════════════════════════════════ */
 const ProjectsReport = ({ projects, isDark }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const [stageFilter, setStageFilter] = useState('All');
   const [cityFilter, setCityFilter] = useState('All');
 
@@ -194,6 +194,7 @@ const ProjectsReport = ({ projects, isDark }) => {
    TASKS REPORT TAB
 ════════════════════════════════════════════ */
 const TasksReport = ({ tasks, isDark }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
 
@@ -291,7 +292,7 @@ const TasksReport = ({ tasks, isDark }) => {
                     <span style={{ fontSize: 11, color: '#52C41A', fontWeight: 600 }}>{a.completed}/{a.total}</span>
                   </div>
                   <Progress percent={pct} size="small" showInfo={false}
-                    strokeColor={{ '0%': primaryColor, '100%': '#0B2B44' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" />
+                    strokeColor={{ '0%': primaryColor, '100%': isDark ? '#1e5c8a' : '#D69F6D' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" />
                 </div>
               );
             })}
@@ -332,6 +333,7 @@ const TasksReport = ({ tasks, isDark }) => {
    FINANCIAL REPORT TAB
 ════════════════════════════════════════════ */
 const FinancialReport = ({ projects, isDark }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const avgBudget = projects.length ? totalBudget / projects.length : 0;
   const maxProject = projects.reduce((a, b) => (b.budget > a.budget ? b : a), projects[0] || {});
@@ -364,7 +366,7 @@ const FinancialReport = ({ projects, isDark }) => {
     { title: 'Share', dataIndex: 'budget', key: 'share', render: v => {
       const pct = totalBudget ? Math.round((v / totalBudget) * 100) : 0;
       return <Progress percent={pct} size="small" showInfo={false}
-        strokeColor={{ '0%': primaryColor, '100%': '#0B2B44' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" style={{ width: 80 }} />;
+        strokeColor={{ '0%': primaryColor, '100%': isDark ? '#1e5c8a' : '#D69F6D' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" style={{ width: 80 }} />;
     }},
   ];
 

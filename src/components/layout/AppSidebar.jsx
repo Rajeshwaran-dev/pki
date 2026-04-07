@@ -32,10 +32,12 @@ const AppSidebar = () => {
   const isMobile = useIsMobile();
 
   const isDark = theme === 'dark';
+  const caputMortuum = '#4F312A';
+  const buffColor = isDark ? '#0B2B44' : '#D69F6D';
+  const activeGradient = `linear-gradient(135deg, ${caputMortuum} 0%, ${buffColor} 100%)`;
   const siderBg = isDark ? '#031726' : '#ffffff';
   const borderColor = isDark ? '#0a2e4a' : '#f0f0f0';
-  const buffColor = '#0B2B44';
-  const logoContainerBg = buffColor;
+  const logoContainerBg = 'transparent';
 
   const handleLogout = () => {
     dispatch(logout());
@@ -55,11 +57,12 @@ const AppSidebar = () => {
           height: 64,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: collapsed && !isMobile ? 'center' : (isDark ? 'center' : 'flex-start'),
+          justifyContent: 'center',
           padding: '0 20px',
           borderBottom: `1px solid ${borderColor}`,
           gap: 12,
-          overflow: 'hidden',
+          overflow: 'visible',
+          background: isDark ? 'transparent' : logoContainerBg,
         }}
       >
         {isDark ? (
@@ -76,35 +79,20 @@ const AppSidebar = () => {
             }}
           />
         ) : (
-          <div
+          <img
+            src="/PK_I_Logo.png"
+            alt="PK_I logo"
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              background: buffColor,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: 17,
+              height: collapsed && !isMobile ? 32 : 64,
+              maxWidth: collapsed && !isMobile ? 40 : 220,
+              width: '100%',
+              objectFit: 'contain',
+              display: 'block',
               flexShrink: 0,
-              overflow: 'hidden',
-              boxShadow: `0 4px 12px ${buffColor}45`,
+              transform: collapsed && !isMobile ? 'none' : 'scale(3.2)',
+              transformOrigin: 'center'
             }}
-          >
-            P
-          </div>
-        )}
-        {(!collapsed || isMobile) && !isDark && (
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.2, color: isDark ? '#f5f5f5' : '#1f1f1f' }}>
-              Perspective
-            </div>
-            <div style={{ fontSize: 10, color: buffColor, fontWeight: 500, letterSpacing: '0.5px' }}>
-              Interiour CRM
-            </div>
-          </div>
+          />
         )}
       </div>
 
@@ -127,33 +115,42 @@ const AppSidebar = () => {
                   gap: 12,
                   padding: collapsed && !isMobile ? '12px 0' : '11px 14px',
                   justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
-                  marginBottom: 3,
-                  borderRadius: 10,
+                  marginBottom: 6,
+                  borderRadius: 14,
                   cursor: 'pointer',
                   background: isActive
-                    ? (isDark ? '#133d5e' : buffColor)
+                    ? (isDark ? '#133d5e' : activeGradient)
                     : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#666'),
-                  border: isActive ? `1px solid ${isDark ? '#1e5c8a' : buffColor}` : 'none',
-                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
+                  border: isActive ? `1px solid ${isDark ? '#1e5c8a' : 'rgba(214,159,109,0.55)'}` : '1px solid transparent',
+                  fontWeight: isActive ? 600 : 500,
                   fontSize: 13.5,
-                  transition: 'background 0.2s ease, color 0.2s ease, border 0.2s ease',
-                  boxShadow: isActive ? `0 4px 12px ${isDark ? 'rgba(30,92,138,0.45)' : buffColor + '40'}` : 'none',
+                  transition: 'background 0.2s ease, color 0.2s ease, border 0.2s ease, box-shadow 0.2s ease',
+                  boxShadow: isActive ? `0 8px 24px ${isDark ? 'rgba(30,92,138,0.28)' : 'rgba(79,49,42,0.16)'}` : 'none',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
-                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : `${buffColor}20`;
-                    e.currentTarget.style.color = isDark ? '#7ec8e3' : buffColor;
+                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(214,159,109,0.09)';
+                    e.currentTarget.style.color = isDark ? '#7ec8e3' : '#4f312a';
                   }
                 }}
                 onMouseLeave={e => {
                   if (!isActive) {
                     e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = isDark ? '#9a9a9a' : '#666';
+                    e.currentTarget.style.color = isDark ? '#9a9a9a' : '#4f312a';
                   }
                 }}
               >
-                <span style={{ fontSize: 17, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                <span style={{
+                  fontSize: 17,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  borderRadius: 10,
+                  background: isActive && !isDark ? 'rgba(255,255,255,0.16)' : 'transparent',
+                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
+                }}>
                   {item.icon}
                 </span>
                 {(!collapsed || isMobile) && (
@@ -172,7 +169,7 @@ const AppSidebar = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px', borderRadius: 10,
-              background: isDark ? '#081b2f' : `${buffColor}15`,
+              background: isDark ? '#081b2f' : 'rgba(255,255,255,0.18)',
               marginBottom: 8,
             }}
           >

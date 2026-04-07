@@ -6,10 +6,10 @@
 
 @layer base {
   :root {
-    --gold: #0B2B44;
-    --gold-light: #0B2B44;
-    --gold-dark: #0B2B44;
-    --gold-soft: rgba(11, 43, 68, 0.08);
+    --gold: #D69F6D;
+    --gold-light: #e6b78d;
+    --gold-dark: #b88656;
+    --gold-soft: rgba(214, 159, 109, 0.09);
 
     --background: 0 0% 100%;
     --foreground: 0 0% 5%;
@@ -193,7 +193,7 @@
   transition: background 0.2s ease;
 }
 .kanban-column:hover {
-  background: rgba(11, 43, 68, 0.03) !important;
+  background: rgba(214, 159, 109, 0.04) !important;
 }
 
 /* Login blobs */
@@ -219,19 +219,19 @@
 
 /* Gradient text */
 .gradient-text {
-  color: #0B2B44;
+  color: #D69F6D;
 }
 
 /* Status badge glow */
 .status-glow-green { box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.15); }
 .status-glow-blue { box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.15); }
-.status-glow-gold { box-shadow: 0 0 0 3px rgba(11, 43, 68, 0.15); }
+.status-glow-gold { box-shadow: 0 0 0 3px rgba(214, 159, 109, 0.15); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(11, 43, 68, 0.25); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(11, 43, 68, 0.45); }
+::-webkit-scrollbar-thumb { background: rgba(214, 159, 109, 0.25); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(214, 159, 109, 0.45); }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
@@ -495,7 +495,7 @@
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #0B2B44;
+  background: #D69F6D;
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -509,16 +509,16 @@
   min-width: 88px;
   border-radius: 10px !important;
   border: none !important;
-  background: #0B2B44 !important;
+  background: #D69F6D !important;
   box-shadow: none !important;
   font-weight: 700 !important;
 }
 
 .crm-outline-btn {
   border-radius: 10px !important;
-  border-color: #0B2B44 !important;
-  color: #0B2B44 !important;
-  background: #e8f0f7 !important;
+  border-color: #D69F6D !important;
+  color: #D69F6D !important;
+  background: rgba(214, 159, 109, 0.08) !important;
   font-weight: 700 !important;
   box-shadow: none !important;
 }

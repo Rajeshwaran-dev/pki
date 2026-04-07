@@ -98,7 +98,7 @@ const TaskCard = ({ task, overlay, onEdit }) => {
             <span style={{ fontSize: 11, color: '#bbb' }}>
               <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
             </span>
-            <Avatar size={20} style={{ background: '#0B2B44', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
+            <Avatar size={20} style={{ background: '#D69F6D', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
       </Card>
@@ -130,7 +130,7 @@ const TaskCard = ({ task, overlay, onEdit }) => {
             <span style={{ fontSize: 11, color: '#bbb' }}>
               <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
             </span>
-            <Avatar size={20} style={{ background: '#0B2B44', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
+            <Avatar size={20} style={{ background: '#D69F6D', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
         {onEdit && (
@@ -254,7 +254,7 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
   <div>
     <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', marginBottom: 16, background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       {showBack && (
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: '#0B2B44' }}>
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: isDark ? '#5ab5e8' : '#D69F6D' }}>
           Back to list
         </Button>
       )}
@@ -339,7 +339,7 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
 );
 
 /* ── List Item Card ── */
-const ListItemCard = ({ item, type = 'task', isSelected, onClick, onEdit, onMore }) => (
+const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit, onMore }) => (
   <Card
     size="small"
     hoverable
@@ -347,8 +347,8 @@ const ListItemCard = ({ item, type = 'task', isSelected, onClick, onEdit, onMore
     style={{
       borderRadius: 12, marginBottom: 8, cursor: 'pointer',
       borderLeft: `3px solid ${statusColors[item.status] || '#ccc'}`,
-      background: isSelected ? 'rgba(11,43,68,0.06)' : undefined,
-      outline: isSelected ? '2px solid #0B2B44' : 'none',
+      background: isSelected ? (isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)') : undefined,
+      outline: isSelected ? `2px solid ${isDark ? '#5ab5e8' : '#D69F6D'}` : 'none',
       transition: 'all 0.2s ease',
     }}
     styles={{ body: { padding: '12px 14px' } }}
@@ -394,6 +394,7 @@ const TasksPage = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
   const isDark = theme === 'dark';
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
@@ -662,7 +663,7 @@ const TasksPage = () => {
                   setRequestModalOpen(true);
                 }
               }}
-              style={{ background: '#0B2B44', border: 'none' }}
+              style={{ background: primaryColor, border: 'none' }}
             >
               {!isMobile && (activeTab === 'tasks' ? 'Add Task' : 'Add Request')}
             </Button>
@@ -686,9 +687,9 @@ const TasksPage = () => {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '8px 18px', borderRadius: 24,
-                  border: isActive ? `2px solid ${isDark ? '#2980b9' : '#0B2B44'}` : '2px solid transparent',
-                  background: isActive ? (isDark ? 'rgba(41,128,185,0.18)' : '#0B2B4412') : (isDark ? darkSurfaceBg : '#f7f7f7'),
-                  color: isActive ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#a8b0ba' : '#666'),
+                  border: isActive ? `2px solid ${primaryColor}` : '2px solid transparent',
+                  background: isActive ? (isDark ? 'rgba(90,181,232,0.18)' : 'rgba(214,159,109,0.12)') : (isDark ? darkSurfaceBg : '#f7f7f7'),
+                  color: isActive ? primaryColor : (isDark ? '#a8b0ba' : '#666'),
                   fontWeight: isActive ? 700 : 400,
                   fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 }}
@@ -730,6 +731,7 @@ const TasksPage = () => {
                     item={task}
                     type="task"
                     isSelected={selectedTask?.id === task.id}
+                    isDark={isDark}
                     onClick={() => setSelectedTask(task)}
                     onEdit={openEditTaskModal}
                     onMore={(action, item) => handleMoreAction(action, item, 'task')}
@@ -751,6 +753,7 @@ const TasksPage = () => {
                   item={task}
                   type="task"
                   isSelected={false}
+                  isDark={isDark}
                   onClick={() => setSelectedTask(task)}
                   onEdit={openEditTaskModal}
                   onMore={(action, item) => handleMoreAction(action, item, 'task')}
@@ -796,6 +799,7 @@ const TasksPage = () => {
                     item={req}
                     type="request"
                     isSelected={selectedRequest?.id === req.id}
+                    isDark={isDark}
                     onClick={() => setSelectedRequest(req)}
                     onEdit={openEditRequestModal}
                     onMore={(action, item) => handleMoreAction(action, item, 'request')}
@@ -817,6 +821,7 @@ const TasksPage = () => {
                   item={req}
                   type="request"
                   isSelected={false}
+                  isDark={isDark}
                   onClick={() => setSelectedRequest(req)}
                   onEdit={openEditRequestModal}
                   onMore={(action, item) => handleMoreAction(action, item, 'request')}

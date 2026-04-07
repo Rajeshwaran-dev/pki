@@ -79,10 +79,11 @@ const DashboardPage = () => {
 
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
 
   const stats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#1677FF', trend: '8%' },
-    { title: 'Active Clients', value: clients.length, icon: <TeamOutlined />, color: '#1677FF', trend: '15%' },
+    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: primaryColor, trend: '8%' },
+    { title: 'Active Clients', value: clients.length, icon: <TeamOutlined />, color: primaryColor, trend: '15%' },
     { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}`, trend: '24%' },
     { title: 'Total Portfolio', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true, trend: '18%' },
   ];
@@ -140,20 +141,20 @@ const DashboardPage = () => {
               <AreaChart data={trendData}>
                 <defs>
                   <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1677FF" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#1677FF" stopOpacity={0} />
+                    <stop offset="5%" stopColor={primaryColor} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={primaryColor} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1677FF" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#1677FF" stopOpacity={0} />
+                    <stop offset="5%" stopColor={primaryColor} stopOpacity={0.2} />
+                    <stop offset="95%" stopColor={primaryColor} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Area type="monotone" dataKey="projects" name="Projects" stroke="#1677FF" strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: '#1677FF', r: 4 }} />
-                <Area type="monotone" dataKey="tasks" name="Tasks" stroke="#1677FF" strokeWidth={2.5} fill="url(#blueGrad)" dot={{ fill: '#1677FF', r: 4 }} />
+                <Area type="monotone" dataKey="projects" name="Projects" stroke={primaryColor} strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: primaryColor, r: 4 }} />
+                <Area type="monotone" dataKey="tasks" name="Tasks" stroke={primaryColor} strokeWidth={2.5} fill="url(#blueGrad)" dot={{ fill: primaryColor, r: 4 }} />
               </AreaChart>
             </ResponsiveContainer>
           </Card>
@@ -312,7 +313,7 @@ const DashboardPage = () => {
                     {task.title}
                   </div>
                   <div style={{ fontSize: 11, color: '#999' }}>
-                    {task.projectName} · <span style={{ color: '#0B2B44' }}>{task.assignee}</span>
+                    {task.projectName} · <span style={{ color: primaryColor }}>{task.assignee}</span>
                   </div>
                 </div>
                 <Space size={6} direction="vertical" style={{ alignItems: 'flex-end', flexShrink: 0 }}>

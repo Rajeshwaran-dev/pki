@@ -200,7 +200,7 @@ const EmptyPanel = ({ height = 420, text = 'No Data Found', image = false, actio
     <div style={{ minHeight: height, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
       {image ? (
         <>
-          <FileImageOutlined style={{ fontSize: 82, color: '#b19625', marginBottom: 18 }} />
+          <FileImageOutlined style={{ fontSize: 82, color: isDark ? '#5ab5e8' : '#D69F6D', marginBottom: 18 }} />
           {action}
         </>
       ) : (
@@ -234,7 +234,7 @@ const TableShell = ({ columns, rowsText = 'No data available', footerText = '0 i
           <span style={{ color: '#b1b8c3' }}>‹</span>
           <span style={{ color: '#b1b8c3' }}>›</span>
           <SelectBox label="25" width={86} />
-          <ReloadOutlined style={{ color: '#b19625' }} />
+          <ReloadOutlined style={{ color: isDark ? '#5ab5e8' : '#D69F6D' }} />
         </div>
       )}
     </div>
@@ -331,15 +331,15 @@ const ProjectDetailPage = () => {
     '--pd-page-bg': isDark ? '#141414' : '#f8fafc',
     '--pd-surface': isDark ? '#0d3554' : '#ffffff',
     '--pd-pill-bg': isDark ? '#0a2235' : '#f6f6f8',
-    '--pd-primary-soft': isDark ? 'rgba(11,43,68,0.22)' : '#e8f0f7',
-    '--pd-control-bg': isDark ? '#0d2a3e' : '#e8f0f7',
+    '--pd-primary-soft': isDark ? 'rgba(90,181,232,0.18)' : 'rgba(214,159,109,0.12)',
+    '--pd-control-bg': isDark ? '#0d2a3e' : '#f0f4f8',
     '--pd-table-head': isDark ? '#242424' : '#f6f7f9',
     '--pd-border': isDark ? '#303030' : '#e9e9ee',
     '--pd-border-soft': isDark ? '#383838' : '#eef0f4',
     '--pd-text': isDark ? '#f3f4f6' : '#2f2f2f',
     '--pd-text-muted': isDark ? '#c7cad1' : '#4b5563',
     '--pd-text-soft': isDark ? '#98a2b3' : '#8ea0b8',
-    '--pd-primary': '#b19625',
+    '--pd-primary': isDark ? '#5ab5e8' : '#D69F6D',
     '--pd-shadow': isDark ? 'none' : '0 1px 2px rgba(16, 24, 40, 0.04)',
   };
 
@@ -473,7 +473,7 @@ const ProjectDetailPage = () => {
             </div>
 
             <div style={{ textAlign: 'center', marginBottom: 12 }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--pd-primary)' }}>All notes <ReloadOutlined style={{ marginLeft: 8, fontSize: 14 }} /></div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: isDark ? '#5ab5e8' : '#D69F6D' }}>All notes <ReloadOutlined style={{ marginLeft: 8, fontSize: 14 }} /></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
               <SearchBox placeholder="Search notes..." width={290} />

@@ -14,13 +14,13 @@ import { useState } from 'react';
 
 const { Header } = Layout;
 
-const InfoRow = ({ icon, label, value, isDark }) => (
+const InfoRow = ({ icon, label, value, isDark, buffColor, caputMortuum }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <div style={{
       width: 38, height: 38, borderRadius: 10,
-      background: isDark ? '#0b2f4f' : '#e8f2fa',
+      background: isDark ? '#0b2f4f' : 'rgba(214,159,109,0.15)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: isDark ? '#5ab5e8' : '#0B2B44', flexShrink: 0,
+      color: isDark ? '#5ab5e8' : caputMortuum, flexShrink: 0,
     }}>
       {icon}
     </div>
@@ -41,8 +41,9 @@ const AppHeader = () => {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const isDark = theme === 'dark';
+  const caputMortuum = '#4F312A';
+  const buffColor = isDark ? '#0B2B44' : '#D69F6D';
   const bg = isDark ? '#031726' : '#ffffff';
-  const buffColor = '#0B2B44';
   const marginLeft = isMobile ? 0 : collapsed ? 72 : 240;
 
   const handleLogout = () => {
@@ -97,7 +98,7 @@ const AppHeader = () => {
           <Badge
             count={3}
             size="small"
-            style={{ background: isDark ? '#1e6fa8' : '#0B2B44' }}
+            style={{ background: isDark ? '#1e6fa8' : buffColor }}
           >
             <Button
               type="text"
@@ -114,7 +115,7 @@ const AppHeader = () => {
                   label: (
                     <div style={{ padding: '4px 0', minWidth: 160 }}>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>{user?.name || 'Super Admin'}</div>
-                      <div style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#0B2B44' }}>{user?.role}</div>
+                      <div style={{ fontSize: 12, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>{user?.role}</div>
                     </div>
                   ),
                   disabled: true,
@@ -142,7 +143,7 @@ const AppHeader = () => {
               {!isMobile && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{user?.name}</div>
-                  <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#0B2B44', lineHeight: 1.1 }}>{user?.role}</div>
+                  <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : buffColor, lineHeight: 1.1, fontWeight: 500 }}>{user?.role}</div>
                 </div>
               )}
             </div>
@@ -165,9 +166,9 @@ const AppHeader = () => {
             <Avatar
               size={80}
               style={{
-                background: isDark ? '#0B2B44' : '#0B2B44',
+                background: buffColor,
                 fontSize: 30, fontWeight: 700,
-                boxShadow: '0 8px 24px rgba(11,43,68,0.35)',
+                boxShadow: isDark ? '0 8px 24px rgba(11,43,68,0.35)' : '0 8px 24px rgba(214,159,109,0.35)',
               }}
             >
               {user?.avatar || 'SA'}
@@ -185,8 +186,8 @@ const AppHeader = () => {
             display: 'inline-block',
             padding: '3px 14px',
             borderRadius: 20,
-            background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(11,43,68,0.1)',
-            color: isDark ? '#5ab5e8' : '#0B2B44',
+            background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
+            color: isDark ? '#5ab5e8' : caputMortuum,
             fontSize: 12,
             fontWeight: 600,
           }}>
@@ -197,10 +198,10 @@ const AppHeader = () => {
         <Divider style={{ margin: '0 0 20px' }} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <InfoRow icon={<MailOutlined />} label="Email" value={user?.email || 'superadmin@gmail.com'} isDark={isDark} />
-          <InfoRow icon={<PhoneOutlined />} label="Phone" value={user?.phone || '+91 98765 43210'} isDark={isDark} />
-          <InfoRow icon={<BankOutlined />} label="Company" value={user?.company || 'Perspective Kitchens & Interiors'} isDark={isDark} />
-          <InfoRow icon={<SafetyCertificateOutlined />} label="Status" value={<span style={{ color: '#52C41A' }}>● Active</span>} isDark={isDark} />
+          <InfoRow icon={<MailOutlined />} label="Email" value={user?.email || 'superadmin@gmail.com'} isDark={isDark} buffColor={buffColor} caputMortuum={caputMortuum} />
+          <InfoRow icon={<PhoneOutlined />} label="Phone" value={user?.phone || '+91 98765 43210'} isDark={isDark} buffColor={buffColor} caputMortuum={caputMortuum} />
+          <InfoRow icon={<BankOutlined />} label="Company" value={user?.company || 'Perspective Kitchens & Interiors'} isDark={isDark} buffColor={buffColor} caputMortuum={caputMortuum} />
+          <InfoRow icon={<SafetyCertificateOutlined />} label="Status" value={<span style={{ color: '#52C41A' }}>● Active</span>} isDark={isDark} buffColor={buffColor} caputMortuum={caputMortuum} />
         </div>
 
         <Divider />

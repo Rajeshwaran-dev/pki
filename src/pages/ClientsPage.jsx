@@ -17,7 +17,7 @@ import useIsMobile from '@/hooks/useIsMobile';
 const { RangePicker } = DatePicker;
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 
-const avatarColors = ['#0B2B44', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14'];
+const avatarColors = ['#D69F6D', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14'];
 
 const ClientCard = ({ client, index, onEdit, onView }) => (
   <Card
@@ -45,7 +45,7 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <PhoneOutlined style={{ color: '#0B2B44' }} /> {client.phone}
+        <PhoneOutlined style={{ color: '#D69F6D' }} /> {client.phone}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
         <MailOutlined style={{ color: '#1677FF' }} /> {client.email || '—'}
@@ -56,7 +56,7 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
     </div>
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
       <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => onView(client)}>View</Button>
-      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={() => onEdit(client)}>Edit</Button>
+      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#D69F6D' }} onClick={() => onEdit(client)}>Edit</Button>
     </div>
   </Card>
 );
@@ -67,6 +67,7 @@ const ClientsPage = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
   const isDark = theme === 'dark';
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const [modalOpen, setModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
@@ -94,7 +95,7 @@ const ClientsPage = () => {
       width: 200,
       render: (name, row) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Avatar size={36} style={{ background: '#0B2B4415', color: '#0B2B44', fontWeight: 700, fontSize: 15 }}>
+          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 15 }}>
             {name.charAt(0)}
           </Avatar>
           <div>
@@ -125,7 +126,7 @@ const ClientsPage = () => {
       render: (_, row) => (
         <Space>
           <Button type="text" size="small" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => openViewClientModal(row)} />
-          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#0B2B44' }} onClick={() => openEditClientModal(row)} />
+          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: primaryColor }} onClick={() => openEditClientModal(row)} />
         </Space>
       ),
     },
@@ -233,13 +234,13 @@ const ClientsPage = () => {
                 icon={<span style={{ fontSize: 14 }}>☰</span>}
                 type={viewMode === 'table' ? 'primary' : 'default'}
                 onClick={() => setViewMode('table')}
-                style={viewMode === 'table' ? { background: '#0B2B44', border: 'none' } : {}}
+                style={viewMode === 'table' ? { background: primaryColor, border: 'none' } : {}}
               />
               <Button
                 icon={<span style={{ fontSize: 14 }}>⊞</span>}
                 type={viewMode === 'grid' ? 'primary' : 'default'}
                 onClick={() => setViewMode('grid')}
-                style={viewMode === 'grid' ? { background: '#0B2B44', border: 'none' } : {}}
+                style={viewMode === 'grid' ? { background: primaryColor, border: 'none' } : {}}
               />
             </Space.Compact>
             <Button icon={<ExportOutlined />}>Export</Button>
@@ -247,7 +248,7 @@ const ClientsPage = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={openCreateClientModal}
-              style={{ background: '#0B2B44', border: 'none' }}
+              style={{ background: primaryColor, border: 'none' }}
             >
               Add Client
             </Button>

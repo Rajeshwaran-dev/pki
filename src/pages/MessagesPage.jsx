@@ -16,11 +16,11 @@ import useIsMobile from '@/hooks/useIsMobile';
 ═══════════════════════════════════════════ */
 const CURRENT_USER = {
   id: 'current', name: 'Super Admin', code: 'EKA00000',
-  email: 'admin@perspective.com', initials: 'SA', color: '#0B2B44',
+  email: 'admin@perspective.com', initials: 'SA', color: '#D69F6D',
 };
 
 const ALL_MEMBERS = [
-  { id: 'm1', name: 'Rahul Sharma',  code: 'EKA00001', email: 'rahul@example.com',  initials: 'RS', color: '#0B2B44' },
+  { id: 'm1', name: 'Rahul Sharma',  code: 'EKA00001', email: 'rahul@example.com',  initials: 'RS', color: '#D69F6D' },
   { id: 'm2', name: 'Priya Patel',   code: 'EKA00002', email: 'priya@example.com',  initials: 'PP', color: '#059669' },
   { id: 'm3', name: 'Amit Gupta',    code: 'EKA00003', email: 'amit@example.com',   initials: 'AG', color: '#DB2777' },
   { id: 'm4', name: 'Sneha Reddy',   code: 'EKA00004', email: 'sneha@example.com',  initials: 'SR', color: '#DC2626' },
@@ -67,7 +67,7 @@ const INITIAL_CONVERSATIONS = [
       { id: 'm6', role: 'member' },
     ],
   },
-  { id: 'rahul', type: 'direct', name: 'Rahul Sharma',   initials: 'RS', color: '#0B2B44', online: true,  lastMsg: 'Sounds good, thank you!',      time: '05:58 PM', unread: 0 },
+  { id: 'rahul', type: 'direct', name: 'Rahul Sharma',   initials: 'RS', color: '#D69F6D', online: true,  lastMsg: 'Sounds good, thank you!',      time: '05:58 PM', unread: 0 },
   { id: 'priya', type: 'direct', name: 'Priya Patel',    initials: 'PP', color: '#059669', online: true,  lastMsg: 'Please review the layout.',    time: '04:45 PM', unread: 1 },
   { id: 'amit',  type: 'direct', name: 'Amit Gupta',     initials: 'AG', color: '#DB2777', online: false, lastMsg: 'Budget revision needed.',      time: '03:30 PM', unread: 0 },
   { id: 'sneha', type: 'direct', name: 'Sneha Reddy',    initials: 'SR', color: '#DC2626', online: false, lastMsg: 'Snag list sent.',              time: '01:20 PM', unread: 0 },
@@ -89,7 +89,7 @@ const INITIAL_MESSAGES = {
     { id: 'm1', type: 'system', text: 'Super Admin added Rahul Sharma' },
     { id: 'm2', type: 'system', text: 'Super Admin added Priya Patel' },
     { id: 'm3', type: 'text', text: 'Welcome to the Luxury Villa Interior project team!', sent: true, time: '09:00 AM', status: 'read' },
-    { id: 'm4', type: 'text', text: 'Design approved!', sent: false, sender: 'Rahul Sharma', senderColor: '#0B2B44', time: '05:17 PM' },
+    { id: 'm4', type: 'text', text: 'Design approved!', sent: false, sender: 'Rahul Sharma', senderColor: '#D69F6D', time: '05:17 PM' },
   ],
   'office-reno-team': [
     { id: 'd1', type: 'date', text: 'Mon Apr 06 2026' },
@@ -106,12 +106,12 @@ const INITIAL_MESSAGES = {
         title: 'TEAM LUNCH',
         options: [
           { label: 'NO', votes: 1, pct: 50, voters: [{ name: 'Neha Kapoor', initials: 'NK', color: '#16A34A' }] },
-          { label: 'YES', votes: 1, pct: 50, voters: [{ name: 'Rahul Sharma', initials: 'RS', color: '#0B2B44' }] },
+          { label: 'YES', votes: 1, pct: 50, voters: [{ name: 'Rahul Sharma', initials: 'RS', color: '#D69F6D' }] },
         ],
         totalVotes: 2,
       },
     },
-    { id: 'm3', type: 'text', text: 'Sounds good, thank you!', sent: false, sender: 'Rahul Sharma', senderColor: '#0B2B44', time: '05:58 PM' },
+    { id: 'm3', type: 'text', text: 'Sounds good, thank you!', sent: false, sender: 'Rahul Sharma', senderColor: '#D69F6D', time: '05:58 PM' },
   ],
   priya:  [{ id: 'd1', type: 'date', text: 'Today' }, { id: 'm1', type: 'text', text: 'Hi Priya, the Office Renovation designs are ready for review.', sent: true, time: '04:00 PM', status: 'read' }, { id: 'm2', type: 'text', text: 'Please review the layout.', sent: false, sender: 'Priya Patel', senderColor: '#059669', time: '04:45 PM' }],
   amit:   [{ id: 'd1', type: 'date', text: 'Today' }, { id: 'm1', type: 'text', text: 'Amit, shall we schedule a call for the Penthouse project?', sent: true, time: '02:00 PM', status: 'read' }, { id: 'm2', type: 'text', text: 'Budget revision needed.', sent: false, sender: 'Amit Gupta', senderColor: '#DB2777', time: '03:30 PM' }],
@@ -169,7 +169,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
       <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0' }}>
         <span style={{
           background: 'rgba(255, 214, 100, 0.35)',
-          border: '1px solid rgba(11,43,68,0.3)',
+          border: '1px solid rgba(214,159,109,0.3)',
           borderRadius: 20, padding: '3px 14px',
           fontSize: 11.5, color: '#7a6010', fontWeight: 500,
         }}>
@@ -205,7 +205,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
         </div>
       </div>
       {isSent && (
-        <Avatar size={28} style={{ background: userColor || '#0B2B44', fontSize: 11, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
+        <Avatar size={28} style={{ background: userColor || (isDark ? '#5ab5e8' : '#D69F6D'), fontSize: 11, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
           {userInitials || 'SA'}
         </Avatar>
       )}
@@ -240,14 +240,14 @@ const AttachmentMenu = ({ isDark }) => (
 const ConversationItem = ({ conv, isActive, onClick, isDark }) => (
   <div
     onClick={onClick}
-    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', borderRadius: 10, background: isActive ? '#0B2B44' : 'transparent', transition: 'background 0.18s', marginBottom: 2 }}
+    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', borderRadius: 10, background: isActive ? (isDark ? '#1e6fa8' : '#D69F6D') : 'transparent', transition: 'background 0.18s', marginBottom: 2 }}
     onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = isDark ? '#0a2235' : '#f5f3eb'; }}
     onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
   >
     <div style={{ position: 'relative', flexShrink: 0 }}>
       <Avatar size={42} style={{ background: conv.color, fontWeight: 700, fontSize: conv.initials?.length > 1 ? 13 : 16, color: '#fff' }}>{conv.initials}</Avatar>
       {conv.online && (
-        <div style={{ position: 'absolute', bottom: 1, right: 1, width: 10, height: 10, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isActive ? '#0B2B44' : (isDark ? '#0d3554' : '#fff')}` }} />
+        <div style={{ position: 'absolute', bottom: 1, right: 1, width: 10, height: 10, borderRadius: '50%', background: '#52C41A', border: `2px solid ${isActive ? (isDark ? '#1e6fa8' : '#D69F6D') : (isDark ? '#0d3554' : '#fff')}` }} />
       )}
     </div>
     <div style={{ flex: 1, minWidth: 0 }}>
@@ -351,10 +351,10 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               </Avatar>
               <div style={{
                 position: 'absolute', bottom: 2, right: -2,
-                background: '#0B2B44',
+                background: isDark ? '#5ab5e8' : '#D69F6D',
                 borderRadius: 6, padding: '2px 8px',
                 fontSize: 11, fontWeight: 700, color: '#fff',
-                cursor: 'pointer', boxShadow: '0 2px 6px rgba(11,43,68,0.4)',
+                cursor: 'pointer', boxShadow: isDark ? '0 2px 6px rgba(90,181,232,0.4)' : '0 2px 6px rgba(214,159,109,0.4)',
               }}>
                 Edit
               </div>
@@ -408,7 +408,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                   {member.code}&nbsp;&nbsp;{member.email}
                 </div>
                 {member.role === 'admin' ? (
-                  <span style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#0B2B44', fontWeight: 600, background: isDark ? 'rgba(90,181,232,0.15)' : '#0B2B4418', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                  <span style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600, background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.12)', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
                     <span style={{ fontSize: 10 }}>⭐</span> Group admin
                   </span>
                 ) : (
@@ -417,7 +417,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               </div>
               {member.id !== 'current' && (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#D69F6D', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
                     {member.role === 'admin' ? 'Make member' : 'Make admin'}
                   </span>
                   <span onClick={() => removeMember(member.id)} style={{ fontSize: 12, color: '#EF4444', cursor: 'pointer', fontWeight: 600 }}>
@@ -457,7 +457,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 12px', marginBottom: 8,
-                  border: `1px solid ${addSelected.includes(member.id) ? '#0B2B44' : borderC}`,
+                  border: `1px solid ${addSelected.includes(member.id) ? (isDark ? '#5ab5e8' : '#D69F6D') : borderC}`,
                   borderRadius: 10, cursor: 'pointer',
                   background: addSelected.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg,
                   transition: 'all 0.15s',
@@ -486,15 +486,15 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
           </div>
           {/* Sticky footer button */}
           <div style={{ padding: '12px 20px', borderTop: `1px solid ${borderC}`, background: sectionBg, flexShrink: 0 }}>
-            <Button
-              block disabled={!addSelected.length}
-              onClick={handleAddMembers}
-              style={{
-                height: 44, borderRadius: 8, fontWeight: 700, fontSize: 13,
-                background: addSelected.length ? '#0B2B44' : (isDark ? '#0a2235' : '#f9f5f0'),
-                color: addSelected.length ? '#fff' : (isDark ? '#555' : '#8a6c00'),
-                border: 'none', opacity: addSelected.length ? 1 : 0.7,
-              }}
+              <Button
+                block disabled={!addSelected.length}
+                onClick={handleAddMembers}
+                style={{
+                  height: 44, borderRadius: 8, fontWeight: 700, fontSize: 13,
+                  background: addSelected.length ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#0a2235' : '#f9f5f0'),
+                  color: addSelected.length ? '#fff' : (isDark ? '#555' : '#8a6c00'),
+                  border: 'none', opacity: addSelected.length ? 1 : 0.7,
+                }}
             >
               Add members{addSelected.length > 0 ? ` (${addSelected.length})` : ''}
             </Button>
@@ -655,7 +655,7 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
         <Button block disabled={!groupName.trim()} onClick={handleCreate}
-          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: groupName.trim() ? '#0B2B44' : (isDark ? '#0a2235' : '#f5f3f0'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
+          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: groupName.trim() ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#0a2235' : '#f5f3f0'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
         >
           Create group
         </Button>
@@ -702,7 +702,7 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
         </div>
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
-        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: '#0B2B44', color: '#fff', border: 'none' }}>
+        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: isDark ? '#5ab5e8' : '#D69F6D', color: '#fff', border: 'none' }}>
           Save settings
         </Button>
       </div>
@@ -738,7 +738,7 @@ const MessagesPage = () => {
   const chatSearchRef = useRef(null);
 
   const userInitials = user?.avatar || 'SA';
-  const userColor = '#0B2B44';
+  const userColor = isDark ? '#5ab5e8' : '#D69F6D';
 
   const activeConv = conversations.find(c => c.id === activeId);
   const activeMessages = messages[activeId] || [];
