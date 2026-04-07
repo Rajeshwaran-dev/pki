@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { useAppSelector } from '@/store';
 
 const stageColors = {
   Sales: '#1677FF',
@@ -16,15 +16,29 @@ const priorityColors = {
   Urgent: '#FF4D4F',
 };
 
-const StatusTag = ({ value, type = 'stage' }) => {
-  const colors = type === 'priority' ? priorityColors : stageColors;
+const StatusTag = ({ value, type = 'stage', colors: customColors }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  const defaultColors = type === 'priority' ? priorityColors : stageColors;
+  const colors = customColors || defaultColors;
+  const color = colors[value] || '#888';
+
   return (
-    <Tag
-      color={colors[value] || '#888'}
-      style={{ borderRadius: 6, fontWeight: 600, fontSize: 11, padding: '2px 8px' }}
+    <span
+      style={{
+        display: 'inline-block',
+        background: isDark ? `${color}28` : `${color}18`,
+        color: color,
+        border: `1px solid ${color}${isDark ? '60' : '45'}`,
+        borderRadius: 6,
+        fontWeight: 600,
+        fontSize: 11,
+        padding: '2px 8px',
+        lineHeight: 1.5,
+        whiteSpace: 'nowrap',
+      }}
     >
       {value}
-    </Tag>
+    </span>
   );
 };
 

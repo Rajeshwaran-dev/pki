@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { Row, Col, Card, Statistic, Table, Tabs, Select, Button, Space, Progress, Avatar, Tag } from 'antd';
+import { Row, Col, Card, Table, Tabs, Select, Button, Space, Progress, Avatar, Tag } from 'antd';
 import {
   ProjectOutlined, TeamOutlined, CheckSquareOutlined, DollarOutlined,
   ArrowUpOutlined, ExportOutlined, FilterOutlined, BarChartOutlined,
+  FireOutlined, ClockCircleOutlined,
 } from '@ant-design/icons';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
@@ -33,43 +34,45 @@ const CustomTooltip = ({ active, payload, label, isDark }) => {
   );
 };
 
-const ReportStatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter }) => (
-  <Card
-    className="stat-card crm-card"
-    styles={{ body: { padding: '14px 16px' } }}
-    style={{ height: '100%' }}
-    hoverable
-  >
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-      <div style={{
-        width: 36, height: 36, borderRadius: 10,
-        background: `linear-gradient(135deg, ${color}20, ${color}35)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 17, color,
-        boxShadow: `0 2px 8px ${color}20`,
-      }}>
-        {icon}
-      </div>
-      {trend && (
+const ReportStatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter }) => {
+  const displayValue = formatter ? `${(Number(value) / 100000).toFixed(1)}L` : value;
+  return (
+    <Card
+      className="stat-card crm-card"
+      styles={{ body: { padding: '12px 14px' } }}
+      style={{ height: '100%' }}
+      hoverable
+    >
+      {/* Row 1: icon left, value right */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 3,
-          background: '#52C41A15', borderRadius: 20,
-          padding: '2px 8px', fontSize: 11, color: '#52C41A', fontWeight: 600,
+          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+          background: `${color}22`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 16, color,
         }}>
-          <ArrowUpOutlined style={{ fontSize: 9 }} /> {trend}
+          {icon}
         </div>
-      )}
-    </div>
-    <Statistic
-      title={<span style={{ fontSize: 12, fontWeight: 500 }}>{title}</span>}
-      value={value}
-      prefix={prefix}
-      suffix={suffix}
-      formatter={formatter ? () => formatter : undefined}
-      valueStyle={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px', marginTop: 4 }}
-    />
-  </Card>
-);
+        <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}>
+          {prefix}{displayValue}{suffix}
+        </div>
+      </div>
+      {/* Row 2: title left, trend right */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>{title}</span>
+        {trend && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 2,
+            background: '#52C41A15', borderRadius: 20,
+            padding: '1px 7px', fontSize: 10, color: '#52C41A', fontWeight: 600,
+          }}>
+            <ArrowUpOutlined style={{ fontSize: 8 }} /> {trend}
+          </span>
+        )}
+      </div>
+    </Card>
+  );
+};
 
 /* ── Export CSV helper ── */
 const exportCSV = (rows, columns, filename) => {
@@ -463,13 +466,17 @@ const ReportsPage = () => {
 
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
-  const completedProjects = projects.filter(p => p.stage === 'Completed').length;
+  const pendingTasks = tasks.filter(t => t.status !== 'Completed').length;
+  const activeProjects = projects.filter(p => p.stage !== 'Completed').length;
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
 
   const summaryStats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: '#1677FF', trend: '8%' },
-    { title: 'Total Clients', value: clients.length, icon: <TeamOutlined />, color: '#1677FF', trend: '15%' },
-    { title: 'Tasks Completed', value: `${completedTasks} / ${tasks.length}`, icon: <CheckSquareOutlined />, color: '#52C41A', trend: '24%' },
-    { title: 'Total Portfolio', value: `₹${(totalBudget / 100000).toFixed(1)}L`, icon: <DollarOutlined />, color: '#722ED1', trend: '18%' },
+    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: primaryColor, trend: '8%' },
+    { title: 'Active Projects', value: activeProjects, icon: <FireOutlined />, color: '#FA8C16', trend: '5%' },
+    { title: 'Total Clients', value: clients.length, icon: <TeamOutlined />, color: primaryColor, trend: '15%' },
+    { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}`, trend: '24%' },
+    { title: 'Pending Tasks', value: pendingTasks, icon: <ClockCircleOutlined />, color: '#FF4D4F', trend: '3%' },
+    { title: 'Total Portfolio', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true, trend: '18%' },
   ];
 
   const tabItems = [
@@ -512,8 +519,8 @@ const ReportsPage = () => {
       {/* Summary Stats */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24, alignItems: 'stretch' }}>
         {summaryStats.map((stat, i) => (
-          <Col xs={24} sm={12} xl={6} key={i} style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ flex: 1, animationDelay: `${i * 0.08}s` }} className="animate-fade-in-up">
+          <Col xs={12} sm={8} xl={4} key={i}>
+            <div style={{ animationDelay: `${i * 0.08}s` }} className="animate-fade-in-up">
               <ReportStatCard {...stat} />
             </div>
           </Col>

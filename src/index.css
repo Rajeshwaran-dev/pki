@@ -555,6 +555,22 @@
   font-weight: 700;
 }
 
+/* Dark mode: crm-muted-table (Additional Contacts table in modals) */
+.dark .crm-muted-table .ant-table {
+  border-color: #1a4d72 !important;
+}
+.dark .crm-muted-table .ant-table-thead > tr > th {
+  background: #0a2235 !important;
+  color: #6a8fad !important;
+  border-color: #1a4d72 !important;
+}
+.dark .crm-muted-table .ant-table-tbody > tr > td {
+  border-color: #1a4d72 !important;
+}
+.dark .crm-muted-table .ant-table-empty .ant-table-tbody > tr > td {
+  background: #0a2235 !important;
+}
+
 .crm-inline-error {
   display: inline-flex;
   margin-top: 6px;
@@ -593,40 +609,122 @@
   border-color: #1a4d72 !important;
 }
 
-.dark .crm-form-shell .ant-input,
-.dark .crm-form-shell .ant-input-affix-wrapper,
-.dark .crm-form-shell .ant-input-number,
-.dark .crm-form-shell .ant-select-selector,
-.dark .crm-form-shell .ant-picker,
-.dark .crm-form-shell textarea.ant-input {
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE — UNIFORM FORM FIELDS IN ALL MODALS & DRAWERS
+   Uses html.dark for maximum specificity to beat AntD CSS-in-JS
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Core field backgrounds — inputs, selects, pickers ── */
+html.dark .crm-modal .ant-input,
+html.dark .crm-modal .ant-input-affix-wrapper,
+html.dark .crm-modal .ant-input-number,
+html.dark .crm-modal .ant-select-selector,
+html.dark .crm-modal .ant-picker,
+html.dark .crm-modal textarea.ant-input,
+html.dark .crm-sheet-modal .ant-input,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper,
+html.dark .crm-sheet-modal .ant-input-number,
+html.dark .crm-sheet-modal .ant-select-selector,
+html.dark .crm-sheet-modal .ant-picker,
+html.dark .crm-sheet-modal textarea.ant-input,
+html.dark .ant-drawer-body .ant-input,
+html.dark .ant-drawer-body .ant-input-affix-wrapper,
+html.dark .ant-drawer-body .ant-select-selector,
+html.dark .ant-drawer-body .ant-picker {
   background: #0a2235 !important;
   border-color: #1a4d72 !important;
   color: #e9edef !important;
+  box-shadow: none !important;
 }
 
-.dark .crm-form-shell .ant-input::placeholder,
-.dark .crm-form-shell textarea.ant-input::placeholder {
+/* ── 2. Inner elements must be transparent (affix-wrapper, number-input) ── */
+html.dark .crm-modal .ant-input-affix-wrapper .ant-input,
+html.dark .crm-modal .ant-input-number-input,
+html.dark .crm-modal .ant-picker-input > input,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper .ant-input,
+html.dark .crm-sheet-modal .ant-input-number-input,
+html.dark .crm-sheet-modal .ant-picker-input > input,
+html.dark .ant-drawer-body .ant-input-affix-wrapper .ant-input,
+html.dark .ant-drawer-body .ant-picker-input > input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #e9edef !important;
+}
+
+/* ── 3. Placeholder text ── */
+html.dark .crm-modal .ant-input::placeholder,
+html.dark .crm-modal .ant-input-affix-wrapper input::placeholder,
+html.dark .crm-modal textarea.ant-input::placeholder,
+html.dark .crm-modal .ant-select-selection-placeholder,
+html.dark .crm-sheet-modal .ant-input::placeholder,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper input::placeholder,
+html.dark .crm-sheet-modal textarea.ant-input::placeholder,
+html.dark .crm-sheet-modal .ant-select-selection-placeholder,
+html.dark .ant-drawer-body .ant-input::placeholder,
+html.dark .ant-drawer-body .ant-select-selection-placeholder {
   color: #5a7a90 !important;
 }
 
-.dark .crm-form-shell .ant-input-number-input {
-  background: transparent !important;
+/* ── 4. Selected value text, icons, arrows ── */
+html.dark .crm-modal .ant-select-selection-item,
+html.dark .crm-sheet-modal .ant-select-selection-item,
+html.dark .ant-drawer-body .ant-select-selection-item {
   color: #e9edef !important;
 }
-
-.dark .crm-form-shell .ant-select-selection-item,
-.dark .crm-form-shell .ant-select-selection-placeholder {
-  color: #e9edef !important;
-}
-
-.dark .crm-form-shell .ant-select-arrow,
-.dark .crm-form-shell .ant-picker-suffix {
+html.dark .crm-modal .ant-select-arrow,
+html.dark .crm-modal .ant-picker-suffix,
+html.dark .crm-modal .ant-input-affix-wrapper .anticon,
+html.dark .crm-modal .ant-input-prefix,
+html.dark .crm-sheet-modal .ant-select-arrow,
+html.dark .crm-sheet-modal .ant-picker-suffix,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper .anticon,
+html.dark .crm-sheet-modal .ant-input-prefix,
+html.dark .ant-drawer-body .ant-select-arrow,
+html.dark .ant-drawer-body .ant-picker-suffix {
   color: #5ab5e8 !important;
 }
 
-.dark .crm-form-shell .ant-picker-input > input {
-  color: #e9edef !important;
-  background: transparent !important;
+/* ── 5. Hover / focus / open border states ── */
+html.dark .crm-modal .ant-input:hover,
+html.dark .crm-modal .ant-input:focus,
+html.dark .crm-modal .ant-input-affix-wrapper:hover,
+html.dark .crm-modal .ant-input-affix-wrapper-focused,
+html.dark .crm-modal .ant-input-affix-wrapper:focus-within,
+html.dark .crm-modal .ant-select-selector:hover,
+html.dark .crm-modal .ant-select-focused .ant-select-selector,
+html.dark .crm-modal .ant-select-open .ant-select-selector,
+html.dark .crm-modal .ant-picker:hover,
+html.dark .crm-modal .ant-picker-focused,
+html.dark .crm-modal .ant-input-number:hover,
+html.dark .crm-modal .ant-input-number-focused,
+html.dark .crm-sheet-modal .ant-input:hover,
+html.dark .crm-sheet-modal .ant-input:focus,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper:hover,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper-focused,
+html.dark .crm-sheet-modal .ant-input-affix-wrapper:focus-within,
+html.dark .crm-sheet-modal .ant-select-selector:hover,
+html.dark .crm-sheet-modal .ant-select-focused .ant-select-selector,
+html.dark .crm-sheet-modal .ant-select-open .ant-select-selector,
+html.dark .crm-sheet-modal .ant-picker:hover,
+html.dark .crm-sheet-modal .ant-picker-focused,
+html.dark .crm-sheet-modal .ant-input-number:hover,
+html.dark .crm-sheet-modal .ant-input-number-focused {
+  background: #0a2235 !important;
+  border-color: #2980b9 !important;
+  box-shadow: none !important;
+}
+
+/* ── 6. Checkbox in dark modals ── */
+html.dark .crm-modal .ant-checkbox-inner,
+html.dark .crm-sheet-modal .ant-checkbox-inner {
+  background: #0a2235 !important;
+  border-color: #1a4d72 !important;
+}
+html.dark .crm-modal .ant-checkbox-checked .ant-checkbox-inner,
+html.dark .crm-sheet-modal .ant-checkbox-checked .ant-checkbox-inner {
+  background: #2980b9 !important;
+  border-color: #2980b9 !important;
 }
 
 .dark .ant-select-dropdown .ant-select-item {
@@ -637,4 +735,113 @@
 .dark .ant-select-dropdown .ant-select-item-option-selected {
   background: #133d5e !important;
   color: #e9edef !important;
+}
+
+/* ── Light mode: form field focus states (buff border) ── */
+.crm-form-shell .ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
+.crm-form-shell .ant-select-open .ant-select-selector {
+  border-color: #D69F6D !important;
+  box-shadow: 0 0 0 2px rgba(214, 159, 109, 0.12) !important;
+}
+.crm-form-shell .ant-input:focus,
+.crm-form-shell .ant-input-affix-wrapper:focus,
+.crm-form-shell .ant-input-affix-wrapper-focused,
+.crm-form-shell .ant-input-number-focused {
+  border-color: #D69F6D !important;
+  box-shadow: 0 0 0 2px rgba(214, 159, 109, 0.12) !important;
+}
+.crm-form-shell .ant-picker-focused {
+  border-color: #D69F6D !important;
+  box-shadow: 0 0 0 2px rgba(214, 159, 109, 0.12) !important;
+}
+
+/* ── Dark mode: form field hover/focus/open states (crm-form-shell fallback) ── */
+.dark .crm-form-shell .ant-select-selector:hover,
+.dark .crm-form-shell .ant-select-focused .ant-select-selector,
+.dark .crm-form-shell .ant-select-open .ant-select-selector,
+.dark .crm-form-shell .ant-input:hover,
+.dark .crm-form-shell .ant-input:focus,
+.dark .crm-form-shell .ant-input-affix-wrapper:hover,
+.dark .crm-form-shell .ant-input-affix-wrapper-focused,
+.dark .crm-form-shell .ant-input-affix-wrapper:focus-within,
+.dark .crm-form-shell .ant-picker:hover,
+.dark .crm-form-shell .ant-picker-focused,
+.dark .crm-form-shell .ant-input-number:hover,
+.dark .crm-form-shell .ant-input-number-focused {
+  background: #0a2235 !important;
+  border-color: #2980b9 !important;
+  box-shadow: none !important;
+}
+
+/* ── Dark mode: modal close button ── */
+.dark .crm-modal .ant-modal-close,
+.dark .crm-sheet-modal .ant-modal-close {
+  color: #a8cce8 !important;
+}
+.dark .crm-modal .ant-modal-close:hover,
+.dark .crm-sheet-modal .ant-modal-close:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: #e9edef !important;
+}
+
+/* ── Dark mode: select dropdown border & shadow ── */
+.dark .ant-select-dropdown {
+  border: 1px solid #1a4d72 !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45) !important;
+}
+
+/* ── Dark mode: DatePicker & TimePicker popup ── */
+.dark .ant-picker-dropdown .ant-picker-panel-container {
+  background: #0d3554 !important;
+  border: 1px solid #1a4d72 !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.45) !important;
+}
+.dark .ant-picker-dropdown .ant-picker-panel {
+  background: #0d3554 !important;
+  border-color: #1a4d72 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-header {
+  color: #c8d8e8 !important;
+  border-color: #1a4d72 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-header button {
+  color: #a8cce8 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-content th {
+  color: #5a7a90 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-cell {
+  color: #3a5a70 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-cell-in-view {
+  color: #e9edef !important;
+}
+.dark .ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+  background: #133d5e !important;
+}
+.dark .ant-picker-dropdown .ant-picker-cell-selected .ant-picker-cell-inner,
+.dark .ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: #2980b9 !important;
+  color: #fff !important;
+}
+.dark .ant-picker-dropdown .ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-color: #2980b9 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-footer {
+  background: #0a2235 !important;
+  border-color: #1a4d72 !important;
+}
+.dark .ant-picker-dropdown .ant-picker-footer .ant-btn-primary {
+  background: #D69F6D !important;
+  border: none !important;
+  color: #fff !important;
+}
+.dark .ant-picker-dropdown .ant-picker-time-panel-column > li .ant-picker-time-panel-cell-inner {
+  color: #e9edef !important;
+}
+.dark .ant-picker-dropdown .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  background: #133d5e !important;
+}
+.dark .ant-picker-dropdown .ant-picker-time-panel-column > li:hover .ant-picker-time-panel-cell-inner {
+  background: #0f3350 !important;
 }

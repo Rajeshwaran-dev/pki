@@ -396,7 +396,7 @@ const ClientsPage = () => {
             <Row gutter={12}>
               <Col span={6}>
                 <Form.Item name="state" label="State">
-                  <Select options={indianStates.map(s => ({ value: s, label: s }))} />
+                  <Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} />
                 </Form.Item>
               </Col>
               <Col span={6}>

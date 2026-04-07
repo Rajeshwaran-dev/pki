@@ -195,51 +195,57 @@ const MiniTabs = ({ items, active, onChange }) => (
   </div>
 );
 
-const EmptyPanel = ({ height = 420, text = 'No Data Found', image = false, action = null }) => (
-  <div style={{ ...cardStyle, padding: '18px 14px 12px' }}>
-    <div style={{ minHeight: height, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-      {image ? (
-        <>
-          <FileImageOutlined style={{ fontSize: 82, color: isDark ? '#5ab5e8' : '#D69F6D', marginBottom: 18 }} />
-          {action}
-        </>
-      ) : (
-        <Text style={{ fontWeight: 600, color: 'var(--pd-text)' }}>{text}</Text>
-      )}
-    </div>
-  </div>
-);
-
-const TableShell = ({ columns, rowsText = 'No data available', footerText = '0 items', pagination = true }) => (
-  <div style={{ ...cardStyle, overflow: 'hidden' }}>
-    <div style={{ overflowX: 'auto' }}>
-      <div style={{ background: 'var(--pd-table-head)', borderBottom: '1px solid var(--pd-border-soft)', minWidth: Math.max(columns.length * 140, 680) }}>
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns.length}, minmax(120px, 1fr))`, gap: 14, padding: '12px 14px 8px' }}>
-        {columns.map(col => (
-          <div key={col}>
-            <div style={{ fontSize: 11, color: 'var(--pd-text-soft)', fontWeight: 600, marginBottom: 6 }}>{col}</div>
-            <SearchBox width="100%" />
-          </div>
-        ))}
+const EmptyPanel = ({ height = 420, text = 'No Data Found', image = false, action = null }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  return (
+    <div style={{ ...cardStyle, padding: '18px 14px 12px' }}>
+      <div style={{ minHeight: height, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        {image ? (
+          <>
+            <FileImageOutlined style={{ fontSize: 82, color: isDark ? '#5ab5e8' : '#D69F6D', marginBottom: 18 }} />
+            {action}
+          </>
+        ) : (
+          <Text style={{ fontWeight: 600, color: 'var(--pd-text)' }}>{text}</Text>
+        )}
       </div>
     </div>
-    </div>
-    <div style={{ minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
-      <Text style={{ fontWeight: 600, color: 'var(--pd-text)' }}>{rowsText}</Text>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, padding: '10px 14px 12px', color: 'var(--pd-text-muted)', fontSize: 12 }}>
-      <span>{footerText}</span>
-      {pagination && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ color: '#b1b8c3' }}>‹</span>
-          <span style={{ color: '#b1b8c3' }}>›</span>
-          <SelectBox label="25" width={86} />
-          <ReloadOutlined style={{ color: isDark ? '#5ab5e8' : '#D69F6D' }} />
+  );
+};
+
+const TableShell = ({ columns, rowsText = 'No data available', footerText = '0 items', pagination = true }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  return (
+    <div style={{ ...cardStyle, overflow: 'hidden' }}>
+      <div style={{ overflowX: 'auto' }}>
+        <div style={{ background: 'var(--pd-table-head)', borderBottom: '1px solid var(--pd-border-soft)', minWidth: Math.max(columns.length * 140, 680) }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns.length}, minmax(120px, 1fr))`, gap: 14, padding: '12px 14px 8px' }}>
+            {columns.map(col => (
+              <div key={col}>
+                <div style={{ fontSize: 11, color: 'var(--pd-text-soft)', fontWeight: 600, marginBottom: 6 }}>{col}</div>
+                <SearchBox width="100%" />
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+      </div>
+      <div style={{ minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
+        <Text style={{ fontWeight: 600, color: 'var(--pd-text)' }}>{rowsText}</Text>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, padding: '10px 14px 12px', color: 'var(--pd-text-muted)', fontSize: 12 }}>
+        <span>{footerText}</span>
+        {pagination && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ color: '#b1b8c3' }}>‹</span>
+            <span style={{ color: '#b1b8c3' }}>›</span>
+            <SelectBox label="25" width={86} />
+            <ReloadOutlined style={{ color: isDark ? '#5ab5e8' : '#D69F6D' }} />
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const FinancialCard = ({ leftTitle, leftValue, leftColor = '#52c41a', rightTitle, rightValue, rightColor = '#52c41a', middleTitle = null, middleValue = null }) => (
   <div style={{ ...cardStyle, flex: 1, overflow: 'hidden' }}>
@@ -328,19 +334,19 @@ const ProjectDetailPage = () => {
   if (!project) return <div style={{ padding: 40 }}>Project not found</div>;
 
   const responsiveVars = {
-    '--pd-page-bg': isDark ? '#141414' : '#f8fafc',
-    '--pd-surface': isDark ? '#0d3554' : '#ffffff',
-    '--pd-pill-bg': isDark ? '#0a2235' : '#f6f6f8',
+    '--pd-page-bg':      isDark ? '#031726' : '#f8fafc',
+    '--pd-surface':      isDark ? '#0d3554' : '#ffffff',
+    '--pd-pill-bg':      isDark ? '#0a2235' : '#f6f6f8',
     '--pd-primary-soft': isDark ? 'rgba(90,181,232,0.18)' : 'rgba(214,159,109,0.12)',
-    '--pd-control-bg': isDark ? '#0d2a3e' : '#f0f4f8',
-    '--pd-table-head': isDark ? '#242424' : '#f6f7f9',
-    '--pd-border': isDark ? '#303030' : '#e9e9ee',
-    '--pd-border-soft': isDark ? '#383838' : '#eef0f4',
-    '--pd-text': isDark ? '#f3f4f6' : '#2f2f2f',
-    '--pd-text-muted': isDark ? '#c7cad1' : '#4b5563',
-    '--pd-text-soft': isDark ? '#98a2b3' : '#8ea0b8',
-    '--pd-primary': isDark ? '#5ab5e8' : '#D69F6D',
-    '--pd-shadow': isDark ? 'none' : '0 1px 2px rgba(16, 24, 40, 0.04)',
+    '--pd-control-bg':   isDark ? '#0a2235' : '#f0f4f8',
+    '--pd-table-head':   isDark ? '#0a2235' : '#f6f7f9',
+    '--pd-border':       isDark ? '#1a4d72' : '#e9e9ee',
+    '--pd-border-soft':  isDark ? '#0d3050' : '#eef0f4',
+    '--pd-text':         isDark ? '#f3f4f6' : '#2f2f2f',
+    '--pd-text-muted':   isDark ? '#c7cad1' : '#4b5563',
+    '--pd-text-soft':    isDark ? '#8696a0' : '#8ea0b8',
+    '--pd-primary':      isDark ? '#5ab5e8' : '#D69F6D',
+    '--pd-shadow':       isDark ? 'none' : '0 1px 2px rgba(16, 24, 40, 0.04)',
   };
 
   const openEditModal = () => {
@@ -853,11 +859,23 @@ const ProjectDetailPage = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', padding: isMobile ? '0 14px 14px' : '0 24px 14px' }}>
-          <Tag style={{ borderRadius: 999, background: '#e8f0f7', borderColor: '#b8d0e8', color: '#0B2B44', fontWeight: 600 }}>
-            <span style={{ marginRight: 6 }}>👤</span>{project.clientName}
+          <Tag style={{
+            borderRadius: 999,
+            background: isDark ? 'rgba(90,181,232,0.12)' : '#e8f0f7',
+            borderColor: isDark ? '#1a4d72' : '#b8d0e8',
+            color: isDark ? '#a8cce8' : '#0B2B44',
+            fontWeight: 600,
+          }}>
+            <UserOutlined style={{ marginRight: 6 }} />{project.clientName}
           </Tag>
-          <Tag style={{ borderRadius: 999, background: '#e8f0f7', borderColor: '#b8d0e8', color: '#0B2B44', fontWeight: 600 }}>
-            <span style={{ marginRight: 6 }}>📞</span>{project.phone}
+          <Tag style={{
+            borderRadius: 999,
+            background: isDark ? 'rgba(90,181,232,0.12)' : '#e8f0f7',
+            borderColor: isDark ? '#1a4d72' : '#b8d0e8',
+            color: isDark ? '#a8cce8' : '#0B2B44',
+            fontWeight: 600,
+          }}>
+            <PhoneOutlined style={{ marginRight: 6 }} />{project.phone}
           </Tag>
         </div>
       </div>

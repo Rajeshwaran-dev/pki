@@ -737,7 +737,7 @@ const ProjectsPage = () => {
                   <Input />
                 </Form.Item>
                 <Row gutter={12}>
-                  <Col span={12}><Form.Item name="stage" label="Project Stage" rules={[{ required: true, message: 'Project stage is required' }]}><Select options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                  <Col span={12}><Form.Item name="stage" label="Project Stage" rules={[{ required: true, message: 'Project stage is required' }]}><Select placeholder="Select stage" options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item></Col>
                   <Col span={12}><Form.Item name="budget" label="Budget"><InputNumber min={0} style={{ width: '100%' }} /></Form.Item></Col>
                 </Row>
                 <Form.Item name="description" label="Description"><Input.TextArea rows={3} /></Form.Item>
@@ -754,7 +754,7 @@ const ProjectsPage = () => {
                   <Col span={12}><Form.Item name="address2" label="Address Line 2"><Input /></Form.Item></Col>
                 </Row>
                 <Row gutter={12}>
-                  <Col span={6}><Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                  <Col span={6}><Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
                   <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
                   <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
                   <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
@@ -782,7 +782,7 @@ const ProjectsPage = () => {
                     <Col span={12}><Form.Item name="address2" label="Address Line 2"><Input /></Form.Item></Col>
                   </Row>
                   <Row gutter={12}>
-                    <Col span={6}><Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
                     <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
                     <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
                     <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
@@ -809,8 +809,8 @@ const ProjectsPage = () => {
                   <MoreOutlined style={{ color: isDark ? '#8696a0' : '#111827', fontSize: 16 }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(140px, 1fr))', gap: 12, width: isMobile ? '100%' : 300 }}>
-                  <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}><Select options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item>
-                  <Form.Item name="subStage" label="Sub Stage" style={{ marginBottom: 0 }}><Select options={[{ value: 'BOQ Discussion', label: 'BOQ Discussion' }, { value: 'Concept Design', label: 'Concept Design' }, { value: 'Design Approval', label: 'Design Approval' }]} /></Form.Item>
+                  <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}><Select placeholder="Select stage" options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item>
+                  <Form.Item name="subStage" label="Sub Stage" style={{ marginBottom: 0 }}><Select placeholder="Select sub stage" options={[{ value: 'BOQ Discussion', label: 'BOQ Discussion' }, { value: 'Concept Design', label: 'Concept Design' }, { value: 'Design Approval', label: 'Design Approval' }]} /></Form.Item>
                 </div>
               </div>
               <div className="crm-panel-card" style={{ marginBottom: 12 }}>
@@ -847,7 +847,7 @@ const ProjectsPage = () => {
                     <Form.Item name="address1" label="Address line 1"><Input /></Form.Item>
                     <Form.Item name="address2" label="Address line 2"><Input /></Form.Item>
                     <Form.Item name="city" label="City"><Input /></Form.Item>
-                    <Form.Item name="state" label="State"><Select options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
+                    <Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
                     <Form.Item name="pincode" label="Pincode"><Input /></Form.Item>
                     <Form.Item name="location" label="Location"><Input /></Form.Item>
                   </div>

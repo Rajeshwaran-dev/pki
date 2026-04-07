@@ -33,6 +33,28 @@ const statusColors = {
   'Discarded': '#FF4D4F',
 };
 
+/* Theme-aware status badge (replaces AntD Tag for status colors) */
+const StatusBadge = ({ status }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  const color = statusColors[status] || '#888';
+  return (
+    <span style={{
+      display: 'inline-block',
+      background: isDark ? `${color}28` : `${color}18`,
+      color: color,
+      border: `1px solid ${color}${isDark ? '60' : '45'}`,
+      borderRadius: 10,
+      fontWeight: 600,
+      fontSize: 10,
+      padding: '2px 8px',
+      lineHeight: 1.5,
+      whiteSpace: 'nowrap',
+    }}>
+      {status}
+    </span>
+  );
+};
+
 const getMoreMenuItems = (type) => (
   type === 'task'
     ? [
@@ -87,9 +109,7 @@ const TaskCard = ({ task, overlay, onEdit }) => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
-          <Tag color={statusColors[task.status] || '#ccc'} style={{ borderRadius: 10, fontSize: 10 }}>
-            {task.status}
-          </Tag>
+          <StatusBadge status={task.status} />
         </div>
         <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -119,9 +139,7 @@ const TaskCard = ({ task, overlay, onEdit }) => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
-          <Tag color={statusColors[task.status] || '#ccc'} style={{ borderRadius: 10, fontSize: 10 }}>
-            {task.status}
-          </Tag>
+          <StatusBadge status={task.status} />
         </div>
         <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -207,7 +225,7 @@ const RequestCard = ({ request, overlay, onEdit }) => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
           <Space size={8}>
             <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
-            <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+            <StatusBadge status={request.status} />
           </Space>
           {onEdit && (
             <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(request); }}>
@@ -236,7 +254,7 @@ const RequestCard = ({ request, overlay, onEdit }) => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
           <Space size={8}>
             <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
-            <Tag color={statusColors[request.status]} style={{ borderRadius: 10, fontSize: 10 }}>{request.status}</Tag>
+            <StatusBadge status={request.status} />
           </Space>
           {onEdit && (
             <Button type="text" size="small" onClick={e => { e.stopPropagation(); onEdit(request); }}>
@@ -284,13 +302,13 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
           <Button type="primary" icon={<CheckSquareOutlined />} ghost style={{ borderRadius: 8 }}>
             {type === 'task' ? 'Mark Completed' : 'Approve'}
           </Button>
-          <Tag color={statusColors[item.status]} style={{ borderRadius: 10 }}>{item.status}</Tag>
+          <StatusBadge status={item.status} />
         </Space>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 24px', padding: '16px 0', borderTop: `1px solid ${isDark ? darkBorder : '#f5f5f5'}`, borderBottom: `1px solid ${isDark ? darkBorder : '#f5f5f5'}` }}>
         {[
-          ['Stage', <Tag color={statusColors[item.status]} style={{ borderRadius: 10 }}>{item.status}</Tag>],
+          ['Stage', <StatusBadge status={item.status} />],
           ['Assignee', item.assignee],
           ['Due Date', item.dueDate],
           ['Time Spent', '00:00:00'],
@@ -357,7 +375,7 @@ const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit
       <span style={{ fontWeight: 600, fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {item.title}
       </span>
-      <Tag color={statusColors[item.status]} style={{ borderRadius: 10, fontSize: 10, marginLeft: 8, flexShrink: 0 }}>{item.status}</Tag>
+      <StatusBadge status={item.status} />
     </div>
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <span style={{ fontSize: 11, color: '#999' }}>
@@ -837,16 +855,18 @@ const TasksPage = () => {
 
       {/* Add Task Modal */}
       <Modal
+        className="crm-modal"
         title={<span style={{ fontWeight: 700 }}>{editingTask ? 'Edit Task' : 'New Task'}</span>}
         open={modalOpen}
         onCancel={resetModal}
         onOk={handleSave}
         okText={editingTask ? 'Update Task' : 'Submit'}
-        okButtonProps={{ style: { background: '#0B2B44', border: 'none' } }}
+        okButtonProps={{ className: 'crm-primary-btn' }}
+        cancelButtonProps={{ style: { display: 'none' } }}
         width={isMobile ? '95%' : 620}
         centered
       >
-        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
+        <Form form={form} layout="vertical" className="crm-form-shell" style={{ marginTop: 16 }}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 
@@ -914,16 +934,18 @@ const TasksPage = () => {
       </Modal>
 
       <Modal
+        className="crm-modal"
         title={<span style={{ fontWeight: 700 }}>{editingRequest ? 'Edit Request' : 'New Request'}</span>}
         open={requestModalOpen}
         onCancel={resetRequestModal}
         onOk={handleSaveRequest}
         okText={editingRequest ? 'Update Request' : 'Submit'}
-        okButtonProps={{ style: { background: '#0B2B44', border: 'none' } }}
+        okButtonProps={{ className: 'crm-primary-btn' }}
+        cancelButtonProps={{ style: { display: 'none' } }}
         width={isMobile ? '95%' : 620}
         centered
       >
-        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
+        <Form form={form} layout="vertical" className="crm-form-shell" style={{ marginTop: 16 }}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 
