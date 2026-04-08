@@ -53,7 +53,7 @@ const AppSidebar = () => {
   const buffColor = isDark ? '#0B2B44' : '#D69F6D';
   const activeGradient = `linear-gradient(135deg, ${caputMortuum} 0%, ${buffColor} 100%)`;
   const siderBg = isDark ? '#031726' : '#ffffff';
-  const borderColor = isDark ? '#0a2e4a' : '#f0f0f0';
+  const borderColor = isDark ? '#0D3554' : '#f0f0f0';
   const logoContainerBg = 'transparent';
 
   const handleLogout = () => {
@@ -135,6 +135,7 @@ const AppSidebar = () => {
           inlineCollapsed={collapsed && !isMobile}
           selectedKeys={[selectedKey]}
           defaultOpenKeys={defaultOpenKeys}
+          className={isDark ? '' : 'light-sidebar-menu'}
           onClick={({ key }) => {
             if (key === settingsMenuKey) return;
             handleClick(key);
@@ -155,7 +156,7 @@ const AppSidebar = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px', borderRadius: 10,
-              background: isDark ? '#081b2f' : 'rgba(255,255,255,0.18)',
+              background: isDark ? '#0D3554' : 'rgba(0,0,0,0.04)',
               marginBottom: 8,
             }}
           >
