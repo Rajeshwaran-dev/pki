@@ -13,6 +13,26 @@ import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
 import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
+import AttendanceSettings from './pages/attendancepages/AttendanceSettings';
+import AdminAttendance from './pages/attendancepages/AdminAttendance';
+import AttendanceTemplates from './pages/attendancepages/AttendanceTemplates';
+import AttendanceTemplateStaff from './pages/attendancepages/AttendanceTemplateStaff';
+import AttendanceGeofence from './pages/attendancepages/AttendanceGeofence';
+import ShiftSettings from './pages/attendancepages/ShiftSettings';
+import WeeklyHolidayTemplates from './pages/attendancepages/WeeklyHolidayTemplates';
+import WeeklyHolidayTemplateStaff from './pages/attendancepages/WeeklyHolidayTemplateStaff';
+import AutomationRules from './pages/attendancepages/AutomationRules';
+import Payroll from './pages/payrollPages/Payroll';
+import PayrollPreview from './pages/payrollPages/PayrollPreview';
+import PayrollAttendance from './pages/payrollPages/Attendance';
+import Reimbursements from './pages/payrollPages/Reimbursements';
+import PayrollSettings from './pages/settingsattendance/PayrollSettings';
+import PayrollCycle from './pages/settingsattendance/payrollPages/PayrollCycle';
+import AttendanceCalculation from './pages/settingsattendance/payrollPages/AttendanceCalculation';
+import DeductionRules from './pages/settingsattendance/payrollPages/DeductionRules';
+import FineCalculation from './pages/settingsattendance/payrollPages/FineCalculation';
+import PayrollProcessingRules from './pages/settingsattendance/payrollPages/PayrollProcessingRules';
+import ReimbursementIntegration from './pages/settingsattendance/payrollPages/ReimbursementIntegration';
 
 const ProtectedRoute = ({ children }) => {
   const isAuth = useAppSelector(s => s.auth.isAuthenticated);
@@ -63,6 +83,34 @@ const ThemedApp = () => {
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+
+              {/* Attendance */}
+              <Route path="/attendance" element={<AdminAttendance />} />
+              <Route path="/attendance/templates" element={<AttendanceTemplates />} />
+              <Route path="/attendance/templates/:templateId/staff" element={<AttendanceTemplateStaff />} />
+              <Route path="/attendance/geofence" element={<AttendanceGeofence />} />
+              <Route path="/attendance/shift-settings" element={<ShiftSettings />} />
+              <Route path="/attendance/weekly-holidays/templates" element={<WeeklyHolidayTemplates />} />
+              <Route path="/attendance/weekly-holidays/templates/:templateId/staff" element={<WeeklyHolidayTemplateStaff />} />
+              <Route path="/attendance/automation-rules" element={<AutomationRules />} />
+
+              {/* Attendance Settings (under Settings menu) */}
+              <Route path="/settings/attendance" element={<AttendanceSettings />} />
+
+              {/* Payroll */}
+              <Route path="/payroll" element={<Payroll />} />
+              <Route path="/payroll/preview" element={<PayrollPreview />} />
+              <Route path="/payroll/attendance" element={<PayrollAttendance />} />
+              <Route path="/payroll/reimbursements" element={<Reimbursements />} />
+
+              {/* Payroll Settings */}
+              <Route path="/settings/payroll" element={<PayrollSettings />} />
+              <Route path="/settings/payroll/cycle" element={<PayrollCycle />} />
+              <Route path="/settings/payroll/attendance-calculation" element={<AttendanceCalculation />} />
+              <Route path="/settings/payroll/deduction-rules" element={<DeductionRules />} />
+              <Route path="/settings/payroll/fine-calculation" element={<FineCalculation />} />
+              <Route path="/settings/payroll/processing-rules" element={<PayrollProcessingRules />} />
+              <Route path="/settings/payroll/reimbursement-integration" element={<ReimbursementIntegration />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

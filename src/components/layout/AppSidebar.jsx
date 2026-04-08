@@ -1,9 +1,11 @@
-import { Layout, Drawer, Avatar, Tooltip } from 'antd';
+import { Layout, Drawer, Avatar, Tooltip, Menu } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
+  DollarOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { setSidebarCollapsed, setMobileSidebarOpen } from '@/store/slices/uiSlice';
 import { logout } from '@/store/slices/authSlice';
@@ -11,6 +13,7 @@ import useIsMobile from '@/hooks/useIsMobile';
 
 const { Sider } = Layout;
 
+const settingsMenuKey = '__settings__';
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
   { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
@@ -19,8 +22,18 @@ const menuItems = [
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
   { key: '/attendance', icon: <TeamOutlined />, label: 'Attendance' },
+  { key: '/payroll', icon: <DollarOutlined />, label: 'Payroll' },
   { key: '/inventory', icon: <BarChartOutlined />, label: 'Inventory' },
-  { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
+  {
+    key: settingsMenuKey,
+    icon: <SettingOutlined />,
+    label: 'Settings',
+    children: [
+      { key: '/settings', label: 'General' },
+      { key: '/settings/attendance', label: 'Attendance Settings' },
+      { key: '/settings/payroll', label: 'Payroll Settings' },
+    ],
+  },
 ];
 
 const AppSidebar = () => {
@@ -50,6 +63,20 @@ const AppSidebar = () => {
     navigate(key);
     if (isMobile) dispatch(setMobileSidebarOpen(false));
   };
+
+  const selectedKey = useMemo(() => {
+    const p = location.pathname;
+    const direct = menuItems
+      .flatMap((i) => (i.children ? i.children : [i]))
+      .find((i) => i.key === p);
+    return direct?.key || '/';
+  }, [location.pathname]);
+
+  const defaultOpenKeys = useMemo(() => {
+    const p = location.pathname;
+    if (p.startsWith('/settings')) return [settingsMenuKey];
+    return [];
+  }, [location.pathname]);
 
   const siderContent = (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -100,68 +127,23 @@ const AppSidebar = () => {
 
       {/* Nav Menu */}
       <div style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
-        {menuItems.map(item => {
-          const isActive = location.pathname === item.key;
-          return (
-            <Tooltip
-              key={item.key}
-              title={collapsed && !isMobile ? item.label : ''}
-              placement="right"
-            >
-              <div
-                onClick={() => handleClick(item.key)}
-                className={`nav-item ${isActive ? 'active' : ''}`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  padding: collapsed && !isMobile ? '12px 0' : '11px 14px',
-                  justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
-                  marginBottom: 6,
-                  borderRadius: 14,
-                  cursor: 'pointer',
-                  background: isActive
-                    ? (isDark ? '#133d5e' : activeGradient)
-                    : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
-                  border: isActive ? `1px solid ${isDark ? '#1e5c8a' : 'rgba(214,159,109,0.55)'}` : '1px solid transparent',
-                  fontWeight: isActive ? 600 : 500,
-                  fontSize: 13.5,
-                  transition: 'background 0.2s ease, color 0.2s ease, border 0.2s ease, box-shadow 0.2s ease',
-                  boxShadow: isActive ? `0 8px 24px ${isDark ? 'rgba(30,92,138,0.28)' : 'rgba(79,49,42,0.16)'}` : 'none',
-                }}
-                onMouseEnter={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(214,159,109,0.09)';
-                    e.currentTarget.style.color = isDark ? '#7ec8e3' : '#4f312a';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = isDark ? '#9a9a9a' : '#4f312a';
-                  }
-                }}
-              >
-                <span style={{
-                  fontSize: 17,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  borderRadius: 10,
-                  background: isActive && !isDark ? 'rgba(255,255,255,0.16)' : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
-                }}>
-                  {item.icon}
-                </span>
-                {(!collapsed || isMobile) && (
-                  <span style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
-                )}
-              </div>
-            </Tooltip>
-          );
-        })}
+        <Menu
+          mode="inline"
+          items={menuItems}
+          inlineCollapsed={collapsed && !isMobile}
+          selectedKeys={[selectedKey]}
+          defaultOpenKeys={defaultOpenKeys}
+          onClick={({ key }) => {
+            if (key === settingsMenuKey) return;
+            handleClick(key);
+          }}
+          style={{
+            background: 'transparent',
+            borderInlineEnd: 'none',
+            color: isDark ? '#b2bdc8' : '#4f312a',
+          }}
+          theme={isDark ? 'dark' : 'light'}
+        />
       </div>
 
       {/* User Section */}

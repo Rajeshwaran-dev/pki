@@ -1,5 +1,5 @@
-import { Space, Typography } from 'antd';
-import { HomeOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Space, Typography } from 'antd';
+import { ArrowLeftOutlined, HomeOutlined, RightOutlined } from '@ant-design/icons';
 import { useLocation, Link } from 'react-router-dom';
 
 const routeNames = {
@@ -9,10 +9,12 @@ const routeNames = {
   '/tasks': 'Tasks',
   '/reports': 'Reports',
   '/messages': 'Chat',
+  '/attendance': 'Attendance',
+  '/payroll': 'Payroll',
   '/settings': 'Settings',
 };
 
-const PageHeader = ({ title, subtitle, actions }) => {
+const PageHeader = ({ title, subtitle, actions, backTo, backLabel = 'Back' }) => {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(Boolean);
 
@@ -27,8 +29,13 @@ const PageHeader = ({ title, subtitle, actions }) => {
         flexWrap: 'wrap',
       }}
     >
-      {/* Left: breadcrumb + divider + title */}
+      {/* Left: back + breadcrumb + divider + title */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        {backTo && (
+          <Link to={backTo} style={{ textDecoration: 'none' }}>
+            <Button icon={<ArrowLeftOutlined />} aria-label={backLabel} />
+          </Link>
+        )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#999' }}>
           <HomeOutlined style={{ fontSize: 11 }} />
           <Link to="/" style={{ color: '#999', marginLeft: 4 }}>Home</Link>
