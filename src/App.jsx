@@ -11,7 +11,6 @@ import SettingsPage from './pages/SettingsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
-import AttendancePage from './pages/AttendancePage';
 import InventoryPage from './pages/InventoryPage';
 import EnquiryPage from './pages/EnquiryPage';
 import EnquiryDetailPage from './pages/EnquiryDetailPage';
@@ -88,8 +87,6 @@ const ThemedApp = () => {
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/messages" element={<MessagesPage />} />
-              <Route path="/attendance" element={<AttendancePage />} />
-              <Route path="/attendance/:tab" element={<AttendancePage />} />
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/inventory/:tab" element={<InventoryPage />} />
               <Route path="/enquiry" element={<EnquiryPage />} />
@@ -98,6 +95,7 @@ const ThemedApp = () => {
 
               {/* Attendance */}
               <Route path="/attendance" element={<AdminAttendance />} />
+              <Route path="/attendance/:tab" element={<Navigate to="/attendance" replace />} />
               <Route path="/attendance/templates" element={<AttendanceTemplates />} />
               <Route path="/attendance/templates/:templateId/staff" element={<AttendanceTemplateStaff />} />
               <Route path="/attendance/geofence" element={<AttendanceGeofence />} />

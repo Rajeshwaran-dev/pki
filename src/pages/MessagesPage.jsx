@@ -640,8 +640,15 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
   ];
 
   return (
-    <Drawer open={open} onClose={() => { onClose(); setGroupName(''); setSelectedMembers([]); setMemberSearch(''); setActiveTab('details'); }} placement="right" width={420} closable={false}
-      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' } }}
+    <Drawer
+      open={open}
+      onClose={() => { onClose(); setGroupName(''); setSelectedMembers([]); setMemberSearch(''); setActiveTab('details'); }}
+      placement="right"
+      closable={false}
+      styles={{
+        wrapper: { width: 420 },
+        body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' },
+      }}
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -675,8 +682,15 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
   const sectionBg = isDark ? '#0d3554' : '#fff';
 
   return (
-    <Drawer open={open} onClose={onClose} placement="right" width={420} closable={false}
-      styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' } }}
+    <Drawer
+      open={open}
+      onClose={onClose}
+      placement="right"
+      closable={false}
+      styles={{
+        wrapper: { width: 420 },
+        body: { padding: 0, display: 'flex', flexDirection: 'column', background: isDark ? '#031726' : '#f9fafb' },
+      }}
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
