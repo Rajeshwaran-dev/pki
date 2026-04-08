@@ -170,6 +170,42 @@
   transform: translateY(-1px);
 }
 
+/* ── Light mode sidebar: caput mortuum + buff gradient active item ── */
+.light-sidebar-menu .ant-menu-item .ant-menu-title-content,
+.light-sidebar-menu .ant-menu-item .anticon,
+.light-sidebar-menu .ant-menu-submenu-title .ant-menu-title-content,
+.light-sidebar-menu .ant-menu-submenu-title .anticon,
+.light-sidebar-menu .ant-menu-submenu-arrow {
+  color: #4F312A !important;
+}
+.light-sidebar-menu .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background: rgba(214, 159, 109, 0.14) !important;
+  border-radius: 10px !important;
+}
+.light-sidebar-menu .ant-menu-submenu-title:hover {
+  background: rgba(214, 159, 109, 0.14) !important;
+  border-radius: 10px !important;
+}
+.light-sidebar-menu .ant-menu-item.ant-menu-item-selected {
+  background: linear-gradient(135deg, #4F312A 0%, #D69F6D 100%) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(79, 49, 42, 0.22) !important;
+}
+.light-sidebar-menu .ant-menu-item.ant-menu-item-selected .ant-menu-title-content,
+.light-sidebar-menu .ant-menu-item.ant-menu-item-selected .anticon {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+.light-sidebar-menu .ant-menu-sub .ant-menu-item.ant-menu-item-selected {
+  background: linear-gradient(135deg, #4F312A 0%, #D69F6D 100%) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 3px 10px rgba(79, 49, 42, 0.18) !important;
+}
+.light-sidebar-menu .ant-menu-sub .ant-menu-item.ant-menu-item-selected .ant-menu-title-content {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
 /* Sidebar nav item */
 .nav-item {
   position: relative;
@@ -194,6 +230,61 @@
 }
 .kanban-column:hover {
   background: rgba(214, 159, 109, 0.04) !important;
+}
+
+/* ── Dark mode sidebar Ant Menu overrides ── */
+.dark .ant-menu-dark {
+  background: transparent !important;
+}
+.dark .ant-menu-dark .ant-menu-item-selected {
+  background: linear-gradient(135deg, #0D3554 0%, #031726 100%) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(3, 23, 38, 0.55) !important;
+}
+.dark .ant-menu-dark .ant-menu-item-selected .ant-menu-title-content,
+.dark .ant-menu-dark .ant-menu-item-selected .anticon {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+.dark .ant-menu-dark .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background: rgba(13, 53, 84, 0.7) !important;
+  border-radius: 10px !important;
+}
+.dark .ant-menu-dark .ant-menu-submenu-title:hover {
+  background: rgba(13, 53, 84, 0.7) !important;
+  border-radius: 10px !important;
+}
+.dark .ant-menu-dark .ant-menu-sub {
+  background: transparent !important;
+}
+.dark .ant-menu-dark .ant-menu-sub .ant-menu-item-selected {
+  background: linear-gradient(135deg, #0D3554 0%, #031726 100%) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 3px 10px rgba(3, 23, 38, 0.45) !important;
+}
+.dark .ant-menu-dark .ant-menu-sub .ant-menu-item-selected .ant-menu-title-content {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* ── Active item left indicator bar — both light & dark ── */
+.light-sidebar-menu .ant-menu-item.ant-menu-item-selected,
+.dark .ant-menu-dark .ant-menu-item-selected {
+  position: relative !important;
+  overflow: hidden !important;
+}
+.light-sidebar-menu .ant-menu-item.ant-menu-item-selected::before,
+.dark .ant-menu-dark .ant-menu-item-selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 55%;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 0 4px 4px 0;
+  z-index: 2;
 }
 
 /* Login blobs */
