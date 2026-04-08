@@ -110,17 +110,6 @@ const AppHeader = () => {
           <Dropdown
             menu={{
               items: [
-                {
-                  key: 'user-info',
-                  label: (
-                    <div style={{ padding: '4px 0', minWidth: 160 }}>
-                      <div style={{ fontWeight: 600, fontSize: 14 }}>{user?.name || 'Super Admin'}</div>
-                      <div style={{ fontSize: 12, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>{user?.role}</div>
-                    </div>
-                  ),
-                  disabled: true,
-                },
-                { type: 'divider' },
                 { key: 'profile', icon: <UserOutlined />, label: 'View Profile' },
                 { type: 'divider' },
                 { key: 'logout', icon: <LogoutOutlined />, label: 'Sign Out', danger: true },

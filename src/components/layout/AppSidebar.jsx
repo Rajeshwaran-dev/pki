@@ -2,6 +2,7 @@ import { Layout, Drawer, Avatar, Tooltip, Menu } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
+  RightOutlined, DownOutlined, ContactsOutlined,
   DollarOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -16,8 +17,9 @@ const { Sider } = Layout;
 const settingsMenuKey = '__settings__';
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
-  { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
+  { key: '/enquiry', icon: <ContactsOutlined />, label: 'Enquiry' },
   { key: '/clients', icon: <TeamOutlined />, label: 'Clients' },
+  { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
@@ -45,6 +47,20 @@ const AppSidebar = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const user = useAppSelector(s => s.auth.user);
   const isMobile = useIsMobile();
+  const [openMenus, setOpenMenus] = useState({});
+
+  useEffect(() => {
+    // Automatically open parent menu if a child is active
+    menuItems.forEach(item => {
+      if (item.children && item.children.some(child => location.pathname.startsWith(child.key))) {
+        setOpenMenus(prev => ({ ...prev, [item.key]: true }));
+      }
+    });
+  }, [location.pathname]);
+
+  const toggleMenu = (key) => {
+    setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const isDark = theme === 'dark';
   const caputMortuum = '#4F312A';

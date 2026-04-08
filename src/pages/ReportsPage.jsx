@@ -185,7 +185,7 @@ const ProjectsReport = ({ projects, isDark }) => {
           columns={columns}
           rowKey="id"
           size="small"
-          pagination={{ pageSize: 8, showSizeChanger: false, showTotal: (t) => `${t} projects` }}
+          pagination={{ pageSize: 10, showSizeChanger: false, showTotal: (t) => `${t} projects` }}
           scroll={{ x: 600 }}
         />
       </Card>
@@ -324,7 +324,7 @@ const TasksReport = ({ tasks, isDark }) => {
           columns={columns}
           rowKey="id"
           size="small"
-          pagination={{ pageSize: 8, showSizeChanger: false, showTotal: (t) => `${t} tasks` }}
+          pagination={{ pageSize: 10, showSizeChanger: false, showTotal: (t) => `${t} tasks` }}
           scroll={{ x: 600 }}
         />
       </Card>
@@ -435,7 +435,7 @@ const FinancialReport = ({ projects, isDark }) => {
           columns={columns}
           rowKey="id"
           size="small"
-          pagination={{ pageSize: 8, showSizeChanger: false, showTotal: (t) => `${t} projects` }}
+          pagination={{ pageSize: 10, showSizeChanger: false, showTotal: (t) => `${t} projects` }}
           scroll={{ x: 600 }}
           summary={() => (
             <Table.Summary.Row>

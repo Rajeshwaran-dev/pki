@@ -68,54 +68,186 @@ const InfoField = ({ label, value, muted, isDark }) => (
 );
 
 /* ══════════════ ORGANIZATION ══════════════ */
-const OrganizationTab = ({ isDark }) => (
-  <div className="animate-fade-in">
-    <Card className="crm-card" style={{ marginBottom: 16 }} styles={{ body: { padding: 24 } }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <Title level={5} style={{ margin: 0 }}>Company Information</Title>
-        <Button icon={<EditOutlined />} style={{ borderRadius: 8 }}>Edit</Button>
+const OrganizationTab = ({ isDark }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  const sectionBg = isDark ? '#081b2f' : '#f8fafd';
+  const sectionBorder = isDark ? '#1a4d72' : '#e8f0fb';
+
+  const CustomInfoField = ({ label, value, icon }) => (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+        <span style={{ fontSize: 12, opacity: 0.7 }}>{icon}</span>
+        <Text type="secondary" style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</Text>
       </div>
-      <Row gutter={[20, 16]}>
-        <Col xs={24} md={12}><InfoField label="Legal Company Name" value="PERSPECTIVE KITCHENS AND INTERIORS PVT LTD" isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="Studio Name" value="PERSPECTIVE KITCHENS AND INTERIORS PVT LTD" isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="GST Number" value="33AAOCP2032L1ZD" isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="PAN" value="AAOCP2032L" isDark={isDark} /></Col>
-      </Row>
-      <div style={{ marginTop: 20 }}>
-        <Text type="secondary" style={{ fontSize: 12 }}>Company Logo</Text>
-        <div style={{ marginTop: 8, padding: '28px 0', borderRadius: 12, background: isDark ? '#0a2235' : '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px dashed ${isDark ? '#1a4d72' : '#e0e0e0'}` }}>
-          <div style={{ width: 80, height: 80, borderRadius: 16, background: '#1a4d72', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 22 }}>PK&I</div>
+      <div style={{
+        padding: '12px 16px',
+        borderRadius: 10,
+        background: isDark ? '#0d3554' : '#fff',
+        border: `1px solid ${sectionBorder}`,
+        fontSize: 13,
+        fontWeight: 600,
+        color: isDark ? '#e0e8f0' : '#1f1f1f',
+        boxShadow: isDark ? 'none' : '0 1px 2px rgba(0,0,0,0.03)',
+      }}>
+        {value || <Text type="secondary" style={{ fontStyle: 'italic', fontWeight: 400 }}>Not set</Text>}
+      </div>
+    </div>
+  );
+
+  const Section = ({ title, icon, children, onEdit }) => (
+    <div style={{
+      background: sectionBg,
+      border: `1px solid ${sectionBorder}`,
+      borderRadius: 16,
+      padding: 24,
+      marginBottom: 20,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 20 }}>{icon}</span>
+          <Title level={5} style={{ margin: 0, fontWeight: 700 }}>{title}</Title>
         </div>
-        <Button icon={<UploadOutlined />} style={{ marginTop: 10, borderRadius: 8 }}>Upload Logo</Button>
+        <Button
+          icon={<EditOutlined />}
+          onClick={onEdit}
+          style={{
+            borderRadius: 8,
+            fontWeight: 600,
+            border: `1px solid ${primaryColor}`,
+            color: primaryColor,
+            background: 'transparent'
+          }}
+        >
+          Edit
+        </Button>
       </div>
-    </Card>
-    <Card className="crm-card" style={{ marginBottom: 16 }} styles={{ body: { padding: 24 } }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <Title level={5} style={{ margin: 0 }}>Company Address</Title>
-        <Button icon={<EditOutlined />} style={{ borderRadius: 8 }}>Edit</Button>
-      </div>
-      <Row gutter={[20, 16]}>
-        <Col xs={24} md={12}><InfoField label="Address Line 1" value="No 691/13, NGGO's Colony" isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="Address Line 2" value="Bagalur Road" isDark={isDark} /></Col>
-        <Col xs={24} md={8}><InfoField label="State" value="Tamil Nadu" isDark={isDark} /></Col>
-        <Col xs={24} md={8}><InfoField label="City" value="Hosur" isDark={isDark} /></Col>
-        <Col xs={24} md={8}><InfoField label="Pincode" value="635109" isDark={isDark} /></Col>
+      {children}
+    </div>
+  );
+
+  return (
+    <div className="animate-fade-in" style={{ paddingBottom: 40 }}>
+      <Row gutter={20}>
+        <Col xs={24} lg={16}>
+          <Section title="Company Information" icon="🏢">
+            <Row gutter={20}>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Legal Company Name" value="PERSPECTIVE KITCHENS AND INTERIORS PVT LTD" icon={<BankOutlined />} />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Studio Name" value="PERSPECTIVE KITCHENS AND INTERIORS PVT LTD" icon={<AppstoreOutlined />} />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="GST Number" value="33AAOCP2032L1ZD" icon={<ThunderboltOutlined />} />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="PAN Number" value="AAOCP2032L" icon={<DatabaseOutlined />} />
+              </Col>
+            </Row>
+          </Section>
+
+          <Section title="Company Address" icon="📍">
+            <Row gutter={20}>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Address Line 1" value="No 691/13, NGGO's Colony" />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Address Line 2" value="Bagalur Road" />
+              </Col>
+              <Col xs={24} md={8}>
+                <CustomInfoField label="State" value="Tamil Nadu" />
+              </Col>
+              <Col xs={24} md={8}>
+                <CustomInfoField label="City" value="Hosur" />
+              </Col>
+              <Col xs={24} md={8}>
+                <CustomInfoField label="Pincode" value="635109" />
+              </Col>
+            </Row>
+          </Section>
+
+          <Section title="Bank Details" icon="💰">
+            <Row gutter={20}>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Bank Name" value="" />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Account Number" value="" />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="IFSC Code" value="" />
+              </Col>
+              <Col xs={24} md={12}>
+                <CustomInfoField label="Branch" value="" />
+              </Col>
+            </Row>
+          </Section>
+        </Col>
+
+        <Col xs={24} lg={8}>
+          <div style={{
+            background: sectionBg,
+            border: `1px solid ${sectionBorder}`,
+            borderRadius: 16,
+            padding: 24,
+            position: 'sticky',
+            top: 20,
+            textAlign: 'center',
+          }}>
+            <Title level={5} style={{ marginBottom: 20, textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span>🖼️</span> Company Logo
+            </Title>
+            <div style={{
+              margin: '0 auto 20px',
+              width: 160,
+              height: 160,
+              borderRadius: 24,
+              background: isDark ? '#0d3554' : '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: `2px dashed ${primaryColor}`,
+              boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.05)',
+            }}>
+              <div style={{
+                width: 100,
+                height: 100,
+                borderRadius: 20,
+                background: primaryColor,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontWeight: 900,
+                fontSize: 28,
+                boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+              }}>
+                PK&I
+              </div>
+            </div>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              style={{
+                width: '100%',
+                height: 40,
+                borderRadius: 10,
+                background: primaryColor,
+                border: 'none',
+                fontWeight: 600,
+              }}
+            >
+              Upload New Logo
+            </Button>
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginTop: 12 }}>
+              Recommended size: 512x512px. Max 2MB.
+            </Text>
+          </div>
+        </Col>
       </Row>
-    </Card>
-    <Card className="crm-card" styles={{ body: { padding: 24 } }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <Title level={5} style={{ margin: 0 }}>Bank Details</Title>
-        <Button icon={<EditOutlined />} style={{ borderRadius: 8 }}>Edit</Button>
-      </div>
-      <Row gutter={[20, 16]}>
-        <Col xs={24} md={12}><InfoField label="Bank Name" value="" muted isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="Account Number" value="" muted isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="IFSC Code" value="" muted isDark={isDark} /></Col>
-        <Col xs={24} md={12}><InfoField label="Branch" value="" muted isDark={isDark} /></Col>
-      </Row>
-    </Card>
-  </div>
-);
+    </div>
+  );
+};
 
 /* ══════════════ ITEM MASTER ══════════════ */
 const itemData = [
@@ -136,7 +268,7 @@ const ItemMasterTab = () => (
     </div>
     <div style={tableCard}>
       <Table dataSource={itemData} size="small" scroll={{ x: 900 }}
-        pagination={{ pageSize: 20, showTotal: (t, r) => `Showing ${r[0]} to ${r[1]} of ${t} items` }}
+        pagination={{ pageSize: 10, showTotal: (t, r) => `Showing ${r[0]} to ${r[1]} of ${t} items` }}
         columns={[
           { title: 'Created On', dataIndex: 'createdOn', width: 130 },
           { title: 'Image', width: 60, render: () => <div style={{ width: 28, height: 28, background: '#f0f0f0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: '#bbb' }}>🖼</div> },
@@ -183,7 +315,7 @@ const MaterialsTab = () => {
             <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Material</Button>
             <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Export Excel</Button>
           </div>
-          <div style={tableCard}><Table dataSource={materialData} columns={matCols} size="small" scroll={{ x: 900 }} pagination={{ showTotal: (t, r) => `Showing ${r[0]} to ${r[1]} of ${t} items` }} /></div>
+          <div style={tableCard}><Table dataSource={materialData} columns={matCols} size="small" scroll={{ x: 900 }} pagination={{ pageSize: 10, showTotal: (t, r) => `Showing ${r[0]} to ${r[1]} of ${t} items` }} /></div>
         </>
       )}
       {sub === 'rate' && (
@@ -193,7 +325,7 @@ const MaterialsTab = () => {
           </div>
           <div style={tableCard}>
             <Table dataSource={[]} size="small" locale={{ emptyText: 'No data available' }}
-              pagination={{ showTotal: () => 'Showing 0 to 0 of 0 items' }}
+              pagination={{ pageSize: 10, showTotal: () => 'Showing 0 to 0 of 0 items' }}
               columns={[
                 { title: 'Contract ID', dataIndex: 'contractId' },
                 { title: 'Created date', dataIndex: 'createdDate' },
@@ -269,7 +401,7 @@ const ActivityTab = () => {
             <Button type="primary" icon={<PlusOutlined />} style={{ background: '#D69F6D', border: 'none', borderRadius: 8 }}>Add Tag</Button>
           </div>
           <div style={tableCard}>
-            <Table dataSource={tagData} size="small" pagination={{ showTotal: t => `${t} items` }}
+            <Table dataSource={tagData} size="small" pagination={{ pageSize: 10, showTotal: t => `${t} items` }}
               columns={[
                 { title: 'Name', dataIndex: 'name', render: v => <a style={{ color: '#1677FF' }}>{v}</a> },
                 { title: 'Actions', width: 100, render: () => <ActionBtns /> },
@@ -285,7 +417,7 @@ const ActivityTab = () => {
             <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Import Excel</Button>
           </div>
           <div style={tableCard}>
-            <Table dataSource={activityData} size="small" pagination={{ showTotal: t => `${t} items` }}
+            <Table dataSource={activityData} size="small" pagination={{ pageSize: 10, showTotal: t => `${t} items` }}
               columns={[
                 { title: 'Name', dataIndex: 'name' },
                 { title: 'Activity tag', dataIndex: 'tag', render: v => v ? <a style={{ color: '#1677FF' }}>{v}</a> : null },
@@ -316,7 +448,7 @@ const ManpowerTab = () => (
       <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Import Excel</Button>
     </div>
     <div style={tableCard}>
-      <Table dataSource={manpowerData} size="small" pagination={{ showTotal: t => `${t} items` }}
+      <Table dataSource={manpowerData} size="small" pagination={{ pageSize: 10, showTotal: t => `${t} items` }}
         columns={[
           { title: 'Created On', dataIndex: 'createdOn', width: 160 },
           { title: 'Name', dataIndex: 'name', render: v => <a style={{ color: '#1677FF' }}>{v}</a> },
@@ -354,7 +486,7 @@ const VendorsTab = () => {
       </div>
       <div style={tableCard}>
         <Table dataSource={filtered} size="small" scroll={{ x: 1000 }}
-          pagination={{ showTotal: t => `${t} items` }}
+          pagination={{ pageSize: 10, showTotal: t => `${t} items` }}
           columns={[
             { title: 'Created On', dataIndex: 'createdOn', width: 120 },
             { title: 'Vendor Code', dataIndex: 'code', width: 120, render: v => <a style={{ color: '#1677FF' }}>{v}</a> },
@@ -406,7 +538,7 @@ const UsersTab = () => {
         <Table
           dataSource={sub === 'internal' ? internalUsers : []}
           size="small"
-          pagination={{ showTotal: t => `${t} items` }}
+          pagination={{ pageSize: 10, showTotal: t => `${t} items` }}
           columns={[
             { title: 'Name', dataIndex: 'name', render: v => <span style={{ fontWeight: 500 }}>{v}</span> },
             { title: 'Phone', dataIndex: 'phone', width: 160 },
