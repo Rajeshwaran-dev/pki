@@ -2,7 +2,7 @@ import { Layout, Drawer, Avatar, Tooltip, Menu } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
-  RightOutlined, DownOutlined, ContactsOutlined,
+  ContactsOutlined,
   DollarOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -47,20 +47,6 @@ const AppSidebar = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const user = useAppSelector(s => s.auth.user);
   const isMobile = useIsMobile();
-  const [openMenus, setOpenMenus] = useState({});
-
-  useEffect(() => {
-    // Automatically open parent menu if a child is active
-    menuItems.forEach(item => {
-      if (item.children && item.children.some(child => location.pathname.startsWith(child.key))) {
-        setOpenMenus(prev => ({ ...prev, [item.key]: true }));
-      }
-    });
-  }, [location.pathname]);
-
-  const toggleMenu = (key) => {
-    setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
-  };
 
   const isDark = theme === 'dark';
   const caputMortuum = '#4F312A';
@@ -218,8 +204,8 @@ const AppSidebar = () => {
         placement="left"
         open={mobileOpen}
         onClose={() => dispatch(setMobileSidebarOpen(false))}
+        size="large"
         styles={{
-          wrapper: { width: 260 },
           body: { padding: 0, background: siderBg, display: 'flex', flexDirection: 'column', height: '100%' },
           header: { display: 'none' },
         }}
