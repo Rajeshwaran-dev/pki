@@ -3,11 +3,17 @@ import { Button, Card, Modal, Space, Table, Tag, Typography, message } from 'ant
 import { SettingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
 export default function AttendanceGeofence() {
   const navigate = useNavigate();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
+  const muted = isDark ? '#a8b0ba' : '#666';
+  const chipBg = isDark ? 'rgba(255,255,255,0.06)' : '#f5f5f5';
+  const chipText = isDark ? '#a8b0ba' : '#999';
   const [branches] = useState([
     {
       id: 'br-001',
@@ -59,7 +65,7 @@ export default function AttendanceGeofence() {
           <div style={{ fontWeight: 700, marginBottom: 6 }}>Branch details</div>
           <div><b>Code:</b> {record.code}</div>
           <div><b>Default radius:</b> {record.defaultRadius}</div>
-          <div style={{ marginTop: 10, color: '#666' }}>
+          <div style={{ marginTop: 10, color: muted }}>
             Map + zone editing can be connected later. This screen is UI-only for now.
           </div>
         </div>
@@ -73,7 +79,7 @@ export default function AttendanceGeofence() {
       dataIndex: 'name',
       render: (_v, r) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: chipText }}>
             ⛭
           </div>
           <div>
@@ -87,7 +93,7 @@ export default function AttendanceGeofence() {
       title: 'Branch Code',
       dataIndex: 'code',
       width: 120,
-      render: v => <Tag style={{ borderRadius: 8, background: '#f5f5f5' }}>{v}</Tag>,
+      render: v => <Tag style={{ borderRadius: 8, background: chipBg, borderColor: 'transparent', color: isDark ? '#e9edef' : undefined }}>{v}</Tag>,
     },
     { title: 'Address', dataIndex: 'address' },
     {

@@ -3,6 +3,7 @@ import { Button, Card, Col, Form, Input, Modal, Row, Space, Switch, Tag, Typogra
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
@@ -45,6 +46,10 @@ const initialTemplates = [
 
 export default function AttendanceTemplates() {
   const navigate = useNavigate();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
+  const borderColor = isDark ? '#1a4d72' : 'rgba(0,0,0,0.06)';
+  const tileBg = isDark ? '#0d3554' : 'rgba(255,255,255,0.6)';
   const [templates, setTemplates] = useState(initialTemplates);
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -151,10 +156,10 @@ export default function AttendanceTemplates() {
                 <div
                   key={t.id}
                   style={{
-                    border: '1px solid rgba(0,0,0,0.06)',
+                    border: `1px solid ${borderColor}`,
                     borderRadius: 12,
                     padding: 14,
-                    background: 'rgba(255,255,255,0.6)',
+                    background: tileBg,
                     display: 'flex',
                     alignItems: 'flex-start',
                     justifyContent: 'space-between',

@@ -3,15 +3,34 @@ import { Badge, Button, Card, Checkbox, Col, DatePicker, Divider, Input, Modal, 
 import { CheckOutlined, CloseOutlined, EyeOutlined, LeftOutlined, RightOutlined, UploadOutlined, FileTextOutlined, ReloadOutlined, DownloadOutlined } from '@ant-design/icons';
 import PageHeader from '@/components/shared/PageHeader';
 import dayjs from 'dayjs';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
 const demoEmployees = [
-  { id: 'e-001', name: 'Boomi', employeeId: 'EXA0005', avatar: 'B' },
-  { id: 'e-002', name: 'Dhanasekar', employeeId: 'EXA0006', avatar: 'D' },
+  { id: 'e-001', name: 'Boomi', employeeId: 'EXA0005', role: 'IT', avatar: 'B' },
+  { id: 'e-002', name: 'Dhanasekar', employeeId: 'EXM00002', role: 'BackEnd', avatar: 'D' },
+  { id: 'e-003', name: 'Akash', employeeId: 'EXA0007', role: 'Designer', avatar: 'A' },
+  { id: 'e-004', name: 'Priya', employeeId: 'EXA0008', role: 'HR', avatar: 'P' },
+  { id: 'e-005', name: 'Karthik', employeeId: 'EXA0009', role: 'Engineer', avatar: 'K' },
+  { id: 'e-006', name: 'Vijay', employeeId: 'EXA0010', role: 'Supervisor', avatar: 'V' },
+  { id: 'e-007', name: 'Meena', employeeId: 'EXA0011', role: 'Accounts', avatar: 'M' },
+  { id: 'e-008', name: 'Ramesh', employeeId: 'EXA0012', role: 'Technician', avatar: 'R' },
+  { id: 'e-009', name: 'Nithya', employeeId: 'EXA0013', role: 'Architect', avatar: 'N' },
+  { id: 'e-010', name: 'Suresh', employeeId: 'EXA0014', role: 'Site Engineer', avatar: 'S' },
+  { id: 'e-011', name: 'Divya', employeeId: 'EXA0015', role: 'Support', avatar: 'D' },
+  { id: 'e-012', name: 'Arun', employeeId: 'EXA0016', role: 'Planner', avatar: 'A' },
+  { id: 'e-013', name: 'Lakshmi', employeeId: 'EXA0017', role: 'Designer', avatar: 'L' },
+  { id: 'e-014', name: 'Gopi', employeeId: 'EXA0018', role: 'Foreman', avatar: 'G' },
+  { id: 'e-015', name: 'Anand', employeeId: 'EXA0019', role: 'QA', avatar: 'A' },
+  { id: 'e-016', name: 'Saranya', employeeId: 'EXA0020', role: 'Admin', avatar: 'S' },
+  { id: 'e-017', name: 'Mohan', employeeId: 'EXA0021', role: 'Electrician', avatar: 'M' },
+  { id: 'e-018', name: 'Keerthi', employeeId: 'EXA0022', role: 'Store', avatar: 'K' },
 ];
 
 export default function AdminAttendance() {
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
   const [selectedDate, setSelectedDate] = useState(() => dayjs('2026-04-08'));
   const [activeTab, setActiveTab] = useState('All');
   const [q, setQ] = useState('');
@@ -19,6 +38,22 @@ export default function AdminAttendance() {
   const [employeeStatus, setEmployeeStatus] = useState(() => ({
     'e-001': 'Pending',
     'e-002': 'Not Marked',
+    'e-003': 'Not Marked',
+    'e-004': 'Not Marked',
+    'e-005': 'Not Marked',
+    'e-006': 'Not Marked',
+    'e-007': 'Not Marked',
+    'e-008': 'Not Marked',
+    'e-009': 'Not Marked',
+    'e-010': 'Not Marked',
+    'e-011': 'Not Marked',
+    'e-012': 'Not Marked',
+    'e-013': 'Not Marked',
+    'e-014': 'Not Marked',
+    'e-015': 'Not Marked',
+    'e-016': 'Not Marked',
+    'e-017': 'Not Marked',
+    'e-018': 'Not Marked',
   }));
 
   const filteredEmployees = useMemo(() => {
@@ -74,6 +109,23 @@ export default function AdminAttendance() {
     });
   };
 
+  const surfaceBg = isDark ? '#0b2338' : '#ffffff';
+  const surface2Bg = isDark ? '#0d3554' : '#ffffff';
+  const borderColor = isDark ? '#1a4d72' : 'rgba(0,0,0,0.06)';
+  const subtleBorder = isDark ? '#163f5f' : 'rgba(0,0,0,0.06)';
+  const textPrimary = isDark ? '#e9edef' : '#1f1f1f';
+  const textSecondary = isDark ? '#a8b0ba' : '#6b7280';
+  const templateHeaderBg = isDark ? '#103a5a' : 'rgba(214,159,109,0.08)';
+  const templateHeaderBorder = isDark ? '#1a4d72' : 'rgba(214,159,109,0.25)';
+  const tagBg = isDark ? 'rgba(90,181,232,0.14)' : 'rgba(214,159,109,0.18)';
+  const tagBorder = isDark ? 'rgba(90,181,232,0.30)' : 'rgba(214,159,109,0.35)';
+  const selectDotBorder = isDark ? 'rgba(255,255,255,0.20)' : 'rgba(214,159,109,0.35)';
+  const selectDotFill = isDark ? '#5ab5e8' : '#D69F6D';
+
+  const actionBtnStyle = isDark
+    ? { background: '#0e2f49', borderColor: '#1a4d72', color: '#e9edef' }
+    : undefined;
+
   return (
     <div>
       <PageHeader
@@ -101,9 +153,9 @@ export default function AdminAttendance() {
             { label: 'Pending', value: stats.pending, color: '#FAAD14', bg: 'rgba(250,173,20,0.10)' },
           ].map((s) => (
             <Col key={s.label} xs={12} sm={8} md={6} lg={3}>
-              <div style={{ border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10, padding: 10, background: s.bg }}>
+              <div style={{ border: `1px solid ${subtleBorder}`, borderRadius: 10, padding: 10, background: isDark ? 'rgba(255,255,255,0.03)' : s.bg }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 12 }}>{s.label}</Text>
+                  <Text style={{ fontSize: 12, color: textSecondary }}>{s.label}</Text>
                   <Text style={{ fontWeight: 800, color: s.color }}>{s.value}</Text>
                 </div>
               </div>
@@ -115,13 +167,13 @@ export default function AdminAttendance() {
       <Card className="crm-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ fontWeight: 800 }}>
-            Attendance for {selectedDate.format('dddd, MMMM D, YYYY')}
+            <span style={{ color: textPrimary }}>Attendance for {selectedDate.format('dddd, MMMM D, YYYY')}</span>
           </div>
           <Space wrap>
-            <Button icon={<DownloadOutlined />} onClick={() => message.info('Sample file not configured')}>Sample File</Button>
-            <Button icon={<FileTextOutlined />} onClick={() => message.info('Daily report not configured')}>Daily Report</Button>
-            <Button icon={<UploadOutlined />} onClick={() => message.info('Import not configured')}>Import Attendance</Button>
-            <Button icon={<ReloadOutlined />} onClick={() => message.success('Refreshed')}>Refresh</Button>
+            <Button style={actionBtnStyle} icon={<DownloadOutlined />} onClick={() => message.info('Sample file not configured')}>Sample File</Button>
+            <Button style={actionBtnStyle} icon={<FileTextOutlined />} onClick={() => message.info('Daily report not configured')}>Daily Report</Button>
+            <Button style={actionBtnStyle} icon={<UploadOutlined />} onClick={() => message.info('Import not configured')}>Import Attendance</Button>
+            <Button style={actionBtnStyle} icon={<ReloadOutlined />} onClick={() => message.success('Refreshed')}>Refresh</Button>
           </Space>
         </div>
 
@@ -146,6 +198,11 @@ export default function AdminAttendance() {
             placeholder="Search by employee name or ID (case-insensitive)..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            style={{
+              background: isDark ? '#08263d' : undefined,
+              borderColor: isDark ? '#1a4d72' : undefined,
+              color: isDark ? '#e9edef' : undefined,
+            }}
           />
         </div>
 
@@ -160,59 +217,94 @@ export default function AdminAttendance() {
         </div>
 
         <div style={{ marginTop: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 12px', borderRadius: 10, background: 'rgba(214,159,109,0.08)', border: '1px solid rgba(214,159,109,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 12px', borderRadius: 10, background: templateHeaderBg, border: `1px solid ${templateHeaderBorder}` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <Text style={{ fontWeight: 800, color: '#b07a45' }}>Standard Template</Text>
-              <Text type="secondary" style={{ fontSize: 12 }}>(10:00 – 19:00)</Text>
+              <Text style={{ fontWeight: 800, color: isDark ? '#e9edef' : '#b07a45' }}>Standard Template</Text>
+              <Text style={{ fontSize: 12, color: textSecondary }}>(10:00 – 19:00)</Text>
             </div>
-            <Tag style={{ borderRadius: 999 }}>{demoEmployees.length} Employees</Tag>
+            <Tag style={{ borderRadius: 999, background: tagBg, borderColor: tagBorder, color: textPrimary }}>
+              {demoEmployees.length} Employees
+            </Tag>
           </div>
 
           <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
             {filteredEmployees.map((e) => {
               const st = employeeStatus[e.id] || 'Not Marked';
+              const isSelected = selectedIds.includes(e.id);
               return (
-                <div key={e.id} style={{ border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12, padding: 12, display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', gap: 12 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
-                      {e.avatar}
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 800 }}>{e.name}</div>
-                      <Text type="secondary" style={{ fontSize: 12 }}>{e.employeeId}</Text>
-                      <div style={{ marginTop: 4 }}>
-                        <Text type="secondary" style={{ fontSize: 12 }}>
-                          {st === 'Not Marked' ? 'No punch record' : `Status: ${st}`}
-                        </Text>
+                <div
+                  key={e.id}
+                  onClick={() =>
+                    setSelectedIds((prev) => (prev.includes(e.id) ? prev.filter((x) => x !== e.id) : [...prev, e.id]))
+                  }
+                  style={{
+                    border: `1px solid ${isSelected ? (isDark ? 'rgba(90,181,232,0.45)' : 'rgba(214,159,109,0.35)') : borderColor}`,
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    background: isDark ? surface2Bg : surfaceBg,
+                    boxShadow: isSelected ? (isDark ? '0 0 0 2px rgba(90,181,232,0.16)' : '0 0 0 2px rgba(214,159,109,0.10)') : 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                    {/* left strip like screenshot */}
+                    <div style={{ width: 54, borderRight: `1px solid ${subtleBorder}`, background: isDark ? '#072235' : 'rgba(214,159,109,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 999, border: `2px solid ${selectDotBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 10, height: 10, borderRadius: 999, background: isSelected ? selectDotFill : 'transparent' }} />
                       </div>
-                      <div style={{ marginTop: 4 }}>
-                        <a style={{ fontSize: 12 }} onClick={() => message.info('Add note not configured')}>Add Note</a>
-                      </div>
                     </div>
-                  </div>
 
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Present')} type={st === 'Present' ? 'primary' : 'default'}>
-                      P <span style={{ marginLeft: 6 }}>Present</span>
-                    </Button>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Half Day')} type={st === 'Half Day' ? 'primary' : 'default'}>
-                      HD <span style={{ marginLeft: 6 }}>Half Day</span>
-                    </Button>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Absent')} type={st === 'Absent' ? 'primary' : 'default'}>
-                      A <span style={{ marginLeft: 6 }}>Absent</span>
-                    </Button>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Fine')}>
-                      F <span style={{ marginLeft: 6 }}>Fine</span>
-                    </Button>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Leave')}>
-                      L <span style={{ marginLeft: 6 }}>Leave</span>
-                    </Button>
-                    <Button size="small" onClick={() => setStatusForEmployee(e.id, 'Weekly Off')}>
-                      WO <span style={{ marginLeft: 6 }}>Week Off</span>
-                    </Button>
-                    <Button size="small" icon={<EyeOutlined />} onClick={() => view(e)} />
-                    <Button size="small" icon={<CheckOutlined />} onClick={() => message.success('Approved')} />
-                    <Button size="small" danger icon={<CloseOutlined />} onClick={() => message.success('Rejected')} />
+                    <div style={{ flex: 1, padding: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                      {/* employee info */}
+                      <div style={{ display: 'flex', gap: 12, minWidth: 260, alignItems: 'center' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: textPrimary }}>
+                          {e.avatar}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 800, color: textPrimary }}>{e.name}</div>
+                          <Text style={{ fontSize: 12, color: textSecondary }}>
+                            {e.employeeId}{e.role ? ` · ${e.role}` : ''}
+                          </Text>
+                          <div style={{ marginTop: 4 }}>
+                            <Text style={{ fontSize: 12, color: textSecondary }}>
+                              {st === 'Not Marked' ? 'No punch record' : `Status: ${st}`}
+                            </Text>
+                          </div>
+                          <div style={{ marginTop: 4 }}>
+                            <a style={{ fontSize: 12, color: isDark ? '#5ab5e8' : undefined }} onClick={() => message.info('Add note not configured')}>Add Note</a>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* right button grid like screenshot */}
+                      <div style={{ width: 360, maxWidth: '100%' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+                          <Button style={st !== 'Present' ? actionBtnStyle : undefined} size="small" onClick={() => setStatusForEmployee(e.id, 'Present')} type={st === 'Present' ? 'primary' : 'default'}>
+                            P&nbsp;&nbsp;Present
+                          </Button>
+                          <Button style={st !== 'Half Day' ? actionBtnStyle : undefined} size="small" onClick={() => setStatusForEmployee(e.id, 'Half Day')} type={st === 'Half Day' ? 'primary' : 'default'}>
+                            HD&nbsp;&nbsp;Half Day
+                          </Button>
+                          <Button style={st !== 'Absent' ? actionBtnStyle : undefined} size="small" onClick={() => setStatusForEmployee(e.id, 'Absent')} type={st === 'Absent' ? 'primary' : 'default'}>
+                            A&nbsp;&nbsp;Absent
+                          </Button>
+                          <Button style={actionBtnStyle} size="small" onClick={() => setStatusForEmployee(e.id, 'Fine')}>
+                            F&nbsp;&nbsp;Fine
+                          </Button>
+                          <Button style={actionBtnStyle} size="small" onClick={() => setStatusForEmployee(e.id, 'Leave')}>
+                            L&nbsp;&nbsp;Leave
+                          </Button>
+                          <Button style={actionBtnStyle} size="small" icon={<EyeOutlined />} onClick={() => view(e)}>
+                            View
+                          </Button>
+                        </div>
+                        <div style={{ marginTop: 8 }}>
+                          <Button style={actionBtnStyle} size="small" block onClick={() => setStatusForEmployee(e.id, 'Weekly Off')}>
+                            WO&nbsp;&nbsp;Week Off
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               );

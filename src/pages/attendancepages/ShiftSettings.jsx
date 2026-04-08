@@ -3,11 +3,17 @@ import { Button, Card, Modal, Space, Tag, Typography, message } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
 export default function ShiftSettings() {
   const navigate = useNavigate();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
+  const muted = isDark ? '#a8b0ba' : '#666';
+  const accentBg = isDark ? 'rgba(90,181,232,0.14)' : 'rgba(214,159,109,0.18)';
+  const accentText = isDark ? '#5ab5e8' : '#D69F6D';
   const [shifts, setShifts] = useState([
     {
       id: 'sh-001',
@@ -75,7 +81,7 @@ export default function ShiftSettings() {
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
               <div style={{ display: 'flex', gap: 12, minWidth: 0 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(214,159,109,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 10, background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: accentText }}>
                   <ClockCircleOutlined />
                 </div>
                 <div style={{ minWidth: 0 }}>
@@ -83,7 +89,7 @@ export default function ShiftSettings() {
                     <div style={{ fontWeight: 800 }}>{s.name}</div>
                   </div>
 
-                  <div style={{ marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap', color: '#666', fontSize: 12 }}>
+                  <div style={{ marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap', color: muted, fontSize: 12 }}>
                     <span>{s.type}</span>
                     {s.start && s.end ? <span>{s.start} – {s.end}</span> : null}
                     {s.grace ? <span>Grace: {s.grace}</span> : null}
@@ -106,7 +112,7 @@ export default function ShiftSettings() {
 
                   {typeof s.assignedStaff === 'number' ? (
                     <div style={{ marginTop: 6, fontSize: 12 }}>
-                      <Text style={{ color: '#D69F6D', fontWeight: 700 }}>Assigned staff: {s.assignedStaff}</Text>
+                      <Text style={{ color: accentText, fontWeight: 700 }}>Assigned staff: {s.assignedStaff}</Text>
                     </div>
                   ) : null}
                 </div>

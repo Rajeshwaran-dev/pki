@@ -3,6 +3,7 @@ import { Button, Card, Input, Modal, Space, Tag, Typography, message } from 'ant
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
@@ -14,6 +15,10 @@ const demo = [
 
 export default function WeeklyHolidayTemplates() {
   const navigate = useNavigate();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
+  const borderColor = isDark ? '#1a4d72' : 'rgba(0,0,0,0.06)';
+  const tileBg = isDark ? '#0d3554' : 'rgba(255,255,255,0.6)';
   const [q, setQ] = useState('');
   const [rows, setRows] = useState(demo);
 
@@ -60,10 +65,10 @@ export default function WeeklyHolidayTemplates() {
             <div
               key={t.id}
               style={{
-                border: '1px solid rgba(0,0,0,0.06)',
+                border: `1px solid ${borderColor}`,
                 borderRadius: 12,
                 padding: 14,
-                background: 'rgba(255,255,255,0.6)',
+                background: tileBg,
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',

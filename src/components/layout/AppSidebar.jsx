@@ -4,6 +4,9 @@ import {
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
   ContactsOutlined,
   DollarOutlined,
+  AppstoreOutlined,
+  SafetyCertificateOutlined,
+  CreditCardOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -31,9 +34,9 @@ const menuItems = [
     icon: <SettingOutlined />,
     label: 'Settings',
     children: [
-      { key: '/settings', label: 'General' },
-      { key: '/settings/attendance', label: 'Attendance Settings' },
-      { key: '/settings/payroll', label: 'Payroll Settings' },
+      { key: '/settings', icon: <AppstoreOutlined />, label: 'General' },
+      { key: '/settings/attendance', icon: <SafetyCertificateOutlined />, label: 'Attendance Settings' },
+      { key: '/settings/payroll', icon: <CreditCardOutlined />, label: 'Payroll Settings' },
     ],
   },
 ];
@@ -135,6 +138,7 @@ const AppSidebar = () => {
           inlineCollapsed={collapsed && !isMobile}
           selectedKeys={[selectedKey]}
           defaultOpenKeys={defaultOpenKeys}
+          rootClassName="app-sidebar-menu"
           onClick={({ key }) => {
             if (key === settingsMenuKey) return;
             handleClick(key);
