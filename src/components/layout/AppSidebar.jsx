@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { Layout, Drawer, Avatar, Tooltip } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
+  RightOutlined, DownOutlined, ContactsOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -13,13 +15,34 @@ const { Sider } = Layout;
 
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
+  { key: '/enquiry', icon: <ContactsOutlined />, label: 'Enquiry' },
   { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/clients', icon: <TeamOutlined />, label: 'Clients' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
-  { key: '/attendance', icon: <TeamOutlined />, label: 'Attendance' },
-  { key: '/inventory', icon: <BarChartOutlined />, label: 'Inventory' },
+  {
+    key: '/attendance',
+    icon: <TeamOutlined />,
+    label: 'Attendance',
+    children: [
+      { key: '/attendance/overview', label: 'Overview' },
+      { key: '/attendance/employees', label: 'Employee List' },
+      { key: '/attendance/log', label: 'Daily Log' },
+      { key: '/attendance/leaves', label: 'Leave Requests' },
+    ]
+  },
+  {
+    key: '/inventory',
+    icon: <BarChartOutlined />,
+    label: 'Inventory',
+    children: [
+      { key: '/inventory/overview', label: 'Overview' },
+      { key: '/inventory/stocks', label: 'Product Stocks' },
+      { key: '/inventory/movements', label: 'Movements' },
+      { key: '/inventory/suppliers', label: 'Suppliers' },
+    ]
+  },
   { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
 ];
 
@@ -32,6 +55,20 @@ const AppSidebar = () => {
   const theme = useAppSelector(s => s.ui.theme);
   const user = useAppSelector(s => s.auth.user);
   const isMobile = useIsMobile();
+  const [openMenus, setOpenMenus] = useState({});
+
+  useEffect(() => {
+    // Automatically open parent menu if a child is active
+    menuItems.forEach(item => {
+      if (item.children && item.children.some(child => location.pathname.startsWith(child.key))) {
+        setOpenMenus(prev => ({ ...prev, [item.key]: true }));
+      }
+    });
+  }, [location.pathname]);
+
+  const toggleMenu = (key) => {
+    setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const isDark = theme === 'dark';
   const caputMortuum = '#4F312A';
@@ -101,65 +138,118 @@ const AppSidebar = () => {
       {/* Nav Menu */}
       <div style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
         {menuItems.map(item => {
-          const isActive = location.pathname === item.key;
+          const hasChildren = item.children && item.children.length > 0;
+          const isOpen = openMenus[item.key];
+          const isChildActive = hasChildren && item.children.some(child => location.pathname === child.key);
+          const isActive = location.pathname === item.key || isChildActive;
+
           return (
-            <Tooltip
-              key={item.key}
-              title={collapsed && !isMobile ? item.label : ''}
-              placement="right"
-            >
-              <div
-                onClick={() => handleClick(item.key)}
-                className={`nav-item ${isActive ? 'active' : ''}`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  padding: collapsed && !isMobile ? '12px 0' : '11px 14px',
-                  justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
-                  marginBottom: 6,
-                  borderRadius: 14,
-                  cursor: 'pointer',
-                  background: isActive
-                    ? (isDark ? '#133d5e' : activeGradient)
-                    : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
-                  border: isActive ? `1px solid ${isDark ? '#1e5c8a' : 'rgba(214,159,109,0.55)'}` : '1px solid transparent',
-                  fontWeight: isActive ? 600 : 500,
-                  fontSize: 13.5,
-                  transition: 'background 0.2s ease, color 0.2s ease, border 0.2s ease, box-shadow 0.2s ease',
-                  boxShadow: isActive ? `0 8px 24px ${isDark ? 'rgba(30,92,138,0.28)' : 'rgba(79,49,42,0.16)'}` : 'none',
-                }}
-                onMouseEnter={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(214,159,109,0.09)';
-                    e.currentTarget.style.color = isDark ? '#7ec8e3' : '#4f312a';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = isDark ? '#9a9a9a' : '#4f312a';
-                  }
-                }}
+            <div key={item.key}>
+              <Tooltip
+                title={collapsed && !isMobile ? item.label : ''}
+                placement="right"
               >
-                <span style={{
-                  fontSize: 17,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  borderRadius: 10,
-                  background: isActive && !isDark ? 'rgba(255,255,255,0.16)' : 'transparent',
-                  color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
-                }}>
-                  {item.icon}
-                </span>
-                {(!collapsed || isMobile) && (
-                  <span style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
-                )}
-              </div>
-            </Tooltip>
+                <div
+                  onClick={() => hasChildren ? toggleMenu(item.key) : handleClick(item.key)}
+                  className={`nav-item ${isActive ? 'active' : ''}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: collapsed && !isMobile ? '12px 0' : '11px 14px',
+                    justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+                    marginBottom: 6,
+                    borderRadius: 14,
+                    cursor: 'pointer',
+                    background: isActive
+                      ? (isDark ? '#133d5e' : activeGradient)
+                      : 'transparent',
+                    color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
+                    border: isActive ? `1px solid ${isDark ? '#1e5c8a' : 'rgba(214,159,109,0.55)'}` : '1px solid transparent',
+                    fontWeight: isActive ? 600 : 500,
+                    fontSize: 13.5,
+                    transition: 'all 0.2s ease',
+                    boxShadow: isActive ? `0 8px 24px ${isDark ? 'rgba(30,92,138,0.28)' : 'rgba(79,49,42,0.16)'}` : 'none',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(214,159,109,0.09)';
+                      e.currentTarget.style.color = isDark ? '#7ec8e3' : '#4f312a';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = isDark ? '#9a9a9a' : '#4f312a';
+                    }
+                  }}
+                >
+                  <span style={{
+                    fontSize: 17,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    borderRadius: 10,
+                    background: isActive && !isDark ? 'rgba(255,255,255,0.16)' : 'transparent',
+                    color: isActive ? '#ffffff' : (isDark ? '#b2bdc8' : '#4f312a'),
+                  }}>
+                    {item.icon}
+                  </span>
+                  {(!collapsed || isMobile) && (
+                    <>
+                      <span style={{ whiteSpace: 'nowrap', flex: 1 }}>{item.label}</span>
+                      {hasChildren && (
+                        <span style={{ fontSize: 10, opacity: 0.7 }}>
+                          {isOpen ? <DownOutlined /> : <RightOutlined />}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+              </Tooltip>
+
+              {/* Sub-menu rendering */}
+              {hasChildren && isOpen && (!collapsed || isMobile) && (
+                <div style={{ marginLeft: 20, marginBottom: 10, borderLeft: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`, paddingLeft: 10 }}>
+                  {item.children.map(child => {
+                    const isSubActive = location.pathname === child.key;
+                    return (
+                      <div
+                        key={child.key}
+                        onClick={() => handleClick(child.key)}
+                        style={{
+                          padding: '8px 12px',
+                          marginBottom: 4,
+                          borderRadius: 8,
+                          cursor: 'pointer',
+                          fontSize: 13,
+                          fontWeight: isSubActive ? 600 : 400,
+                          color: isSubActive ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#9a9a9a' : '#666'),
+                          background: isSubActive ? (isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)') : 'transparent',
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={e => {
+                          if (!isSubActive) {
+                            e.currentTarget.style.color = isDark ? '#f0f0f0' : '#4f312a';
+                            e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+                          }
+                        }}
+                        onMouseLeave={e => {
+                          if (!isSubActive) {
+                            e.currentTarget.style.color = isDark ? '#9a9a9a' : '#666';
+                            e.currentTarget.style.background = 'transparent';
+                          }
+                        }}
+                      >
+                        {child.label}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

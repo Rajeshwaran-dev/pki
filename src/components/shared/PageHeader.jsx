@@ -4,6 +4,7 @@ import { useLocation, Link } from 'react-router-dom';
 
 const routeNames = {
   '/': 'Dashboard',
+  '/enquiry': 'Enquiry',
   '/projects': 'Projects',
   '/clients': 'Clients',
   '/tasks': 'Tasks',

@@ -11,6 +11,10 @@ import SettingsPage from './pages/SettingsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
+import AttendancePage from './pages/AttendancePage';
+import InventoryPage from './pages/InventoryPage';
+import EnquiryPage from './pages/EnquiryPage';
+import EnquiryDetailPage from './pages/EnquiryDetailPage';
 import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -62,6 +66,12 @@ const ThemedApp = () => {
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/attendance" element={<AttendancePage />} />
+              <Route path="/attendance/:tab" element={<AttendancePage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/inventory/:tab" element={<InventoryPage />} />
+              <Route path="/enquiry" element={<EnquiryPage />} />
+              <Route path="/enquiry/:id" element={<EnquiryDetailPage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
