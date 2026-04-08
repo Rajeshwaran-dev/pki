@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
+import { useAppSelector } from '@/store';
 
 const { Text } = Typography;
 
@@ -44,6 +45,8 @@ function makeSamplePayrollRows(targetMonth, targetYear) {
 
 export default function Payroll() {
   const navigate = useNavigate();
+  const theme = useAppSelector(s => s.ui.theme);
+  const isDark = theme === 'dark';
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
@@ -174,18 +177,18 @@ export default function Payroll() {
       <Row gutter={[16, 16]}>
         {/* Filters */}
         <Col span={24}>
-          <Card className="crm-card">
+          <Card className="crm-card payroll-filters-card">
             <Row gutter={[16, 12]}>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6 }}>Month</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Month</div>
                 <Select value={month} onChange={setMonth} options={monthOptions} style={{ width: '100%' }} />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6 }}>Year</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Year</div>
                 <Select value={year} onChange={setYear} options={yearOptions} style={{ width: '100%' }} />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6 }}>Status</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Status</div>
                 <Select
                   value={status}
                   onChange={setStatus}
@@ -199,7 +202,7 @@ export default function Payroll() {
                 />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6 }}>Search</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Search</div>
                 <Input
                   placeholder="Search by employee name or ID..."
                   prefix={<SearchOutlined />}

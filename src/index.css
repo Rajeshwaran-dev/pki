@@ -257,6 +257,10 @@
 .dark .ant-menu-dark .ant-menu-sub {
   background: transparent !important;
 }
+.dark .ant-menu-dark .ant-menu-sub .ant-menu-item,
+.dark .ant-menu-dark .ant-menu-sub .ant-menu-submenu-title {
+  padding-inline-start: 20px !important;
+}
 .dark .ant-menu-dark .ant-menu-sub .ant-menu-item-selected {
   background: linear-gradient(135deg, #0D3554 0%, #031726 100%) !important;
   border-radius: 8px !important;
@@ -265,6 +269,12 @@
 .dark .ant-menu-dark .ant-menu-sub .ant-menu-item-selected .ant-menu-title-content {
   color: #ffffff !important;
   font-weight: 600;
+}
+
+/* Light mode submenu indent (AntD defaults ~48px) */
+.ant-menu-light .ant-menu-sub .ant-menu-item,
+.ant-menu-light .ant-menu-sub .ant-menu-submenu-title {
+  padding-inline-start: 10px !important;
 }
 
 /* ── Active item left indicator bar — both light & dark ── */
@@ -306,6 +316,37 @@
 }
 .dark .glass {
   background: rgba(30, 30, 30, 0.85);
+}
+
+/* ========== Payroll filters (dark theme) ========== */
+.dark .payroll-filters-card {
+  background: #0b2338 !important;
+}
+
+.dark .payroll-filters-card .ant-select-selector {
+  background: #08263d !important;
+  border-color: #1a4d72 !important;
+  color: #e9edef !important;
+}
+.dark .payroll-filters-card .ant-select-arrow {
+  color: #a8b0ba !important;
+}
+.dark .payroll-filters-card .ant-select-selection-item,
+.dark .payroll-filters-card .ant-select-selection-placeholder {
+  color: #e9edef !important;
+}
+
+.dark .payroll-filters-card .ant-input-affix-wrapper {
+  background: #08263d !important;
+  border-color: #1a4d72 !important;
+}
+.dark .payroll-filters-card .ant-input {
+  background: transparent !important;
+  color: #e9edef !important;
+}
+.dark .payroll-filters-card .ant-input-prefix,
+.dark .payroll-filters-card .ant-input-suffix {
+  color: #a8b0ba !important;
 }
 
 /* Gradient text */
