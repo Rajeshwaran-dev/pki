@@ -303,7 +303,7 @@ const EnquiryPage = () => {
             dataSource={filtered}
             columns={columns}
             rowKey="id"
-            pagination={{ pageSize: 15, showTotal: t => `${t} enquiries`, showSizeChanger: false }}
+            pagination={{ pageSize: 10, showTotal: t => `${t} enquiries`, showSizeChanger: false }}
             scroll={{ x: 900 }}
             size="middle"
             onRow={(record) => ({

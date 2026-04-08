@@ -15,6 +15,7 @@ import AttendancePage from './pages/AttendancePage';
 import InventoryPage from './pages/InventoryPage';
 import EnquiryPage from './pages/EnquiryPage';
 import EnquiryDetailPage from './pages/EnquiryDetailPage';
+import ClientDetailPage from './pages/ClientDetailPage';
 import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -63,6 +64,7 @@ const ThemedApp = () => {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/projects/:id" element={<ProjectDetailPage />} />
               <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/clients/:id" element={<ClientDetailPage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/messages" element={<MessagesPage />} />

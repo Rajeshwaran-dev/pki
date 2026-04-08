@@ -197,7 +197,7 @@ const AttendancePage = () => {
                   <Table 
                     columns={columns} 
                     dataSource={employeeData} 
-                    pagination={{ pageSize: 5 }} 
+                    pagination={{ pageSize: 10 }} 
                     scroll={{ x: 'max-content' }}
                   />
                 </div>
@@ -220,7 +220,7 @@ const AttendancePage = () => {
                   <Table 
                     columns={leaveColumns} 
                     dataSource={leaveRequests} 
-                    pagination={{ pageSize: 5 }} 
+                    pagination={{ pageSize: 10 }} 
                     scroll={{ x: 'max-content' }}
                   />
                 </div>

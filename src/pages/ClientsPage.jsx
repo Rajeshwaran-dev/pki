@@ -8,6 +8,7 @@ import {
   SearchOutlined, MinusCircleOutlined,
   MailOutlined, PhoneOutlined, EnvironmentOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { addClient, updateClient } from '@/store/slices/clientSlice';
 import { indianStates } from '@/data/mockData';
@@ -55,7 +56,7 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
       </div>
     </div>
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
-      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => onView(client)}>View</Button>
+      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => onView(client.id)}>View</Button>
       <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#D69F6D' }} onClick={() => onEdit(client)}>Edit</Button>
     </div>
   </Card>
@@ -63,6 +64,7 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
 
 const ClientsPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const clients = useAppSelector(s => s.clients.clients);
   const theme = useAppSelector(s => s.ui.theme);
   const isMobile = useIsMobile();
@@ -125,8 +127,26 @@ const ClientsPage = () => {
       width: 100,
       render: (_, row) => (
         <Space>
-          <Button type="text" size="small" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => openViewClientModal(row)} />
-          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: primaryColor }} onClick={() => openEditClientModal(row)} />
+          <Button 
+            type="text" 
+            size="small" 
+            icon={<EyeOutlined />} 
+            style={{ color: '#1677FF' }} 
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/clients/${row.id}`);
+            }} 
+          />
+          <Button 
+            type="text" 
+            size="small" 
+            icon={<EditOutlined />} 
+            style={{ color: primaryColor }} 
+            onClick={(e) => {
+              e.stopPropagation();
+              openEditClientModal(row);
+            }} 
+          />
         </Space>
       ),
     },
@@ -260,7 +280,7 @@ const ClientsPage = () => {
         <Row gutter={[16, 16]}>
           {filtered.map((client, i) => (
             <Col key={client.id} xs={24} sm={12} lg={8} xl={6}>
-              <ClientCard client={client} index={i} onEdit={openEditClientModal} onView={openViewClientModal} />
+              <ClientCard client={client} index={i} onEdit={openEditClientModal} onView={(id) => navigate(`/clients/${id}`)} />
             </Col>
           ))}
         </Row>
@@ -281,6 +301,10 @@ const ClientsPage = () => {
             pagination={{ pageSize: 10, showTotal: t => `${t} clients` }}
             scroll={{ x: 900 }}
             size="middle"
+            onRow={(record) => ({
+              onClick: () => navigate(`/clients/${record.id}`),
+              style: { cursor: 'pointer' }
+            })}
           />
         </div>
       )}

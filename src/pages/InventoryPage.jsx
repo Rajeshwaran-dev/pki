@@ -191,7 +191,7 @@ const InventoryPage = () => {
                   <Table 
                     columns={columns} 
                     dataSource={inventoryData} 
-                    pagination={{ pageSize: 5 }} 
+                    pagination={{ pageSize: 10 }} 
                     scroll={{ x: 'max-content' }}
                   />
                 </div>
@@ -208,7 +208,7 @@ const InventoryPage = () => {
                   <Table 
                     columns={movementColumns} 
                     dataSource={movementData} 
-                    pagination={{ pageSize: 5 }} 
+                    pagination={{ pageSize: 10 }} 
                     scroll={{ x: 'max-content' }}
                   />
                 </div>

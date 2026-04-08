@@ -16,8 +16,8 @@ const { Sider } = Layout;
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
   { key: '/enquiry', icon: <ContactsOutlined />, label: 'Enquiry' },
-  { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/clients', icon: <TeamOutlined />, label: 'Clients' },
+  { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },

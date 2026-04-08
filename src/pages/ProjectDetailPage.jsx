@@ -77,15 +77,15 @@ const MOCK_PAYMENTS = [
 
 /* ─────────────── SIDEBAR NAV TABS ─────────────── */
 const SIDEBAR_TABS = [
-  { key: 'Project Detail', label: 'Project Detail', icon: <InfoCircleOutlined /> },
-  { key: 'Files', label: 'Files', icon: <AppstoreOutlined /> },
-  { key: 'Scope of Work', label: 'Scope of Work', icon: <UnorderedListOutlined /> },
-  { key: 'Order Sheet', label: 'Order Sheet', icon: <SnippetsOutlined /> },
-  { key: 'Project Planning', label: 'Project Planning', icon: <FlagOutlined /> },
-  { key: 'Schedule', label: 'Schedule', icon: <CalendarOutlined /> },
-  { key: 'Payment Schedule', label: 'Payment Schedule', icon: <CreditCardOutlined /> },
-  { key: 'Tracker', label: 'Tracker', icon: <LineChartOutlined /> },
-  { key: 'Raise Invoice', label: 'Raise Invoice', icon: <FileAddOutlined /> },
+  { key: 'Project Detail', label: 'Project Detail', icon: '📋' },
+  { key: 'Files', label: 'Files', icon: '📁' },
+  { key: 'Scope of Work', label: 'Scope of Work', icon: '⚒️' },
+  { key: 'Order Sheet', label: 'Order Sheet', icon: '📄' },
+  { key: 'Project Planning', label: 'Project Planning', icon: '🚩' },
+  { key: 'Schedule', label: 'Schedule', icon: '📅' },
+  { key: 'Payment Schedule', label: 'Payment Schedule', icon: '💳' },
+  { key: 'Tracker', label: 'Tracker', icon: '📈' },
+  { key: 'Raise Invoice', label: 'Raise Invoice', icon: '📝' },
 ];
 
 const subStages = {
@@ -109,6 +109,14 @@ const formatDisplayDate = (value) => {
   if (!year || !month || !day) return value;
   return `${day}-${month}-${year}`;
 };
+
+/* ── small helpers ── */
+const InfoRow = ({ label, value, isDark }) => (
+  <div style={{ marginBottom: 10 }}>
+    <div style={{ fontSize: 11, color: isDark ? '#6a7f95' : '#aaa', fontWeight: 500, marginBottom: 2 }}>{label}</div>
+    <div style={{ fontSize: 13, color: isDark ? '#e0e8f0' : '#1f1f1f', fontWeight: 500 }}>{value || '—'}</div>
+  </div>
+);
 
 /* ─────────────── SUB-COMPONENTS ─────────────── */
 const StatusBadge = ({ status }) => {
@@ -262,63 +270,53 @@ const ProjectDetailPage = () => {
 
   /* ── TAB CONTENT RENDERERS ── */
 
-  const renderProjectDetail = () => (
-    <div>
-      {[
-        {
-          title: 'Contact Details',
-          fields: [
-            { label: 'Name', value: project.clientName },
-            { label: 'Email', value: project.email || 'N/A' },
-            { label: 'Phone', value: project.phone },
-          ],
-        },
-        {
-          title: 'Project Details',
-          fields: [
-            { label: 'Project Code', value: project.projectCode },
-            { label: 'Created On', value: project.createdDate },
-            { label: 'Budget', value: `₹${project.budget?.toLocaleString() || 0}` },
-            { label: 'Stage', value: mainStage },
-            { label: 'Sub Stage', value: subStage },
-            { label: 'Description', value: project.description || 'N/A' },
-          ],
-        },
-        {
-          title: 'Address Details',
-          fields: [
-            { label: 'Address Line 1', value: project.address1 || 'N/A' },
-            { label: 'Address Line 2', value: project.address2 || 'N/A' },
-            { label: 'City', value: project.city || 'N/A' },
-            { label: 'State', value: project.state || 'N/A' },
-            { label: 'Pincode', value: project.pincode || 'N/A' },
-          ],
-        },
-        {
-          title: 'Other Details',
-          fields: [
-            { label: 'Legal Name', value: project.legalName || 'N/A' },
-            { label: 'GST Number', value: project.gst || 'N/A' },
-          ],
-        },
-      ].map(section => (
-        <div key={section.title} style={{ ...card, marginBottom: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--border-soft)' }}>
-            <span style={{ fontWeight: 700, color: 'var(--text)' }}>{section.title}</span>
-            <Button icon={<EditOutlined />} size="small" onClick={openEditModal} style={{ border: '1px solid var(--border)', color: 'var(--text-muted)', borderRadius: 6 }}>Edit</Button>
+  const renderProjectDetail = () => {
+    const sectionBox = {
+      background: isDark ? '#081b2f' : '#f8fafd',
+      border: `1px solid ${isDark ? '#1a4d72' : '#e8f0fb'}`,
+      borderRadius: 12,
+      padding: '16px 20px',
+      flex: 1,
+      minWidth: 0,
+    };
+    const sectionTitleColor = isDark ? '#5ab5e8' : '#1677FF';
+
+    return (
+      <div style={{ display: 'flex', gap: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+        {/* Primary Information */}
+        <div style={sectionBox}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <span style={{ fontSize: 16 }}>👤</span>
+            <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Client Details</span>
           </div>
-          <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: isCompact ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
-            {section.fields.map(f => (
-              <div key={f.label}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4 }}>{f.label}</div>
-                <div style={{ fontSize: 13, color: 'var(--text)' }}>{f.value}</div>
-              </div>
-            ))}
-          </div>
+          <InfoRow label="Client Name" value={project.clientName} isDark={isDark} />
+          <InfoRow label="Email" value={project.email} isDark={isDark} />
+          <InfoRow label="Phone" value={project.phone} isDark={isDark} />
+          <InfoRow label="Address Line 1" value={project.address1} isDark={isDark} />
+          <InfoRow label="Address Line 2" value={project.address2} isDark={isDark} />
+          <InfoRow label="City" value={project.city} isDark={isDark} />
+          <InfoRow label="State" value={project.state} isDark={isDark} />
+          <InfoRow label="Pincode" value={project.pincode} isDark={isDark} />
         </div>
-      ))}
-    </div>
-  );
+
+        {/* Project Details */}
+        <div style={sectionBox}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <span style={{ fontSize: 16 }}>🏗️</span>
+            <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Project Information</span>
+          </div>
+          <InfoRow label="Project Code" value={project.projectCode} isDark={isDark} />
+          <InfoRow label="Project Name" value={project.projectName} isDark={isDark} />
+          <InfoRow label="Budget" value={`₹${project.budget?.toLocaleString() || 0}`} isDark={isDark} />
+          <InfoRow label="Stage" value={mainStage} isDark={isDark} />
+          <InfoRow label="Sub Stage" value={subStage} isDark={isDark} />
+          <InfoRow label="Legal Name" value={project.legalName} isDark={isDark} />
+          <InfoRow label="GST Number" value={project.gst} isDark={isDark} />
+          <InfoRow label="Description" value={project.description} isDark={isDark} />
+        </div>
+      </div>
+    );
+  };
 
   const renderFiles = () => (
     <div>
@@ -888,77 +886,194 @@ const ProjectDetailPage = () => {
 
   /* ─────────────── RENDER ─────────────── */
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', ...css }}>
-      {/* ── Top Header ── */}
-      <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: isMobile ? '14px 14px 12px' : '14px 20px 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          {/* Left: back + avatar + name */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => navigate('/projects')} style={{ color: 'var(--text-muted)', padding: 0 }} />
-            <Avatar size={44} style={{ background: '#9ca3af', color: '#fff', fontSize: 18, fontWeight: 700, flexShrink: 0 }}>
-              {initials}
-            </Avatar>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>Mr. {project.clientName}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{project.projectCode}</div>
+    <div style={{ ...css }}>
+      {/* Back button */}
+      <Button
+        type="text"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate('/projects')}
+        style={{ marginBottom: 14, color: isDark ? '#8a9ab0' : '#666', fontWeight: 500 }}
+      >
+        Back to Projects
+      </Button>
+
+      {/* ── Header card ── */}
+      <div
+        style={{
+          background: 'var(--surface)',
+          border: `1px solid var(--border)`,
+          borderRadius: 14,
+          padding: '16px 20px',
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          flexWrap: 'wrap',
+          boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Avatar
+            size={44}
+            style={{
+              background: 'var(--primary)',
+              color: '#fff',
+              fontWeight: 800,
+              fontSize: 18,
+              flexShrink: 0,
+            }}
+          >
+            {initials}
+          </Avatar>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>
+              {project.clientName}
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--primary)', fontWeight: 600 }}>
+              {project.projectCode}
             </div>
           </div>
-
-          {/* Right: action buttons */}
-          <Space wrap>
-            <Button
-              onClick={openEditModal}
-              style={{ background: '#D69F6D', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600 }}
-            >
-              Edit Project
-            </Button>
-            {activeTab === 'Order Sheet' && orderView === 'versions' && (
-              <Button style={{ borderRadius: 8, border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>
-                Edit BOQ
-              </Button>
-            )}
-            <Button style={{ borderRadius: 8, border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>
-              Generate DPR (Detailed)
-            </Button>
-            <Button danger style={{ borderRadius: 8, fontWeight: 600 }}>
-              Delete Project
-            </Button>
-          </Space>
         </div>
+
+        <Space wrap size={8}>
+          <Button
+            icon={<EditOutlined />}
+            onClick={openEditModal}
+            style={{
+              background: '#1677FF',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              fontWeight: 600,
+            }}
+          >
+            Edit Project
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              Modal.confirm({
+                title: 'Delete Project',
+                content: `Are you sure you want to delete ${project.projectCode}?`,
+                okText: 'Delete',
+                okButtonProps: { danger: true },
+                onOk: () => {
+                  // dispatch(deleteProject(project.id));
+                  navigate('/projects');
+                },
+              });
+            }}
+            style={{ borderRadius: 8, fontWeight: 600 }}
+          >
+            Delete Project
+          </Button>
+        </Space>
       </div>
 
-      {/* ── Main Layout ── */}
-      <div style={{ display: 'flex', gap: 14, padding: isMobile ? 10 : 14, alignItems: 'flex-start' }}>
-        {/* Left Sidebar Nav */}
-        <div style={{ ...card, width: 220, flexShrink: 0, overflow: 'hidden' }}>
-          {SIDEBAR_TABS.map((tab, i) => {
-            const isActive = activeTab === tab.key;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  width: '100%', padding: '12px 16px', cursor: 'pointer',
-                  border: 'none', textAlign: 'left',
-                  background: isActive ? 'var(--nav-active-bg)' : 'transparent',
-                  color: isActive ? 'var(--nav-active-color)' : 'var(--text-muted)',
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: 13,
-                  borderBottom: i < SIDEBAR_TABS.length - 1 ? '1px solid var(--border-soft)' : 'none',
-                  borderLeft: isActive ? '3px solid var(--nav-active-color)' : '3px solid transparent',
-                  transition: 'all 0.15s',
-                }}
-              >
-                <span style={{ fontSize: 14 }}>{tab.icon}</span>
-                {tab.label}
-              </button>
-            );
-          })}
+      {/* ── Main two-column layout ── */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 16,
+          alignItems: 'flex-start',
+          flexDirection: isMobile ? 'column' : 'row',
+        }}
+      >
+        {/* Left tab sidebar */}
+        <div
+          style={{
+            width: isMobile ? '100%' : 200,
+            flexShrink: 0,
+            background: 'var(--surface)',
+            border: `1px solid var(--border)`,
+            borderRadius: 14,
+            padding: '12px 10px',
+            boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
+          }}
+        >
+          {isMobile ? (
+            <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
+              {SIDEBAR_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  style={{
+                    padding: '7px 14px',
+                    borderRadius: 8,
+                    border: 'none',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    fontSize: 12,
+                    fontWeight: activeTab === tab.key ? 600 : 500,
+                    color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
+                    background: activeTab === tab.key ? 'var(--primary)' : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            SIDEBAR_TABS.map(tab => {
+              const isActive = activeTab === tab.key;
+              return (
+                <div
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    cursor: 'pointer',
+                    fontSize: 13,
+                    fontWeight: isActive ? 600 : 500,
+                    color: isActive ? 'var(--primary)' : (isDark ? '#8a9ab0' : '#666'),
+                    background: isActive
+                      ? (isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)')
+                      : 'transparent',
+                    borderLeft: isActive ? `3px solid var(--primary)` : '3px solid transparent',
+                    marginBottom: 4,
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={e => {
+                    if (activeTab !== tab.key) {
+                      e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
+                      e.currentTarget.style.color = isDark ? '#d8e8f8' : '#333';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (activeTab !== tab.key) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = isDark ? '#8a9ab0' : '#666';
+                    }
+                  }}
+                >
+                  <span style={{ fontSize: 15 }}>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        {/* Right Content */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        {/* Right content */}
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            background: 'var(--surface)',
+            border: `1px solid var(--border)`,
+            borderRadius: 14,
+            padding: isMobile ? 14 : 20,
+            boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
+            minHeight: 400,
+          }}
+        >
           {renderContent()}
         </div>
       </div>
