@@ -2,11 +2,9 @@ import { Layout, Drawer, Avatar, Tooltip, Menu } from 'antd';
 import {
   DashboardOutlined, ProjectOutlined, TeamOutlined,
   CheckSquareOutlined, SettingOutlined, LogoutOutlined, BarChartOutlined, MessageOutlined,
-  ContactsOutlined,
-  DollarOutlined,
-  AppstoreOutlined,
-  SafetyCertificateOutlined,
-  CreditCardOutlined,
+  ContactsOutlined, DollarOutlined,
+  BankOutlined, UserOutlined, LockOutlined,
+  SafetyCertificateOutlined, CreditCardOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -34,8 +32,10 @@ const menuItems = [
     icon: <SettingOutlined />,
     label: 'Settings',
     children: [
-      { key: '/settings', icon: <AppstoreOutlined />, label: 'General' },
-      { key: '/settings/attendance', icon: <SafetyCertificateOutlined />, label: 'Attendance Settings' },
+      { key: '/settings/organisation', icon: <BankOutlined />, label: 'Organisation Settings' },
+      { key: '/settings/users', icon: <UserOutlined />, label: 'User Management' },
+      { key: '/settings/permissions', icon: <LockOutlined />, label: 'Permissions' },
+{ key: '/settings/attendance', icon: <SafetyCertificateOutlined />, label: 'Attendance Settings' },
       { key: '/settings/payroll', icon: <CreditCardOutlined />, label: 'Payroll Settings' },
     ],
   },
@@ -52,9 +52,7 @@ const AppSidebar = () => {
   const isMobile = useIsMobile();
 
   const isDark = theme === 'dark';
-  const caputMortuum = '#4F312A';
   const buffColor = isDark ? '#0B2B44' : '#D69F6D';
-  const activeGradient = `linear-gradient(135deg, ${caputMortuum} 0%, ${buffColor} 100%)`;
   const siderBg = isDark ? '#031726' : '#ffffff';
   const borderColor = isDark ? '#0D3554' : '#f0f0f0';
   const logoContainerBg = 'transparent';
@@ -131,11 +129,12 @@ const AppSidebar = () => {
       </div>
 
       {/* Nav Menu */}
-      <div style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '12px 4px', overflowY: 'auto', overflowX: 'hidden' }}>
         <Menu
           mode="inline"
           items={menuItems}
           inlineCollapsed={collapsed && !isMobile}
+          inlineIndent={16}
           selectedKeys={[selectedKey]}
           defaultOpenKeys={defaultOpenKeys}
           className={isDark ? '' : 'light-sidebar-menu'}
@@ -147,6 +146,7 @@ const AppSidebar = () => {
             background: 'transparent',
             borderInlineEnd: 'none',
             color: isDark ? '#b2bdc8' : '#4f312a',
+            fontSize: 13,
           }}
           theme={isDark ? 'dark' : 'light'}
         />

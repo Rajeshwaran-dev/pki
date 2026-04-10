@@ -259,7 +259,7 @@
 }
 .dark .ant-menu-dark .ant-menu-sub .ant-menu-item,
 .dark .ant-menu-dark .ant-menu-sub .ant-menu-submenu-title {
-  padding-inline-start: 20px !important;
+  /* padding-inline-start: 20px !important; */
 }
 .dark .ant-menu-dark .ant-menu-sub .ant-menu-item-selected {
   background: linear-gradient(135deg, #0D3554 0%, #031726 100%) !important;
@@ -274,7 +274,7 @@
 /* Light mode submenu indent (AntD defaults ~48px) */
 .ant-menu-light .ant-menu-sub .ant-menu-item,
 .ant-menu-light .ant-menu-sub .ant-menu-submenu-title {
-  padding-inline-start: 10px !important;
+  /* padding-inline-start: 20px !important; */
 }
 
 /* ── Active item left indicator bar — both light & dark ── */

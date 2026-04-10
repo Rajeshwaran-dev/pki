@@ -50,7 +50,7 @@ export default function PayrollSettings() {
 
   return (
     <div>
-      <PageHeader title="Payroll Settings" backTo="/settings" />
+      <PageHeader title="Payroll Settings" />
       <Card className="crm-card" styles={{ body: { padding: 14 } }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {items.map((it) => (

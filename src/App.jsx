@@ -7,7 +7,9 @@ import DashboardPage from './pages/DashboardPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ClientsPage from './pages/ClientsPage';
 import TasksPage from './pages/TasksPage';
-import SettingsPage from './pages/SettingsPage';
+import OrganisationSettings from './pages/settingsPages/OrganisationSettings';
+import UserManagementSettings from './pages/settingsPages/UserManagementSettings';
+import PermissionsSettings from './pages/settingsPages/PermissionsSettings';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
@@ -91,7 +93,9 @@ const ThemedApp = () => {
               <Route path="/inventory/:tab" element={<InventoryPage />} />
               <Route path="/enquiry" element={<EnquiryPage />} />
               <Route path="/enquiry/:id" element={<EnquiryDetailPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings/organisation" element={<OrganisationSettings />} />
+              <Route path="/settings/users" element={<UserManagementSettings />} />
+              <Route path="/settings/permissions" element={<PermissionsSettings />} />
 
               {/* Attendance */}
               <Route path="/attendance" element={<AdminAttendance />} />

@@ -50,7 +50,7 @@ export default function AttendanceSettings() {
 
   return (
     <div>
-      <PageHeader title="Attendance Settings" backTo="/settings" />
+      <PageHeader title="Attendance Settings" />
 
       <Card className="crm-card" styles={{ body: { padding: 14 } }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

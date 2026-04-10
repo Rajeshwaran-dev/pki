@@ -13,6 +13,11 @@ const routeNames = {
   '/attendance': 'Attendance',
   '/payroll': 'Payroll',
   '/settings': 'Settings',
+  '/settings/organisation': 'Organisation Settings',
+  '/settings/users': 'User Management',
+  '/settings/permissions': 'Permissions',
+  '/settings/attendance': 'Attendance Settings',
+  '/settings/payroll': 'Payroll Settings',
 };
 
 const PageHeader = ({ title, subtitle, actions, backTo, backLabel = 'Back' }) => {
