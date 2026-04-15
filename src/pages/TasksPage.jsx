@@ -23,20 +23,32 @@ import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
 
-const statusColors = {
-  'Created': '#1677FF',
-  'In Progress': '#0ea5e9',
-  'Completed': '#52C41A',
-  'Approved': '#52C41A',
-  'On Hold': '#FAAD14',
-  'Rejected': '#FF4D4F',
-  'Discarded': '#FF4D4F',
+// Light: warm buff/brown  |  Dark: cool blue — no reds
+const LIGHT_STATUS_COLORS = {
+  'Created':     '#D69F6D',
+  'In Progress': '#C07230',
+  'Completed':   '#4F312A',
+  'Approved':    '#7A4218',
+  'On Hold':     '#B87C4A',
+  'Rejected':    '#4F312A',
+  'Discarded':   '#aaa',
 };
+const DARK_STATUS_COLORS = {
+  'Created':     '#5AB5E8',
+  'In Progress': '#3A8FC4',
+  'Completed':   '#7ED3F0',
+  'Approved':    '#A8D8F0',
+  'On Hold':     '#2A7DB5',
+  'Rejected':    '#1A6499',
+  'Discarded':   '#666',
+};
+// default to light for module-level references (KanbanColumn passes isDark)
+const statusColors = LIGHT_STATUS_COLORS;
 
-/* Theme-aware status badge (replaces AntD Tag for status colors) */
+/* Theme-aware status badge */
 const StatusBadge = ({ status }) => {
   const isDark = useAppSelector(s => s.ui.theme === 'dark');
-  const color = statusColors[status] || '#888';
+  const color = (isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status] || (isDark ? '#5AB5E8' : '#B87C4A');
   return (
     <span style={{
       display: 'inline-block',
@@ -175,14 +187,15 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
         minWidth: 260, flex: '1 0 260px', borderRadius: 14, padding: 14,
         background: isOver ? (isDark ? '#133d5e' : '#e8f4fd') : (isDark ? darkSurfaceBg : '#f9f9f9'), minHeight: 200,
         border: isDark ? `1px solid ${darkBorder}` : 'none',
-        borderTop: `3px solid ${statusColors[status] || '#ccc'}`,
+        borderTop: `3px solid ${(isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status] || '#ccc'}`,
         transition: 'background 0.2s ease',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, padding: '0 2px' }}>
         <span style={{ fontWeight: 700, fontSize: 13 }}>{status}</span>
         <span style={{
-          background: `${statusColors[status]}20`, color: statusColors[status],
+          background: `${(isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status]}20`,
+          color: (isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status],
           borderRadius: 10, fontSize: 11, fontWeight: 700, padding: '2px 8px',
         }}>
           {tasks.length}

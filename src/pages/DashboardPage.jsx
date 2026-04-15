@@ -11,7 +11,9 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const CHART_COLORS = ['#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#0ea5e9'];
+// Light: warm buff/brown palette  |  Dark: cool blue palette
+const LIGHT_COLORS = ['#D69F6D', '#B87C4A', '#7A4218', '#4F312A', '#C07230', '#E8C49A'];
+const DARK_COLORS  = ['#5AB5E8', '#3A8FC4', '#7ED3F0', '#1A6499', '#2A7DB5', '#A8D8F0'];
 
 const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter }) => {
   const displayValue = formatter ? `${(Number(value) / 100000).toFixed(1)}L` : value;
@@ -22,7 +24,6 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter 
       style={{ height: '100%' }}
       hoverable
     >
-      {/* Row 1: icon left, value right */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
         <div style={{
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
@@ -36,13 +37,12 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter 
           {prefix}{displayValue}{suffix}
         </div>
       </div>
-      {/* Row 2: title left, trend right */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>{title}</span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 2,
-          background: '#52C41A15', borderRadius: 20,
-          padding: '1px 7px', fontSize: 10, color: '#52C41A', fontWeight: 600,
+          background: `${color}18`, borderRadius: 20,
+          padding: '1px 7px', fontSize: 10, color, fontWeight: 600,
         }}>
           <ArrowUpOutlined style={{ fontSize: 8 }} /> {trend || '12%'}
         </span>
@@ -54,7 +54,12 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter 
 const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: isDark ? '#0d3554' : '#fff', border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`, borderRadius: 10, padding: '10px 14px', boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
+    <div style={{
+      background: isDark ? '#0d3554' : '#fff',
+      border: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`,
+      borderRadius: 10, padding: '10px 14px',
+      boxShadow: isDark ? 'none' : '0 4px 12px rgba(0,0,0,0.1)',
+    }}>
       <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ color: p.color, fontSize: 13 }}>{p.name}: <strong>{p.value}</strong></div>
@@ -65,24 +70,30 @@ const CustomTooltip = ({ active, payload, label, isDark }) => {
 
 const DashboardPage = () => {
   const projects = useAppSelector(s => s.projects.projects);
-  const clients = useAppSelector(s => s.clients.clients);
-  const tasks = useAppSelector(s => s.tasks.tasks);
-  const theme = useAppSelector(s => s.ui.theme);
-  const isDark = theme === 'dark';
+  const clients  = useAppSelector(s => s.clients.clients);
+  const tasks    = useAppSelector(s => s.tasks.tasks);
+  const theme    = useAppSelector(s => s.ui.theme);
+  const isDark   = theme === 'dark';
 
-  const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
+  const CHART_COLORS = isDark ? DARK_COLORS : LIGHT_COLORS;
+
+  const totalBudget    = projects.reduce((s, p) => s + p.budget, 0);
   const completedTasks = tasks.filter(t => t.status === 'Completed').length;
-  const pendingTasks = tasks.filter(t => t.status !== 'Completed').length;
+  const pendingTasks   = tasks.filter(t => t.status !== 'Completed').length;
   const activeProjects = projects.filter(p => p.stage !== 'Completed').length;
-  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+
+  const primaryColor  = isDark ? '#5AB5E8' : '#D69F6D';
+  const secondColor   = isDark ? '#7ED3F0' : '#7A4218';
+  const accentColor   = isDark ? '#3A8FC4' : '#C07230';
+  const positiveColor = isDark ? '#5AB5E8' : '#7A4218';
 
   const stats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: primaryColor, trend: '8%' },
-    { title: 'Active Projects', value: activeProjects, icon: <FireOutlined />, color: '#FA8C16', trend: '5%' },
-    { title: 'Active Clients', value: clients.length, icon: <TeamOutlined />, color: primaryColor, trend: '15%' },
-    { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}`, trend: '24%' },
-    { title: 'Pending Tasks', value: pendingTasks, icon: <ClockCircleOutlined />, color: '#FF4D4F', trend: '3%' },
-    { title: 'Total Portfolio', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true, trend: '18%' },
+    { title: 'Total Projects',  value: projects.length,  icon: <ProjectOutlined />,      color: primaryColor, trend: '8%' },
+    { title: 'Active Projects', value: activeProjects,   icon: <FireOutlined />,          color: accentColor,  trend: '5%' },
+    { title: 'Active Clients',  value: clients.length,   icon: <TeamOutlined />,          color: primaryColor, trend: '15%' },
+    { title: 'Tasks Completed', value: completedTasks,   icon: <CheckSquareOutlined />,   color: positiveColor, suffix: `/ ${tasks.length}`, trend: '24%' },
+    { title: 'Pending Tasks',   value: pendingTasks,     icon: <ClockCircleOutlined />,   color: isDark ? '#FF6B6B' : '#FF4D4F', trend: '3%' },
+    { title: 'Total Portfolio', value: totalBudget,      icon: <DollarOutlined />,        color: secondColor, prefix: '₹', formatter: true, trend: '18%' },
   ];
 
   const stageData = ['Sales', 'Designing', 'Execution', 'Snags', 'Handover', 'Completed'].map(stage => ({
@@ -90,10 +101,13 @@ const DashboardPage = () => {
     count: projects.filter(p => p.stage === stage).length,
   }));
 
+  const stageColors = isDark
+    ? { Sales: '#5AB5E8', Designing: '#3A8FC4', Execution: '#7ED3F0', Snags: '#2A7DB5', Handover: '#A8D8F0', Completed: '#1A6499' }
+    : { Sales: '#D69F6D', Designing: '#C07230', Execution: '#7A4218', Snags: '#B87C4A', Handover: '#E8C49A', Completed: '#4F312A' };
+
   const pieData = stageData.filter(d => d.count > 0);
   const recentProjects = projects.slice(0, 5);
 
-  // Monthly trend data (mock)
   const trendData = [
     { month: 'Jan', projects: 3, tasks: 12 },
     { month: 'Feb', projects: 5, tasks: 18 },
@@ -128,30 +142,48 @@ const DashboardPage = () => {
             className="crm-card chart-card animate-fade-in-up anim-delay-300"
             style={{ flex: 1 }}
             title={
-              <div className="flex items-center justify-between">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontWeight: 700 }}>Activity Trend</span>
-                <Tag color="gold" style={{ borderRadius: 8 }}>Last 6 months</Tag>
+                <Tag
+                  style={{
+                    borderRadius: 8,
+                    background: `${primaryColor}18`,
+                    border: `1px solid ${primaryColor}40`,
+                    color: primaryColor,
+                    fontWeight: 500,
+                  }}
+                >
+                  Last 6 months
+                </Tag>
               </div>
             }
           >
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={trendData}>
                 <defs>
-                  <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={primaryColor} stopOpacity={0.25} />
+                  <linearGradient id="projGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor={primaryColor} stopOpacity={0.28} />
                     <stop offset="95%" stopColor={primaryColor} stopOpacity={0} />
                   </linearGradient>
-                  <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={primaryColor} stopOpacity={0.2} />
-                    <stop offset="95%" stopColor={primaryColor} stopOpacity={0} />
+                  <linearGradient id="taskGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor={secondColor} stopOpacity={0.22} />
+                    <stop offset="95%" stopColor={secondColor} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Area type="monotone" dataKey="projects" name="Projects" stroke={primaryColor} strokeWidth={2.5} fill="url(#goldGrad)" dot={{ fill: primaryColor, r: 4 }} />
-                <Area type="monotone" dataKey="tasks" name="Tasks" stroke={primaryColor} strokeWidth={2.5} fill="url(#blueGrad)" dot={{ fill: primaryColor, r: 4 }} />
+                <Area
+                  type="monotone" dataKey="projects" name="Projects"
+                  stroke={primaryColor} strokeWidth={2.5} fill="url(#projGrad)"
+                  dot={{ fill: primaryColor, r: 4 }}
+                />
+                <Area
+                  type="monotone" dataKey="tasks" name="Tasks"
+                  stroke={secondColor} strokeWidth={2.5} fill="url(#taskGrad)"
+                  dot={{ fill: secondColor, r: 4 }}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </Card>
@@ -175,8 +207,8 @@ const DashboardPage = () => {
                   innerRadius={48}
                   paddingAngle={4}
                 >
-                  {pieData.map((_, idx) => (
-                    <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} stroke="none" />
+                  {pieData.map((entry, idx) => (
+                    <Cell key={idx} fill={stageColors[entry.name] || CHART_COLORS[idx % CHART_COLORS.length]} stroke="none" />
                   ))}
                 </Pie>
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
@@ -187,7 +219,7 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
-      {/* Bottom Section: 2 columns, each with 2 stacked cards */}
+      {/* Bottom Section */}
       <Row gutter={[16, 16]} style={{ alignItems: 'stretch' }}>
         {/* Left Column */}
         <Col xs={24} lg={12} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -204,8 +236,8 @@ const DashboardPage = () => {
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Count" radius={[8, 8, 0, 0]}>
-                  {stageData.map((_, idx) => (
-                    <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
+                  {stageData.map((entry, idx) => (
+                    <Cell key={idx} fill={stageColors[entry.name] || CHART_COLORS[idx % CHART_COLORS.length]} />
                   ))}
                 </Bar>
               </BarChart>
@@ -220,17 +252,19 @@ const DashboardPage = () => {
           >
             {stageData.map(({ name, count }) => {
               const pct = projects.length ? Math.round((count / projects.length) * 100) : 0;
-              const colors = { Sales: '#1677FF', Designing: '#0ea5e9', Execution: '#722ED1', Snags: '#FF4D4F', Handover: '#FAAD14', Completed: '#52C41A' };
+              const color = stageColors[name];
               return (
                 <div key={name} style={{ marginBottom: 14 }}>
-                  <div className="flex justify-between mb-1">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ fontSize: 13, fontWeight: 500 }}>{name}</span>
-                    <span style={{ fontSize: 12, color: colors[name], fontWeight: 600 }}>{count} project{count !== 1 ? 's' : ''}</span>
+                    <span style={{ fontSize: 12, color, fontWeight: 600 }}>
+                      {count} project{count !== 1 ? 's' : ''}
+                    </span>
                   </div>
                   <Progress
                     percent={pct}
                     showInfo={false}
-                    strokeColor={{ '0%': colors[name], '100%': colors[name] + 'cc' }}
+                    strokeColor={{ '0%': color, '100%': color + 'cc' }}
                     trailColor={isDark ? '#1a3a52' : '#f0f0f0'}
                     strokeLinecap="round"
                     size="small"
@@ -256,14 +290,19 @@ const DashboardPage = () => {
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '12px 0',
-                  borderBottom: i < recentProjects.length - 1 ? `1px solid ${isDark ? '#1a3a52' : '#f5f5f5'}` : 'none',
+                  borderBottom: i < recentProjects.length - 1
+                    ? `1px solid ${isDark ? '#1a3a52' : '#f5f5f5'}` : 'none',
                   animation: `fadeInUp 0.4s ease-out ${0.1 * i}s both`,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <Avatar
                     size={36}
-                    style={{ background: `${CHART_COLORS[i % CHART_COLORS.length]}20`, color: CHART_COLORS[i % CHART_COLORS.length], fontWeight: 700, fontSize: 14, flexShrink: 0 }}
+                    style={{
+                      background: `${CHART_COLORS[i % CHART_COLORS.length]}28`,
+                      color: CHART_COLORS[i % CHART_COLORS.length],
+                      fontWeight: 700, fontSize: 14, flexShrink: 0,
+                    }}
                   >
                     {p.clientName.charAt(0)}
                   </Avatar>
@@ -274,7 +313,9 @@ const DashboardPage = () => {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <StatusTag value={p.stage} />
-                  <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>₹{(p.budget / 100000).toFixed(1)}L</div>
+                  <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>
+                    ₹{(p.budget / 100000).toFixed(1)}L
+                  </div>
                 </div>
               </div>
             ))}
@@ -284,11 +325,7 @@ const DashboardPage = () => {
           <Card
             className="crm-card animate-fade-in-up anim-delay-500"
             style={{ flex: 1 }}
-            title={
-              <div className="flex items-center gap-2">
-                <span style={{ fontWeight: 700 }}>Priority Tasks</span>
-              </div>
-            }
+            title={<span style={{ fontWeight: 700 }}>Priority Tasks</span>}
           >
             {urgentTasks.map((task, i) => (
               <div
@@ -296,16 +333,22 @@ const DashboardPage = () => {
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 0',
-                  borderBottom: i < urgentTasks.length - 1 ? `1px solid ${isDark ? '#1a3a52' : '#f5f5f5'}` : 'none',
+                  borderBottom: i < urgentTasks.length - 1
+                    ? `1px solid ${isDark ? '#1a3a52' : '#f5f5f5'}` : 'none',
                 }}
               >
                 <div style={{
                   width: 4, height: 40, borderRadius: 4,
-                  background: task.priority === 'Urgent' ? '#FF4D4F' : '#FAAD14',
+                  background: task.priority === 'Urgent'
+                    ? (isDark ? '#1A6499' : '#4F312A')
+                    : (isDark ? '#3A8FC4' : '#7A4218'),
                   flexShrink: 0,
                 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{
+                    fontWeight: 600, fontSize: 13,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>
                     {task.title}
                   </div>
                   <div style={{ fontSize: 11, color: '#999' }}>

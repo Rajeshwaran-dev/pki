@@ -22,14 +22,25 @@ import useIsMobile from '@/hooks/useIsMobile';
 const { RangePicker } = DatePicker;
 const { Text, Title } = Typography;
 
-const stageColors = {
-  Sales: '#1677FF',
-  Designing: '#0ea5e9',
-  Execution: '#722ED1',
-  Snags: '#FF4D4F',
-  Handover: '#FAAD14',
-  Completed: '#52C41A',
+// Light: buff/brown  |  Dark: blue — imported from StatusTag palette
+const LIGHT_STAGE_COLORS = {
+  Sales:     '#D69F6D',
+  Designing: '#C07230',
+  Execution: '#7A4218',
+  Snags:     '#B87C4A',
+  Handover:  '#E8C49A',
+  Completed: '#4F312A',
 };
+const DARK_STAGE_COLORS = {
+  Sales:     '#5AB5E8',
+  Designing: '#3A8FC4',
+  Execution: '#7ED3F0',
+  Snags:     '#2A7DB5',
+  Handover:  '#A8D8F0',
+  Completed: '#1A6499',
+};
+// used in ProjectOverviewDrawer (receives isDark)
+const stageColors = LIGHT_STAGE_COLORS;
 
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 const modalUserOptions = [
@@ -45,7 +56,7 @@ const vendorOptions = ['Studio Grid', 'Value Kitchens', 'Blue Stone Works'];
 
 /* ── Kanban project card ── */
 const KanbanCard = ({ project, onView, isDark }) => {
-  const primaryColor = isDark ? '#0B2B44' : '#D69F6D';
+  const primaryColor = isDark ? '#5AB5E8' : '#D69F6D';
   return (
   <div
     style={{
@@ -85,10 +96,10 @@ const KanbanCard = ({ project, onView, isDark }) => {
 /* ── Project Overview Drawer ── */
 const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
   const isDark = useAppSelector(s => s.ui.theme) === 'dark';
-  const primaryColor = isDark ? '#0B2B44' : '#D69F6D';
+  const primaryColor = isDark ? '#5AB5E8' : '#D69F6D';
   const [tab, setTab] = useState('Details');
   if (!project) return null;
-  const color = stageColors[project.stage] || '#666';
+  const color = (isDark ? DARK_STAGE_COLORS : LIGHT_STAGE_COLORS)[project.stage] || (isDark ? '#5AB5E8' : '#B87C4A');
 
   return (
     <Drawer

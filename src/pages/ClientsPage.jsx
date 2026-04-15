@@ -18,7 +18,8 @@ import useIsMobile from '@/hooks/useIsMobile';
 const { RangePicker } = DatePicker;
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 
-const avatarColors = ['#D69F6D', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14'];
+// Buff/brown shades — consistent in both themes
+const avatarColors = ['#D69F6D', '#C07230', '#7A4218', '#4F312A', '#B87C4A', '#E8C49A'];
 
 const ClientCard = ({ client, index, onEdit, onView }) => (
   <Card
@@ -49,14 +50,14 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
         <PhoneOutlined style={{ color: '#D69F6D' }} /> {client.phone}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <MailOutlined style={{ color: '#1677FF' }} /> {client.email || '—'}
+        <MailOutlined style={{ color: '#C07230' }} /> {client.email || '—'}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <EnvironmentOutlined style={{ color: '#52C41A' }} /> {client.city}, {client.state}
+        <EnvironmentOutlined style={{ color: '#7A4218' }} /> {client.city}, {client.state}
       </div>
     </div>
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
-      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#1677FF' }} onClick={() => onView(client.id)}>View</Button>
+      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#D69F6D' }} onClick={() => onView(client.id)}>View</Button>
       <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#D69F6D' }} onClick={() => onEdit(client)}>Edit</Button>
     </div>
   </Card>

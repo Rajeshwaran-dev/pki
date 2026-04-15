@@ -56,7 +56,7 @@ const ThemedApp = () => {
         token: {
           colorPrimary: isDark ? '#5ab5e8' : '#D69F6D',
           borderRadius: 8,
-          fontFamily: "'Inter', -apple-system, sans-serif",
+          fontFamily: "'Poppins', -apple-system, sans-serif",
           colorBgContainer: isDark ? '#031726' : '#ffffff',
           colorBgElevated: isDark ? '#0b2338' : '#ffffff',
           colorBgLayout: isDark ? '#031726' : '#f7f7f7',

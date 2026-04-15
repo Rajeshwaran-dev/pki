@@ -13,7 +13,18 @@ import { useAppSelector } from '@/store';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 
-const CHART_COLORS = ['#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#0ea5e9'];
+// Theme-derived palettes — no multi-colors
+const LIGHT_PALETTE = ['#D69F6D', '#C07230', '#7A4218', '#4F312A', '#B87C4A', '#E8C49A'];
+const DARK_PALETTE  = ['#5AB5E8', '#3A8FC4', '#7ED3F0', '#1A6499', '#2A7DB5', '#A8D8F0'];
+
+const LIGHT_STAGE_COLORS = { Sales: '#D69F6D', Designing: '#C07230', Execution: '#7A4218', Snags: '#B87C4A', Handover: '#E8C49A', Completed: '#4F312A' };
+const DARK_STAGE_COLORS  = { Sales: '#5AB5E8', Designing: '#3A8FC4', Execution: '#7ED3F0', Snags: '#2A7DB5', Handover: '#A8D8F0', Completed: '#1A6499' };
+
+const LIGHT_STATUS_COLORS = { Created: '#D69F6D', 'In Progress': '#C07230', Completed: '#4F312A', 'On Hold': '#B87C4A', Discarded: '#aaa' };
+const DARK_STATUS_COLORS  = { Created: '#5AB5E8', 'In Progress': '#3A8FC4', Completed: '#7ED3F0', 'On Hold': '#2A7DB5', Discarded: '#666' };
+
+const LIGHT_PRIORITY_COLORS = { Low: '#D69F6D', Medium: '#C07230', High: '#7A4218', Urgent: '#4F312A' };
+const DARK_PRIORITY_COLORS  = { Low: '#A8D8F0', Medium: '#5AB5E8', High: '#3A8FC4', Urgent: '#1A6499' };
 
 const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (!active || !payload?.length) return null;
@@ -63,8 +74,8 @@ const ReportStatCard = ({ title, value, icon, color, trend, prefix, suffix, form
         {trend && (
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 2,
-            background: '#52C41A15', borderRadius: 20,
-            padding: '1px 7px', fontSize: 10, color: '#52C41A', fontWeight: 600,
+            background: `${color}18`, borderRadius: 20,
+            padding: '1px 7px', fontSize: 10, color, fontWeight: 600,
           }}>
             <ArrowUpOutlined style={{ fontSize: 8 }} /> {trend}
           </span>
@@ -143,7 +154,7 @@ const ProjectsReport = ({ projects, isDark }) => {
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Projects" radius={[8, 8, 0, 0]}>
-                  {stageData.map((_, idx) => <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />)}
+                  {stageData.map((entry, idx) => <Cell key={idx} fill={(isDark ? DARK_STAGE_COLORS : LIGHT_STAGE_COLORS)[entry.name] || (isDark ? DARK_PALETTE : LIGHT_PALETTE)[idx % 6]} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -154,7 +165,7 @@ const ProjectsReport = ({ projects, isDark }) => {
             <ResponsiveContainer width="100%" height={240}>
               <PieChart>
                 <Pie data={cityData} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={85} innerRadius={44} paddingAngle={4}>
-                  {cityData.map((_, idx) => <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} stroke="none" />)}
+                  {cityData.map((_, idx) => <Cell key={idx} fill={(isDark ? DARK_PALETTE : LIGHT_PALETTE)[idx % 6]} stroke="none" />)}
                 </Pie>
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 11 }}>{v}</span>} />
@@ -337,6 +348,7 @@ const TasksReport = ({ tasks, isDark }) => {
 ════════════════════════════════════════════ */
 const FinancialReport = ({ projects, isDark }) => {
   const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  const CHART_COLORS = isDark ? DARK_PALETTE : LIGHT_PALETTE;
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const avgBudget = projects.length ? totalBudget / projects.length : 0;
   const maxProject = projects.reduce((a, b) => (b.budget > a.budget ? b : a), projects[0] || {});
@@ -470,13 +482,15 @@ const ReportsPage = () => {
   const activeProjects = projects.filter(p => p.stage !== 'Completed').length;
   const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
 
+  const accentColor = isDark ? '#3A8FC4' : '#C07230';
+  const deepColor   = isDark ? '#1A6499' : '#4F312A';
   const summaryStats = [
-    { title: 'Total Projects', value: projects.length, icon: <ProjectOutlined />, color: primaryColor, trend: '8%' },
-    { title: 'Active Projects', value: activeProjects, icon: <FireOutlined />, color: '#FA8C16', trend: '5%' },
-    { title: 'Total Clients', value: clients.length, icon: <TeamOutlined />, color: primaryColor, trend: '15%' },
-    { title: 'Tasks Completed', value: completedTasks, icon: <CheckSquareOutlined />, color: '#52C41A', suffix: `/ ${tasks.length}`, trend: '24%' },
-    { title: 'Pending Tasks', value: pendingTasks, icon: <ClockCircleOutlined />, color: '#FF4D4F', trend: '3%' },
-    { title: 'Total Portfolio', value: totalBudget, icon: <DollarOutlined />, color: '#722ED1', prefix: '₹', formatter: true, trend: '18%' },
+    { title: 'Total Projects',  value: projects.length, icon: <ProjectOutlined />,    color: primaryColor, trend: '8%' },
+    { title: 'Active Projects', value: activeProjects,  icon: <FireOutlined />,        color: accentColor,  trend: '5%' },
+    { title: 'Total Clients',   value: clients.length,  icon: <TeamOutlined />,        color: primaryColor, trend: '15%' },
+    { title: 'Tasks Completed', value: completedTasks,  icon: <CheckSquareOutlined />, color: deepColor, suffix: `/ ${tasks.length}`, trend: '24%' },
+    { title: 'Pending Tasks',   value: pendingTasks,    icon: <ClockCircleOutlined />, color: accentColor,  trend: '3%' },
+    { title: 'Total Portfolio', value: totalBudget,     icon: <DollarOutlined />,      color: deepColor, prefix: '₹', formatter: true, trend: '18%' },
   ];
 
   const tabItems = [
