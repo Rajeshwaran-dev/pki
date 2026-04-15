@@ -9,6 +9,7 @@ import {
   FilterOutlined, AppstoreOutlined, UnorderedListOutlined,
   PhoneOutlined, UserOutlined, MoreOutlined, ArrowRightOutlined,
   CloseOutlined, InfoCircleOutlined, ClockCircleOutlined, MailOutlined, DeleteOutlined, EyeOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -150,7 +151,7 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
         <div>
           <Text type="secondary" style={{ fontSize: 11 }}>Project Assignees</Text>
           <div style={{ marginTop: 4 }}>
-            <Avatar size={28} style={{ background: '#FF6B35', fontWeight: 700, fontSize: 12 }}>T</Avatar>
+            <Avatar size={28} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 12 }}>T</Avatar>
           </div>
         </div>
       </div>
@@ -203,7 +204,7 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 12 }}>👥 Team Members</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <Avatar size={34} style={{ background: '#FF6B35', fontWeight: 700 }}>T</Avatar>
+              <Avatar size={34} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700 }}>T</Avatar>
               <div>
                 <div style={{ fontWeight: 600, fontSize: 13 }}>Thara</div>
                 <div style={{ fontSize: 11, color: '#999' }}>Member</div>
@@ -542,32 +543,28 @@ const ProjectsPage = () => {
   const visibleUsers = modalUserOptions.filter(name => name.toLowerCase().includes(userSearch.toLowerCase()));
 
   const viewToggle = (
-    <div style={{ display: 'flex', background: mutedSurface, borderRadius: 8, padding: 3, gap: 2 }}>
-      <button
-        onClick={() => setViewMode('list')}
-        style={{
-          padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'list' ? (isDark ? '#133d5e' : '#D69F6D') : 'transparent',
-          color: viewMode === 'list' ? 'white' : '#888',
-          fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
-          transition: 'all 0.2s ease',
-        }}
-      >
-        <UnorderedListOutlined />
-      </button>
-      <button
-        onClick={() => setViewMode('board')}
-        style={{
-          padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-          background: viewMode === 'board' ? (isDark ? '#133d5e' : '#D69F6D') : 'transparent',
-          color: viewMode === 'board' ? 'white' : '#888',
-          fontSize: 14, lineHeight: 1, display: 'flex', alignItems: 'center',
-          transition: 'all 0.2s ease',
-        }}
-      >
-        <AppstoreOutlined />
-      </button>
-    </div>
+    <Space.Compact style={{ borderRadius: 8, overflow: 'hidden' }}>
+      <Tooltip title="List View">
+        <Button
+          icon={<UnorderedListOutlined />}
+          type={viewMode === 'list' ? 'primary' : 'default'}
+          onClick={() => setViewMode('list')}
+          style={viewMode === 'list' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
+        >
+          {!isMobile && 'List'}
+        </Button>
+      </Tooltip>
+      <Tooltip title="Board View">
+        <Button
+          icon={<AppstoreOutlined />}
+          type={viewMode === 'board' ? 'primary' : 'default'}
+          onClick={() => setViewMode('board')}
+          style={viewMode === 'board' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
+        >
+          {!isMobile && 'Board'}
+        </Button>
+      </Tooltip>
+    </Space.Compact>
   );
 
   return (
@@ -611,20 +608,23 @@ const ProjectsPage = () => {
             <button
               key={s}
               onClick={() => dispatch(setActiveTab(s))}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.transform = 'scale(1.03)'; }}
+              onMouseLeave={e => { if (!isActive) e.currentTarget.style.transform = 'scale(1)'; }}
               style={{
                 padding: '5px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
-                border: isActive ? 'none' : `1.5px solid ${s === 'All' ? (isDark ? '#2980b9' : primaryLight) : chipBorder}`,
+                border: isActive ? 'none' : `1px solid ${chipBorder}`,
                 background: isActive ? (isDark ? '#133d5e' : primaryColor) : chipBg,
-                color: isActive ? 'white' : (s === 'All' ? (isDark ? '#5ab5e8' : primaryColor) : (isDark ? '#a8b0ba' : '#555')),
+                color: isActive ? 'white' : (isDark ? '#a8b0ba' : '#555'),
                 fontWeight: isActive ? 600 : 400, whiteSpace: 'nowrap', flexShrink: 0,
                 boxShadow: isActive ? (isDark ? '0 4px 14px rgba(19,61,94,0.55)' : '0 6px 16px rgba(11,43,68,0.22)') : 'none',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isActive ? 'scale(1.05)' : 'scale(1)',
               }}
             >
               {s} ({count})
             </button>
           );
         })}
-        <button style={{ padding: '5px 10px', borderRadius: 20, border: `1.5px solid ${isDark ? '#2980b9' : primaryLight}`, background: chipBg, cursor: 'pointer', fontSize: 14, color: isDark ? '#5ab5e8' : primaryColor, flexShrink: 0 }}>+</button>
       </div>
 
       {/* BOARD VIEW */}

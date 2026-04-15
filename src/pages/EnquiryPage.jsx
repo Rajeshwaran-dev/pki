@@ -14,23 +14,12 @@ import { addEnquiry, deleteEnquiry } from '@/store/slices/enquirySlice';
 import PageHeader from '@/components/shared/PageHeader';
 import useIsMobile from '@/hooks/useIsMobile';
 import dayjs from 'dayjs';
-
-const SOURCE_COLORS = {
-  Instagram: '#E1306C',
-  Facebook: '#1877F2',
-  Google: '#4285F4',
-  Referral: '#52C41A',
-  Advertisement: '#722ED1',
-  Website: '#13C2C2',
-};
-
 const PROJECT_TYPES = ['Residential', 'Commercial', 'Renovation', 'Interior'];
 const SOURCES = ['Instagram', 'Facebook', 'Google', 'Referral', 'Advertisement', 'Website'];
 const SITE_STATUSES = ['Planning Stage', 'Ready to Start', 'Under Construction'];
 const PROJECT_SUBTYPES = ['Apartment', 'Villa', 'Individual Villa', 'Duplex', 'Penthouse', 'Row House', 'Office Space', 'Independent House'];
 const OCCUPATIONS = ['IT', 'Business', 'Engineer', 'Doctor', 'Lawyer', 'Architect', 'Businessman', 'Consultant', 'CA', 'Professional'];
 
-const avatarColors = ['#D69F6D', '#1677FF', '#52C41A', '#722ED1', '#FF4D4F', '#FAAD14', '#13C2C2', '#E1306C'];
 
 const EnquiryPage = () => {
   const navigate = useNavigate();
@@ -120,7 +109,8 @@ const EnquiryPage = () => {
           <Avatar
             size={30}
             style={{
-              background: avatarColors[idx % avatarColors.length],
+              background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
+              color: primaryColor,
               fontSize: 12,
               fontWeight: 700,
               flexShrink: 0,
@@ -180,8 +170,8 @@ const EnquiryPage = () => {
             fontWeight: 500,
             fontSize: 11,
             border: 'none',
-            background: `${SOURCE_COLORS[v] || '#999'}18`,
-            color: SOURCE_COLORS[v] || '#999',
+            background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)',
+            color: primaryColor,
           }}
         >
           {v}
@@ -370,14 +360,14 @@ const EnquiryPage = () => {
                     onMouseLeave={e => { e.currentTarget.style.borderColor = isDark ? '#0a2e4a' : '#eee'; }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <Avatar size={26} style={{ background: avatarColors[idx % avatarColors.length], fontSize: 11, fontWeight: 700 }}>
+                      <Avatar size={26} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontSize: 11, fontWeight: 700 }}>
                         {e.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0)}
                       </Avatar>
                       <span style={{ fontWeight: 600, fontSize: 12.5 }}>{e.name}</span>
                     </div>
                     <div style={{ fontSize: 11, color: isDark ? '#8a98a8' : '#999', marginBottom: 4 }}>{e.id}</div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <Tag style={{ fontSize: 10, borderRadius: 4, margin: 0, border: 'none', background: `${SOURCE_COLORS[e.source] || '#999'}18`, color: SOURCE_COLORS[e.source] || '#999' }}>
+                      <Tag style={{ fontSize: 10, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)', color: primaryColor }}>
                         {e.source}
                       </Tag>
                       <Tag style={{ fontSize: 10, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', color: isDark ? '#aaa' : '#666' }}>

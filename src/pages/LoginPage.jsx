@@ -41,34 +41,30 @@ const LoginPage = () => {
         className="animate-scale-in"
         style={{
           width: '100%',
-          maxWidth: 440,
+          maxWidth: 450,
           background: '#ffffff',
           borderRadius: 24,
-          padding: '48px 44px',
-          boxShadow: '0 24px 64px rgba(79,49,42,0.12)',
+          padding: '24px 44px 40px',
+          boxShadow: '0 20px 60px rgba(135,110,105,0.12), 0 4px 16px rgba(135,110,105,0.06)',
+          border: '1px solid rgba(255,255,255,0.8)'
         }}
       >
         {/* Logo mark */}
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div
-            style={{
-              width: 56,
-              height: 56,
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #4F312A 0%, #D69F6D 100%)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: 24,
-              marginBottom: 14,
-              boxShadow: '0 8px 20px rgba(79,49,42,0.28)',
-            }}
-          >
-            P
+        <div style={{ textAlign: 'center', marginBottom: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: -45, marginBottom: -45 }}>
+            <img
+              src="/PK_I_Logo.png"
+              alt="PK&I Logo"
+              style={{
+                width: '100%',
+                maxWidth: 180,
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
           </div>
-          <div>
+          <div style={{ marginBottom: 16 }}>
             <Typography.Title
               level={3}
               style={{
@@ -76,49 +72,55 @@ const LoginPage = () => {
                 fontWeight: 700,
                 letterSpacing: '-0.4px',
                 fontFamily: "'Poppins', sans-serif",
+                color: '#2a1a16'
               }}
             >
               Welcome back
             </Typography.Title>
             <Typography.Text
-              type="secondary"
-              style={{ fontSize: 14, fontFamily: "'Poppins', sans-serif" }}
+              style={{ fontSize: 14, color: '#8b7068', fontFamily: "'Poppins', sans-serif" }}
             >
               Sign in to your workspace
             </Typography.Text>
           </div>
         </div>
 
-        <Form layout="vertical" onFinish={handleLogin} autoComplete="off" size="large">
+        <Form layout="vertical" onFinish={handleLogin} autoComplete="off" size="large" requiredMark={false}>
           <Form.Item
             name="email"
             label={
-              <span style={{ fontWeight: 500, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>
+              <span style={{ fontWeight: 500, fontSize: 13, color: '#4F312A', fontFamily: "'Poppins', sans-serif" }}>
                 Email address
               </span>
             }
             rules={[{ required: true, message: 'Please enter your email' }]}
           >
             <Input
-              prefix={<MailOutlined style={{ color: '#ccc' }} />}
+              prefix={<MailOutlined style={{ color: '#b8a6a1', marginRight: 6 }} />}
               placeholder="you@company.com"
-              style={{ borderRadius: 10, height: 48, fontFamily: "'Poppins', sans-serif" }}
+              style={{
+                borderRadius: 12, height: 50, fontFamily: "'Poppins', sans-serif",
+                background: '#faf9f7', border: '1px solid #efeae6'
+              }}
             />
           </Form.Item>
 
           <Form.Item
             name="password"
             label={
-              <span style={{ fontWeight: 500, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>
+              <span style={{ fontWeight: 500, fontSize: 13, color: '#4F312A', fontFamily: "'Poppins', sans-serif" }}>
                 Password
               </span>
             }
             rules={[{ required: true, message: 'Please enter your password' }]}
           >
             <Input.Password
-              prefix={<LockOutlined style={{ color: '#ccc' }} />}
+              prefix={<LockOutlined style={{ color: '#b8a6a1', marginRight: 6 }} />}
               placeholder="••••••••"
-              style={{ borderRadius: 10, height: 48, fontFamily: "'Poppins', sans-serif" }}
+              style={{
+                borderRadius: 12, height: 50, fontFamily: "'Poppins', sans-serif",
+                background: '#faf9f7', border: '1px solid #efeae6'
+              }}
             />
           </Form.Item>
 

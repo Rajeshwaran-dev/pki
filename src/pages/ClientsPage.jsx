@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Space, Dropdown,
-  DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions,
+  DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions, Tooltip,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, EyeOutlined,
   SearchOutlined, MinusCircleOutlined, MoreOutlined,
   MailOutlined, PhoneOutlined, EnvironmentOutlined, FilterOutlined,
+  UnorderedListOutlined, AppstoreOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -18,10 +19,7 @@ import useIsMobile from '@/hooks/useIsMobile';
 const { RangePicker } = DatePicker;
 const phoneCodeOptions = [{ value: '+91', label: '+91' }];
 
-// Buff/brown shades — consistent in both themes
-const avatarColors = ['#D69F6D', '#C07230', '#7A4218', '#4F312A', '#B87C4A', '#E8C49A'];
-
-const ClientCard = ({ client, index, onEdit, onView }) => (
+const ClientCard = ({ client, index, onEdit, onView, isDark, primaryColor }) => (
   <Card
     className="crm-card animate-fade-in-up"
     style={{ animationDelay: `${index * 0.05}s` }}
@@ -32,7 +30,8 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
       <Avatar
         size={46}
         style={{
-          background: `linear-gradient(135deg, ${avatarColors[index % avatarColors.length]}, ${avatarColors[index % avatarColors.length]}cc)`,
+          background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
+          color: primaryColor,
           fontWeight: 700, fontSize: 18, flexShrink: 0,
         }}
       >
@@ -47,18 +46,18 @@ const ClientCard = ({ client, index, onEdit, onView }) => (
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <PhoneOutlined style={{ color: '#D69F6D' }} /> {client.phone}
+        <PhoneOutlined style={{ color: '#999' }} /> {client.phone}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <MailOutlined style={{ color: '#C07230' }} /> {client.email || '—'}
+        <MailOutlined style={{ color: '#999' }} /> {client.email || '—'}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
-        <EnvironmentOutlined style={{ color: '#7A4218' }} /> {client.city}, {client.state}
+        <EnvironmentOutlined style={{ color: '#999' }} /> {client.city}, {client.state}
       </div>
     </div>
-    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
-      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: '#D69F6D' }} onClick={() => onView(client.id)}>View</Button>
-      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: '#D69F6D' }} onClick={() => onEdit(client)}>Edit</Button>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, paddingTop: 12, borderTop: isDark ? '1px solid #1a4d72' : '1px solid #f5f5f5' }}>
+      <Button size="small" type="text" icon={<EyeOutlined />} style={{ color: primaryColor }} onClick={() => onView(client.id)}>View</Button>
+      <Button size="small" type="text" icon={<EditOutlined />} style={{ color: primaryColor }} onClick={() => onEdit(client)}>Edit</Button>
     </div>
   </Card>
 );
@@ -266,18 +265,26 @@ const ClientsPage = () => {
             <Button icon={<FilterOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Filter</Button>
             <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Export</Button>
             <Space.Compact style={{ borderRadius: 8, overflow: 'hidden' }}>
-              <Button
-                icon={<span style={{ fontSize: 14 }}>☰</span>}
-                type={viewMode === 'table' ? 'primary' : 'default'}
-                onClick={() => setViewMode('table')}
-                style={viewMode === 'table' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
-              />
-              <Button
-                icon={<span style={{ fontSize: 14 }}>⊞</span>}
-                type={viewMode === 'grid' ? 'primary' : 'default'}
-                onClick={() => setViewMode('grid')}
-                style={viewMode === 'grid' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
-              />
+              <Tooltip title="List View">
+                <Button
+                  icon={<UnorderedListOutlined />}
+                  type={viewMode === 'table' ? 'primary' : 'default'}
+                  onClick={() => setViewMode('table')}
+                  style={viewMode === 'table' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
+                >
+                  {!isMobile && 'List'}
+                </Button>
+              </Tooltip>
+              <Tooltip title="Grid View">
+                <Button
+                  icon={<AppstoreOutlined />}
+                  type={viewMode === 'grid' ? 'primary' : 'default'}
+                  onClick={() => setViewMode('grid')}
+                  style={viewMode === 'grid' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
+                >
+                  {!isMobile && 'Grid'}
+                </Button>
+              </Tooltip>
             </Space.Compact>
             <Button
               type="primary"
@@ -295,7 +302,7 @@ const ClientsPage = () => {
         <Row gutter={[16, 16]}>
           {filtered.map((client, i) => (
             <Col key={client.id} xs={24} sm={12} lg={8} xl={6}>
-              <ClientCard client={client} index={i} onEdit={openEditClientModal} onView={(id) => navigate(`/clients/${id}`)} />
+              <ClientCard client={client} index={i} onEdit={openEditClientModal} onView={(id) => navigate(`/clients/${id}`)} isDark={isDark} primaryColor={primaryColor} />
             </Col>
           ))}
         </Row>
