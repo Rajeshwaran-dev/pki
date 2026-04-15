@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import {
-  Table, Button, Input, Modal, Form, Space,
+  Table, Button, Input, Modal, Form, Space, Dropdown,
   DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, EyeOutlined,
-  SearchOutlined, MinusCircleOutlined,
-  MailOutlined, PhoneOutlined, EnvironmentOutlined,
+  SearchOutlined, MinusCircleOutlined, MoreOutlined,
+  MailOutlined, PhoneOutlined, EnvironmentOutlined, FilterOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -125,30 +125,43 @@ const ClientsPage = () => {
     },
     {
       title: 'Actions',
-      width: 100,
+      width: 80,
+      fixed: 'right',
       render: (_, row) => (
-        <Space>
-          <Button 
-            type="text" 
-            size="small" 
-            icon={<EyeOutlined />} 
-            style={{ color: '#1677FF' }} 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/clients/${row.id}`);
-            }} 
-          />
-          <Button 
-            type="text" 
-            size="small" 
-            icon={<EditOutlined />} 
-            style={{ color: primaryColor }} 
-            onClick={(e) => {
-              e.stopPropagation();
-              openEditClientModal(row);
-            }} 
-          />
-        </Space>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'view',
+                  icon: <EyeOutlined style={{ color: '#1677FF' }} />,
+                  label: 'View',
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    navigate(`/clients/${row.id}`);
+                  },
+                },
+                {
+                  key: 'edit',
+                  icon: <EditOutlined style={{ color: primaryColor }} />,
+                  label: 'Edit',
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    openEditClientModal(row);
+                  },
+                },
+              ],
+            }}
+            trigger={['click']}
+            placement="bottomRight"
+          >
+            <Button
+              type="text"
+              size="small"
+              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
+            />
+          </Dropdown>
+        </div>
       ),
     },
   ];
@@ -246,32 +259,33 @@ const ClientsPage = () => {
               placeholder="Search clients…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ width: 200, borderRadius: 8 }}
+              style={{ width: isMobile ? 180 : 220, borderRadius: 8 }}
               allowClear
             />
             {!isMobile && <RangePicker style={{ borderRadius: 8 }} />}
-            <Space.Compact>
+            <Button icon={<FilterOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Filter</Button>
+            <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Export</Button>
+            <Space.Compact style={{ borderRadius: 8, overflow: 'hidden' }}>
               <Button
                 icon={<span style={{ fontSize: 14 }}>☰</span>}
                 type={viewMode === 'table' ? 'primary' : 'default'}
                 onClick={() => setViewMode('table')}
-                style={viewMode === 'table' ? { background: primaryColor, border: 'none' } : {}}
+                style={viewMode === 'table' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
               />
               <Button
                 icon={<span style={{ fontSize: 14 }}>⊞</span>}
                 type={viewMode === 'grid' ? 'primary' : 'default'}
                 onClick={() => setViewMode('grid')}
-                style={viewMode === 'grid' ? { background: primaryColor, border: 'none' } : {}}
+                style={viewMode === 'grid' ? { background: primaryColor, border: 'none', color: '#fff' } : {}}
               />
             </Space.Compact>
-            <Button icon={<ExportOutlined />}>Export</Button>
             <Button
               type="primary"
               icon={<PlusOutlined />}
               onClick={openCreateClientModal}
-              style={{ background: primaryColor, border: 'none' }}
+              style={{ background: primaryColor, border: 'none', borderRadius: 8, color: '#fff', fontWeight: 500 }}
             >
-              Add Client
+              {!isMobile && 'Add Client'}
             </Button>
           </>
         }

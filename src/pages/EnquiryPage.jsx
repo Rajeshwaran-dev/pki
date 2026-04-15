@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Space, Tag, Avatar, Tooltip, Modal, Form,
-  Row, Col, Select, DatePicker,
+  Row, Col, Select, DatePicker, Dropdown,
 } from 'antd';
 import {
   PlusOutlined, SearchOutlined, FilterOutlined, UploadOutlined,
   UnorderedListOutlined, AppstoreOutlined, EyeOutlined, DeleteOutlined,
-  PhoneOutlined, MailOutlined, UserOutlined,
+  PhoneOutlined, MailOutlined, UserOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -189,38 +189,50 @@ const EnquiryPage = () => {
       ),
     },
     {
-      title: '',
+      title: 'Actions',
       width: 80,
+      fixed: 'right',
       render: (_, row) => (
-        <Space size={4}>
-          <Tooltip title="View Detail">
+        <div onClick={(e) => e.stopPropagation()}>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'view',
+                  icon: <EyeOutlined style={{ color: isDark ? '#5ab5e8' : '#1677FF' }} />,
+                  label: 'View',
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    navigate(`/enquiry/${row.id}`);
+                  },
+                },
+                {
+                  key: 'delete',
+                  icon: <DeleteOutlined style={{ color: '#FF4D4F' }} />,
+                  label: <span style={{ color: '#FF4D4F' }}>Delete</span>,
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    Modal.confirm({
+                      title: 'Delete Enquiry',
+                      content: `Are you sure you want to delete ${row.id}?`,
+                      okText: 'Delete',
+                      okButtonProps: { danger: true },
+                      onOk: () => dispatch(deleteEnquiry(row.id)),
+                    });
+                  },
+                },
+              ],
+            }}
+            trigger={['click']}
+            placement="bottomRight"
+          >
             <Button
               type="text"
               size="small"
-              icon={<EyeOutlined />}
-              style={{ color: isDark ? '#5ab5e8' : '#1677FF' }}
-              onClick={(e) => { e.stopPropagation(); navigate(`/enquiry/${row.id}`); }}
+              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
             />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <Button
-              type="text"
-              size="small"
-              icon={<DeleteOutlined />}
-              style={{ color: '#FF4D4F' }}
-              onClick={(e) => {
-                e.stopPropagation();
-                Modal.confirm({
-                  title: 'Delete Enquiry',
-                  content: `Are you sure you want to delete ${row.id}?`,
-                  okText: 'Delete',
-                  okButtonProps: { danger: true },
-                  onOk: () => dispatch(deleteEnquiry(row.id)),
-                });
-              }}
-            />
-          </Tooltip>
-        </Space>
+          </Dropdown>
+        </div>
       ),
     },
   ];
@@ -250,7 +262,11 @@ const EnquiryPage = () => {
               style={{ width: isMobile ? 180 : 240, borderRadius: 8 }}
               allowClear
             />
-            <Space.Compact>
+            <Button icon={<FilterOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Filter</Button>
+            {!isMobile && (
+              <Button icon={<UploadOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Bulk Upload</Button>
+            )}
+            <Space.Compact style={{ borderRadius: 8, overflow: 'hidden' }}>
               <Tooltip title="List View">
                 <Button
                   icon={<UnorderedListOutlined />}
@@ -276,14 +292,10 @@ const EnquiryPage = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setNewModalOpen(true)}
-              style={{ background: primaryColor, border: 'none' }}
+              style={{ background: primaryColor, border: 'none', borderRadius: 8, color: '#fff', fontWeight: 500 }}
             >
               {!isMobile && 'New Enquiry'}
             </Button>
-            {!isMobile && (
-              <Button icon={<UploadOutlined />}>Bulk Upload</Button>
-            )}
-            <Button icon={<FilterOutlined />}>Filter</Button>
           </>
         }
       />

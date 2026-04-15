@@ -146,7 +146,7 @@ const AppSidebar = () => {
             background: 'transparent',
             borderInlineEnd: 'none',
             color: isDark ? '#b2bdc8' : '#4f312a',
-            fontSize: 13,
+            fontSize: 15,
           }}
           theme={isDark ? 'dark' : 'light'}
         />
@@ -170,10 +170,10 @@ const AppSidebar = () => {
               {user?.avatar || 'SA'}
             </Avatar>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: isDark ? '#f0f0f0' : '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#f0f0f0' : '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.name || 'Super Admin'}
               </div>
-              <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>
+              <div style={{ fontSize: 13, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>
                 {user?.role || 'Super Admin'}
               </div>
             </div>
@@ -194,7 +194,7 @@ const AppSidebar = () => {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,77,79,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
           >
-            <span style={{ fontSize: 16, display: 'flex', alignItems: 'center' }}><LogoutOutlined /></span>
+            <span style={{ fontSize: 18, display: 'flex', alignItems: 'center' }}><LogoutOutlined /></span>
             {(!collapsed || isMobile) && <span>Sign Out</span>}
           </div>
         </Tooltip>

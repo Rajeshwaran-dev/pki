@@ -238,8 +238,8 @@ const TasksReport = ({ tasks, isDark }) => {
     completed: tasks.filter(t => t.assignee === a && t.status === 'Completed').length,
   }));
 
-  const statusColors = { Created: '#1677FF', 'In Progress': '#0ea5e9', Completed: '#52C41A', 'On Hold': '#FAAD14', Discarded: '#999' };
-  const priorityColors = { Low: '#52C41A', Medium: '#1677FF', High: '#FAAD14', Urgent: '#FF4D4F' };
+  const statusColors = isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS;
+  const priorityColors = isDark ? DARK_PRIORITY_COLORS : LIGHT_PRIORITY_COLORS;
 
   const columns = [
     { title: 'Task', dataIndex: 'title', key: 'title', render: (v, r) => (
@@ -348,6 +348,8 @@ const TasksReport = ({ tasks, isDark }) => {
 ════════════════════════════════════════════ */
 const FinancialReport = ({ projects, isDark }) => {
   const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  const accentColor = isDark ? '#3A8FC4' : '#C07230';
+  const deepColor   = isDark ? '#1A6499' : '#4F312A';
   const CHART_COLORS = isDark ? DARK_PALETTE : LIGHT_PALETTE;
   const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
   const avgBudget = projects.length ? totalBudget / projects.length : 0;
@@ -389,13 +391,13 @@ const FinancialReport = ({ projects, isDark }) => {
     <div>
       <Row gutter={[16, 16]} style={{ marginBottom: 24, alignItems: 'stretch' }}>
         <Col xs={24} sm={8}>
-          <ReportStatCard title="Total Portfolio" value={`₹${(totalBudget / 100000).toFixed(1)}L`} icon={<DollarOutlined />} color="#722ED1" />
+          <ReportStatCard title="Total Portfolio" value={`₹${(totalBudget / 100000).toFixed(1)}L`} icon={<DollarOutlined />} color={deepColor} />
         </Col>
         <Col xs={24} sm={8}>
-          <ReportStatCard title="Avg. Project Budget" value={`₹${(avgBudget / 100000).toFixed(1)}L`} icon={<BarChartOutlined />} color="#1677FF" />
+          <ReportStatCard title="Avg. Project Budget" value={`₹${(avgBudget / 100000).toFixed(1)}L`} icon={<BarChartOutlined />} color={primaryColor} />
         </Col>
         <Col xs={24} sm={8}>
-          <ReportStatCard title="Largest Project" value={maxProject?.projectName || '-'} icon={<ProjectOutlined />} color="#52C41A" />
+          <ReportStatCard title="Largest Project" value={maxProject?.projectName || '-'} icon={<ProjectOutlined />} color={accentColor} />
         </Col>
       </Row>
 

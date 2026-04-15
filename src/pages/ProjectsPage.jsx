@@ -2,13 +2,13 @@ import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Select, InputNumber,
   Tooltip, DatePicker, Avatar, Row, Col, Drawer, Tag,
-  Space, Typography, Divider, Checkbox,
+  Space, Typography, Divider, Checkbox, Dropdown,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, SearchOutlined,
   FilterOutlined, AppstoreOutlined, UnorderedListOutlined,
   PhoneOutlined, UserOutlined, MoreOutlined, ArrowRightOutlined,
-  CloseOutlined, InfoCircleOutlined, ClockCircleOutlined, MailOutlined, DeleteOutlined,
+  CloseOutlined, InfoCircleOutlined, ClockCircleOutlined, MailOutlined, DeleteOutlined, EyeOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -492,12 +492,42 @@ const ProjectsPage = () => {
     { title: 'Phone', dataIndex: 'phone', width: 145, responsive: ['lg'] },
     { title: 'Date', dataIndex: 'createdDate', width: 100, sorter: (a, b) => a.createdDate.localeCompare(b.createdDate) },
     {
-      title: '', width: 80,
+      title: 'Actions', width: 80, fixed: 'right',
       render: (_, row) => (
-        <Space size={4}>
-          <Tooltip title="View"><Button type="text" size="small" icon={<ArrowRightOutlined style={{ color: primaryColor }} />} onClick={e => { e.stopPropagation(); setOverviewProject(row); }} /></Tooltip>
-          <Tooltip title="Edit"><Button type="text" size="small" icon={<EditOutlined />} style={{ color: primaryColor }} onClick={e => { e.stopPropagation(); openEditProjectModal(row); }} /></Tooltip>
-        </Space>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'view',
+                  icon: <EyeOutlined style={{ color: primaryColor }} />,
+                  label: 'View',
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    setOverviewProject(row);
+                  },
+                },
+                {
+                  key: 'edit',
+                  icon: <EditOutlined style={{ color: primaryColor }} />,
+                  label: 'Edit',
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    openEditProjectModal(row);
+                  },
+                },
+              ],
+            }}
+            trigger={['click']}
+            placement="bottomRight"
+          >
+            <Button
+              type="text"
+              size="small"
+              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
+            />
+          </Dropdown>
+        </div>
       ),
     },
   ];
@@ -552,22 +582,22 @@ const ProjectsPage = () => {
               placeholder="Search projects…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ width: 200, borderRadius: 8 }}
+              style={{ width: isMobile ? 180 : 200, borderRadius: 8 }}
               allowClear
             />
-            <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }}>Excel</Button>
+            <Button icon={<FilterOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn" onClick={() => setFilterOpen(true)}>
+              Filter
+            </Button>
+            <Button icon={<ExportOutlined />} style={{ borderRadius: 8 }} className="crm-outline-btn">Export</Button>
+            {viewToggle}
             <Button
               type="primary"
               icon={<PlusOutlined />}
               onClick={openCreateProjectModal}
-              style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
+              style={{ background: primaryColor, border: 'none', borderRadius: 8, color: '#fff', fontWeight: 500 }}
             >
-              New Project
+              {!isMobile && 'New Project'}
             </Button>
-            <Button icon={<FilterOutlined />} style={{ borderRadius: 8 }} onClick={() => setFilterOpen(true)}>
-              Filters
-            </Button>
-            {viewToggle}
           </>
         }
       />
