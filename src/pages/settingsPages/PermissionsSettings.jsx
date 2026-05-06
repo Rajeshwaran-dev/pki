@@ -5,12 +5,12 @@ import PageHeader from '@/components/shared/PageHeader';
 import { useAppSelector } from '@/store';
 
 const roles = [
-  { key: 'superAdmin', label: 'Super Admin', color: '#4F312A' },
-  { key: 'admin',      label: 'Admin',       color: '#D69F6D' },
-  { key: 'designer',   label: 'Designer',    color: '#52c41a' },
-  { key: 'siteManager',label: 'Site Manager',color: '#1677FF' },
-  { key: 'accountant', label: 'Accountant',  color: '#722ed1' },
-  { key: 'viewer',     label: 'Viewer',      color: '#8c8c8c' },
+  { key: 'superAdmin', label: 'Super Admin' },
+  { key: 'admin',      label: 'Admin'       },
+  { key: 'designer',   label: 'Designer'    },
+  { key: 'siteManager',label: 'Site Manager'},
+  { key: 'accountant', label: 'Accountant'  },
+  { key: 'viewer',     label: 'Viewer'      },
 ];
 
 const initialModules = [
@@ -47,15 +47,15 @@ export default function PermissionsSettings() {
   const columns = [
     {
       title: 'Module', dataIndex: 'module', width: 140,
-      render: v => <span style={{ fontWeight: 600, fontSize: 13 }}>{v}</span>,
+      render: v => <span style={{ fontWeight: 600, fontSize: 15 }}>{v}</span>,
     },
     ...roles.map(r => ({
       title: (
         <div style={{ textAlign: 'center' }}>
           <Tag style={{
-            background: `${r.color}18`, color: r.color,
-            border: `1px solid ${r.color}40`,
-            borderRadius: 6, fontSize: 11, fontWeight: 600,
+            background: `${primaryColor}18`, color: primaryColor,
+            border: `1px solid ${primaryColor}40`,
+            borderRadius: 6, fontSize: 14, fontWeight: 600,
           }}>
             {r.label}
           </Tag>
@@ -66,7 +66,7 @@ export default function PermissionsSettings() {
       align: 'center',
       render: (val, record) => {
         if (r.key === 'superAdmin') {
-          return <Tag color="success" style={{ borderRadius: 6, fontSize: 11 }}>Always</Tag>;
+          return <Tag style={{ background: `${primaryColor}18`, color: primaryColor, border: `1px solid ${primaryColor}40`, borderRadius: 6, fontSize: 14 }}>Always</Tag>;
         }
         return (
           <Switch size="small" checked={val} onChange={() => toggle(record.key, r.key)} />
@@ -91,7 +91,7 @@ export default function PermissionsSettings() {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-          <span style={{ fontSize: 13, color: isDark ? '#a8b0ba' : '#666' }}>
+          <span style={{ fontSize: 14, color: isDark ? '#a8b0ba' : '#666' }}>
             Configure which roles can access each module. Super Admin always has full access.
           </span>
           <Button

@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { useAppSelector } from '@/store';
+import useIsMobile from '@/hooks/useIsMobile';
 
 const { Text } = Typography;
 
@@ -46,6 +47,7 @@ function makeSamplePayrollRows(targetMonth, targetYear) {
 export default function Payroll() {
   const navigate = useNavigate();
   const theme = useAppSelector(s => s.ui.theme);
+  const isMobile = useIsMobile();
   const isDark = theme === 'dark';
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
@@ -119,8 +121,8 @@ export default function Payroll() {
       dataIndex: 'employee',
       render: (_v, r) => (
         <div>
-          <div style={{ fontWeight: 700 }}>{r.employee}</div>
-          <Text type="secondary" style={{ fontSize: 12 }}>{r.designation || '—'}</Text>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>{r.employee}</div>
+          <Text type="secondary" style={{ fontSize: 14 }}>{r.designation || '—'}</Text>
         </div>
       ),
     },
@@ -159,18 +161,20 @@ export default function Payroll() {
       <PageHeader
         title="Payroll Management"
         actions={[
-          <Button key="export" icon={<DownloadOutlined />} onClick={exportPayroll}>
-            Export
-          </Button>,
-          <Button key="bulk" icon={<TeamOutlined />} onClick={() => setBulkGenerateOpen(true)}>
-            Bulk Generate
-          </Button>,
-          <Button key="gen" icon={<PlusOutlined />} onClick={() => setGenerateOpen(true)}>
-            Generate
-          </Button>,
-          <Button key="process" type="primary" icon={<SendOutlined />} onClick={processPayroll}>
-            Process
-          </Button>,
+          <Space key="actions" size={8} wrap={isMobile} style={{ width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
+            <Button size={isMobile ? 'small' : 'middle'} icon={<DownloadOutlined />} onClick={exportPayroll}>
+              Export
+            </Button>
+            <Button size={isMobile ? 'small' : 'middle'} icon={<TeamOutlined />} onClick={() => setBulkGenerateOpen(true)}>
+              Bulk
+            </Button>
+            <Button size={isMobile ? 'small' : 'middle'} icon={<PlusOutlined />} onClick={() => setGenerateOpen(true)}>
+              Gen
+            </Button>
+            <Button size={isMobile ? 'small' : 'middle'} type="primary" icon={<SendOutlined />} onClick={processPayroll}>
+              Process
+            </Button>
+          </Space>
         ]}
       />
 
@@ -180,15 +184,15 @@ export default function Payroll() {
           <Card className="crm-card payroll-filters-card">
             <Row gutter={[16, 12]}>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Month</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined, fontSize: 14 }}>Month</div>
                 <Select value={month} onChange={setMonth} options={monthOptions} style={{ width: '100%' }} />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Year</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined, fontSize: 14 }}>Year</div>
                 <Select value={year} onChange={setYear} options={yearOptions} style={{ width: '100%' }} />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Status</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined, fontSize: 14 }}>Status</div>
                 <Select
                   value={status}
                   onChange={setStatus}
@@ -202,7 +206,7 @@ export default function Payroll() {
                 />
               </Col>
               <Col xs={24} sm={12} md={6}>
-                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined }}>Search</div>
+                <div style={{ fontWeight: 600, marginBottom: 6, color: isDark ? '#e9edef' : undefined, fontSize: 14 }}>Search</div>
                 <Input
                   placeholder="Search by employee name or ID..."
                   prefix={<SearchOutlined />}
@@ -222,7 +226,7 @@ export default function Payroll() {
               <Text type="secondary">₹</Text>
             </div>
             <div style={{ fontSize: 22, fontWeight: 900, marginTop: 8 }}>{formatINR(totals.grossSalary)}</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>This month</Text>
+            <Text type="secondary" style={{ fontSize: 14 }}>This month</Text>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
@@ -232,7 +236,7 @@ export default function Payroll() {
               <Text type="secondary">₹</Text>
             </div>
             <div style={{ fontSize: 22, fontWeight: 900, marginTop: 8 }}>{formatINR(totals.deductions)}</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>PF, ESI, Tax</Text>
+            <Text type="secondary" style={{ fontSize: 14 }}>PF, ESI, Tax</Text>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
@@ -242,7 +246,7 @@ export default function Payroll() {
               <CheckCircleOutlined style={{ color: '#999' }} />
             </div>
             <div style={{ fontSize: 22, fontWeight: 900, marginTop: 8 }}>{formatINR(totals.netPayable)}</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Ready to disburse</Text>
+            <Text type="secondary" style={{ fontSize: 14 }}>Ready to disburse</Text>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
@@ -251,8 +255,8 @@ export default function Payroll() {
               <Text type="secondary">Processed</Text>
               <ClockCircleOutlined style={{ color: '#999' }} />
             </div>
-            <div style={{ fontSize: 22, fontWeight: 900, marginTop: 8 }}>{totals.processed}</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Out of {totals.totalEmployees}</Text>
+            <div style={{ fontSize: 24, fontWeight: 900, marginTop: 8 }}>{totals.processed}</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Out of {totals.totalEmployees}</Text>
           </Card>
         </Col>
 
@@ -263,6 +267,7 @@ export default function Payroll() {
               columns={columns}
               dataSource={filtered}
               pagination={{ pageSize: 10, showSizeChanger: false }}
+              scroll={{ x: 'max-content' }}
               locale={{
                 emptyText: (
                   <div style={{ padding: '34px 0', color: '#999' }}>

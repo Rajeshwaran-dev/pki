@@ -56,7 +56,7 @@ const ThemedApp = () => {
         token: {
           colorPrimary: isDark ? '#5ab5e8' : '#D69F6D',
           borderRadius: 8,
-          fontFamily: "'Poppins', -apple-system, sans-serif",
+          fontFamily: "'Outfit', -apple-system, sans-serif",
           colorBgContainer: isDark ? '#031726' : '#ffffff',
           colorBgElevated: isDark ? '#0b2338' : '#ffffff',
           colorBgLayout: isDark ? '#031726' : '#f7f7f7',
@@ -64,7 +64,7 @@ const ThemedApp = () => {
           colorTextSecondary: isDark ? '#a8b0ba' : '#666',
           colorBorder: isDark ? '#0a2d47' : '#e8e8e8',
           colorBgBase: isDark ? '#031726' : '#f7f7f7',
-          fontSize: 14,
+          fontSize: 16,
           lineHeight: 1.5,
         },
         algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,

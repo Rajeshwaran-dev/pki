@@ -21,7 +21,7 @@ export default function DeductionRules() {
       />
 
       <Card className="crm-card">
-        <Title level={5} style={{ marginTop: 0 }}>Deduction Configuration</Title>
+        <Title level={5} style={{ marginTop: 0, fontSize: 18 }}>Deduction Configuration</Title>
 
         <div style={{ display: 'grid', gap: 14 }}>
           {[
@@ -33,8 +33,8 @@ export default function DeductionRules() {
           ].map((row) => (
             <div key={row.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 600 }}>{row.label}</div>
-                <Text type="secondary" style={{ fontSize: 12 }}>{row.help}</Text>
+                <div style={{ fontWeight: 600, fontSize: 15 }}>{row.label}</div>
+                <Text type="secondary" style={{ fontSize: 14 }}>{row.help}</Text>
               </div>
               <Switch checked={row.value} onChange={row.onChange} />
             </div>

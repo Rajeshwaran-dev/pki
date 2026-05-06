@@ -29,22 +29,22 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter 
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
           background: `${color}22`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, color,
+          fontSize: 22, color,
         }}>
           {icon}
         </div>
-        <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}>
+        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}>
           {prefix}{displayValue}{suffix}
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>{title}</span>
+        <span style={{ fontSize: 15, fontWeight: 500, color: '#999' }}>{title}</span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 2,
           background: `${color}18`, borderRadius: 20,
-          padding: '1px 7px', fontSize: 10, color, fontWeight: 600,
+          padding: '1px 7px', fontSize: 14, color, fontWeight: 600,
         }}>
-          <ArrowUpOutlined style={{ fontSize: 8 }} /> {trend || '12%'}
+          <ArrowUpOutlined style={{ fontSize: 12 }} /> {trend || '12%'}
         </span>
       </div>
     </Card>
@@ -62,7 +62,7 @@ const CustomTooltip = ({ active, payload, label, isDark }) => {
     }}>
       <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
       {payload.map((p, i) => (
-        <div key={i} style={{ color: p.color, fontSize: 13 }}>{p.name}: <strong>{p.value}</strong></div>
+        <div key={i} style={{ color: p.color, fontSize: 15 }}>{p.name}: <strong>{p.value}</strong></div>
       ))}
     </div>
   );
@@ -212,7 +212,7 @@ const DashboardPage = () => {
                   ))}
                 </Pie>
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 12 }}>{v}</span>} />
+                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 14 }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
           </Card>
@@ -232,8 +232,8 @@ const DashboardPage = () => {
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={stageData} barSize={36}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1a3a52' : '#f0f0f0'} vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 13 }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 13 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Count" radius={[8, 8, 0, 0]}>
                   {stageData.map((entry, idx) => (
@@ -256,8 +256,8 @@ const DashboardPage = () => {
               return (
                 <div key={name} style={{ marginBottom: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 500 }}>{name}</span>
-                    <span style={{ fontSize: 12, color, fontWeight: 600 }}>
+                    <span style={{ fontSize: 15, fontWeight: 500 }}>{name}</span>
+                    <span style={{ fontSize: 15, color, fontWeight: 600 }}>
                       {count} project{count !== 1 ? 's' : ''}
                     </span>
                   </div>
@@ -301,19 +301,18 @@ const DashboardPage = () => {
                     style={{
                       background: `${CHART_COLORS[i % CHART_COLORS.length]}28`,
                       color: CHART_COLORS[i % CHART_COLORS.length],
-                      fontWeight: 700, fontSize: 14, flexShrink: 0,
+                      fontWeight: 700, fontSize: 15, flexShrink: 0,
                     }}
                   >
                     {p.clientName.charAt(0)}
                   </Avatar>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 13 }}>{p.projectName}</div>
-                    <div style={{ fontSize: 11, color: '#999' }}>{p.clientName} · {p.city}</div>
+                    <div style={{ fontSize: 15, color: '#999' }}>{p.clientName} · {p.city}</div>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <StatusTag value={p.stage} />
-                  <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>
+                  <div style={{ fontSize: 15, color: '#999', marginTop: 4 }}>
                     ₹{(p.budget / 100000).toFixed(1)}L
                   </div>
                 </div>
@@ -346,18 +345,18 @@ const DashboardPage = () => {
                 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontWeight: 600, fontSize: 13,
+                    fontWeight: 600, fontSize: 15,
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                   }}>
                     {task.title}
                   </div>
-                  <div style={{ fontSize: 11, color: '#999' }}>
+                  <div style={{ fontSize: 15, color: '#999' }}>
                     {task.projectName} · <span style={{ color: primaryColor }}>{task.assignee}</span>
                   </div>
                 </div>
                 <Space size={6} direction="vertical" style={{ alignItems: 'flex-end', flexShrink: 0 }}>
                   <StatusTag value={task.priority} type="priority" />
-                  <span style={{ fontSize: 10, color: '#bbb' }}>
+                  <span style={{ fontSize: 14, color: '#bbb' }}>
                     <ClockCircleOutlined style={{ marginRight: 3 }} />{task.dueDate}
                   </span>
                 </Space>

@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { useAppSelector } from '@/store';
 import useIsMobile from '@/hooks/useIsMobile';
+import { Star, MessageSquare } from 'lucide-react';
 
 /* ═══════════════════════════════════════════
    BASE MEMBER DATA
@@ -21,13 +22,13 @@ const CURRENT_USER = {
 
 const ALL_MEMBERS = [
   { id: 'm1', name: 'Rahul Sharma',  code: 'EKA00001', email: 'rahul@example.com',  initials: 'RS', color: '#D69F6D' },
-  { id: 'm2', name: 'Priya Patel',   code: 'EKA00002', email: 'priya@example.com',  initials: 'PP', color: '#059669' },
-  { id: 'm3', name: 'Amit Gupta',    code: 'EKA00003', email: 'amit@example.com',   initials: 'AG', color: '#DB2777' },
-  { id: 'm4', name: 'Sneha Reddy',   code: 'EKA00004', email: 'sneha@example.com',  initials: 'SR', color: '#DC2626' },
-  { id: 'm5', name: 'Vikram Singh',  code: 'EKA00005', email: 'vikram@example.com', initials: 'VS', color: '#9333EA' },
-  { id: 'm6', name: 'Neha Kapoor',   code: 'EKA00006', email: 'neha@example.com',   initials: 'NK', color: '#16A34A' },
-  { id: 'm7', name: 'Rajesh Iyer',   code: 'EKA00007', email: 'rajesh@example.com', initials: 'RI', color: '#0891B2' },
-  { id: 'm8', name: 'Ananya Das',    code: 'EKA00008', email: 'ananya@example.com', initials: 'AD', color: '#7C3AED' },
+  { id: 'm2', name: 'Priya Patel',   code: 'EKA00002', email: 'priya@example.com',  initials: 'PP', color: '#82A67D' },
+  { id: 'm3', name: 'Amit Gupta',    code: 'EKA00003', email: 'amit@example.com',   initials: 'AG', color: '#9FA8DA' },
+  { id: 'm4', name: 'Sneha Reddy',   code: 'EKA00004', email: 'sneha@example.com',  initials: 'SR', color: '#E57373' },
+  { id: 'm5', name: 'Vikram Singh',  code: 'EKA00005', email: 'vikram@example.com', initials: 'VS', color: '#BA68C8' },
+  { id: 'm6', name: 'Neha Kapoor',   code: 'EKA00006', email: 'neha@example.com',   initials: 'NK', color: '#81C784' },
+  { id: 'm7', name: 'Rajesh Iyer',   code: 'EKA00007', email: 'rajesh@example.com', initials: 'RI', color: '#4DB6AC' },
+  { id: 'm8', name: 'Ananya Das',    code: 'EKA00008', email: 'ananya@example.com', initials: 'AD', color: '#9575CD' },
 ];
 
 const MEMBER_MAP = Object.fromEntries(
@@ -40,13 +41,13 @@ const MEMBER_MAP = Object.fromEntries(
 const INITIAL_CONVERSATIONS = [
   {
     id: 'broadcast', type: 'broadcast', name: 'Broadcast',
-    initials: 'B', color: '#F59E0B',
+    initials: 'B', color: '#FFB74D',
     lastMsg: 'You: Project updates shared', time: '05:54 PM', unread: 0,
     members: [{ id: 'current', role: 'admin' }],
   },
   {
     id: 'luxury-villa-team', type: 'group', name: 'Luxury Villa Team',
-    initials: 'LV', color: '#7C3AED',
+    initials: 'LV', color: '#9575CD',
     lastMsg: 'Rahul: Design approved!', time: '05:17 PM', unread: 2,
     members: [
       { id: 'current', role: 'admin' },
@@ -57,7 +58,7 @@ const INITIAL_CONVERSATIONS = [
   },
   {
     id: 'office-reno-team', type: 'group', name: 'Office Renovation Team',
-    initials: 'OR', color: '#0891B2',
+    initials: 'OR', color: '#4DB6AC',
     lastMsg: 'Priya: Site visit scheduled', time: '04:13 PM', unread: 0,
     members: [
       { id: 'current', role: 'admin' },
@@ -68,11 +69,11 @@ const INITIAL_CONVERSATIONS = [
     ],
   },
   { id: 'rahul', type: 'direct', name: 'Rahul Sharma',   initials: 'RS', color: '#D69F6D', online: true,  lastMsg: 'Sounds good, thank you!',      time: '05:58 PM', unread: 0 },
-  { id: 'priya', type: 'direct', name: 'Priya Patel',    initials: 'PP', color: '#059669', online: true,  lastMsg: 'Please review the layout.',    time: '04:45 PM', unread: 1 },
-  { id: 'amit',  type: 'direct', name: 'Amit Gupta',     initials: 'AG', color: '#DB2777', online: false, lastMsg: 'Budget revision needed.',      time: '03:30 PM', unread: 0 },
-  { id: 'sneha', type: 'direct', name: 'Sneha Reddy',    initials: 'SR', color: '#DC2626', online: false, lastMsg: 'Snag list sent.',              time: '01:20 PM', unread: 0 },
-  { id: 'vikram',type: 'direct', name: 'Vikram Singh',   initials: 'VS', color: '#9333EA', online: true,  lastMsg: 'Final walkthrough done!',      time: '11:00 AM', unread: 0 },
-  { id: 'neha',  type: 'direct', name: 'Neha Kapoor',    initials: 'NK', color: '#16A34A', online: false, lastMsg: 'Handover documents ready.',    time: '10:30 AM', unread: 0 },
+  { id: 'priya', type: 'direct', name: 'Priya Patel',    initials: 'PP', color: '#82A67D', online: true,  lastMsg: 'Please review the layout.',    time: '04:45 PM', unread: 1 },
+  { id: 'amit',  type: 'direct', name: 'Amit Gupta',     initials: 'AG', color: '#9FA8DA', online: false, lastMsg: 'Budget revision needed.',      time: '03:30 PM', unread: 0 },
+  { id: 'sneha', type: 'direct', name: 'Sneha Reddy',    initials: 'SR', color: '#E57373', online: false, lastMsg: 'Snag list sent.',              time: '01:20 PM', unread: 0 },
+  { id: 'vikram',type: 'direct', name: 'Vikram Singh',   initials: 'VS', color: '#BA68C8', online: true,  lastMsg: 'Final walkthrough done!',      time: '11:00 AM', unread: 0 },
+  { id: 'neha',  type: 'direct', name: 'Neha Kapoor',    initials: 'NK', color: '#81C784', online: false, lastMsg: 'Handover documents ready.',    time: '10:30 AM', unread: 0 },
 ];
 
 /* ═══════════════════════════════════════════
@@ -126,14 +127,14 @@ const INITIAL_MESSAGES = {
 const PollMessage = ({ poll, isDark }) => (
   <div style={{ background: isDark ? '#1a3a2e' : '#fff', borderRadius: 10, padding: '10px 12px', border: `1px solid ${isDark ? '#2a4a3a' : '#f5f3f0'}`, minWidth: 220, maxWidth: 280 }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-      <BarChartOutlined style={{ color: '#059669', fontSize: 14 }} />
-      <span style={{ fontWeight: 700, fontSize: 13, color: isDark ? '#f0f0f0' : '#1f1f1f', letterSpacing: 0.5 }}>{poll.title}</span>
+      <BarChartOutlined style={{ color: '#059669', fontSize: 16 }} />
+      <span style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#f0f0f0' : '#1f1f1f', letterSpacing: 0.5 }}>{poll.title}</span>
     </div>
     {poll.options.map((opt, i) => (
       <div key={i} style={{ marginBottom: i < poll.options.length - 1 ? 10 : 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#d0d0d0' : '#374151' }}>{opt.label}</span>
-          <span style={{ fontSize: 11, color: '#6b7280' }}>{opt.votes} ({opt.pct}%)</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: isDark ? '#d0d0d0' : '#374151' }}>{opt.label}</span>
+          <span style={{ fontSize: 13, color: '#6b7280' }}>{opt.votes} ({opt.pct}%)</span>
         </div>
         <div style={{ height: 4, borderRadius: 4, background: isDark ? '#0a2235' : '#f5f3f0', overflow: 'hidden', marginBottom: 5 }}>
           <div style={{ height: '100%', width: `${opt.pct}%`, borderRadius: 4, background: '#F59E0B' }} />
@@ -141,8 +142,8 @@ const PollMessage = ({ poll, isDark }) => (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {opt.voters.map((v, vi) => (
             <div key={vi} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Avatar size={18} style={{ background: v.color, fontSize: 9, fontWeight: 700 }}>{v.initials}</Avatar>
-              <span style={{ fontSize: 10, color: '#9ca3af' }}>{v.name}</span>
+              <Avatar size={18} style={{ background: v.color, fontSize: 13, fontWeight: 700 }}>{v.initials}</Avatar>
+              <span style={{ fontSize: 14, color: '#9ca3af' }}>{v.name}</span>
             </div>
           ))}
         </div>
@@ -158,7 +159,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
   if (msg.type === 'date') {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0' }}>
-        <span style={{ background: 'rgba(255,255,255,0.88)', borderRadius: 20, padding: '3px 12px', fontSize: 11, color: '#6b7280', fontWeight: 500, boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}>
+        <span style={{ background: 'rgba(255,255,255,0.88)', borderRadius: 20, padding: '3px 12px', fontSize: 14, color: '#6b7280', fontWeight: 500, boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}>
           {msg.text}
         </span>
       </div>
@@ -171,7 +172,7 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
           background: 'rgba(255, 214, 100, 0.35)',
           border: '1px solid rgba(214,159,109,0.3)',
           borderRadius: 20, padding: '3px 14px',
-          fontSize: 11.5, color: '#7a6010', fontWeight: 500,
+          fontSize: 14, color: '#7a6010', fontWeight: 500,
         }}>
           {msg.text}
         </span>
@@ -180,32 +181,32 @@ const MessageBubble = ({ msg, isDark, userInitials, userColor }) => {
   }
 
   const isSent = msg.sent;
-  const bubbleBg = isSent ? (isDark ? '#0e3a5c' : '#d9fdd3') : (isDark ? '#0a2235' : '#ffffff');
+  const bubbleBg = isSent ? (isDark ? '#0e3a5c' : '#f5f3eb') : (isDark ? '#0a2235' : '#ffffff');
 
   return (
     <div style={{ display: 'flex', justifyContent: isSent ? 'flex-end' : 'flex-start', marginBottom: 4, paddingLeft: isSent ? 48 : 0, paddingRight: isSent ? 0 : 48 }}>
       {!isSent && (
-        <Avatar size={28} style={{ background: msg.senderColor || '#888', fontSize: 11, fontWeight: 700, marginRight: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
+        <Avatar size={28} style={{ background: msg.senderColor || '#888', fontSize: 13, fontWeight: 700, marginRight: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
           {msg.sender?.charAt(0) || '?'}
         </Avatar>
       )}
       <div style={{ maxWidth: '65%' }}>
         {!isSent && msg.sender && (
-          <div style={{ fontSize: 11, fontWeight: 600, color: msg.senderColor || '#888', marginBottom: 2, paddingLeft: 2 }}>{msg.sender}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: msg.senderColor || '#888', marginBottom: 2, paddingLeft: 2 }}>{msg.sender}</div>
         )}
         <div style={{ background: bubbleBg, borderRadius: isSent ? '12px 2px 12px 12px' : '2px 12px 12px 12px', padding: msg.type === 'poll' ? '8px 10px 10px' : '7px 10px 6px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
           {msg.type === 'poll'
             ? <PollMessage poll={msg.poll} isDark={isDark} />
-            : <span style={{ fontSize: 13.5, color: isDark ? '#e9edef' : '#1f1f1f', lineHeight: 1.4 }}>{msg.text}</span>
+            : <span style={{ fontSize: 15, color: isDark ? '#e9edef' : '#1f1f1f', lineHeight: 1.4 }}>{msg.text}</span>
           }
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 3, marginTop: 3 }}>
-            <span style={{ fontSize: 10, color: isDark ? '#8696a0' : '#999' }}>{msg.time}</span>
-            {isSent && <span style={{ fontSize: 12, color: msg.status === 'read' ? '#53bdeb' : '#8696a0' }}>✓✓</span>}
+            <span style={{ fontSize: 14, color: isDark ? '#8696a0' : '#999' }}>{msg.time}</span>
+            {isSent && <span style={{ fontSize: 14, color: msg.status === 'read' ? '#53bdeb' : '#8696a0' }}>✓✓</span>}
           </div>
         </div>
       </div>
       {isSent && (
-        <Avatar size={28} style={{ background: userColor || (isDark ? '#5ab5e8' : '#D69F6D'), fontSize: 11, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
+        <Avatar size={28} style={{ background: userColor || (isDark ? '#5ab5e8' : '#D69F6D'), fontSize: 13, fontWeight: 700, marginLeft: 6, flexShrink: 0, alignSelf: 'flex-end' }}>
           {userInitials || 'SA'}
         </Avatar>
       )}
@@ -227,7 +228,7 @@ const AttachmentMenu = ({ isDark }) => (
         onMouseEnter={e => e.currentTarget.style.background = isDark ? '#0a2235' : '#f5f5f5'}
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
       >
-        <div style={{ width: 38, height: 38, borderRadius: '50%', background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16 }}>{item.icon}</div>
+        <div style={{ width: 38, height: 38, borderRadius: '50%', background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 18 }}>{item.icon}</div>
         {item.label}
       </div>
     ))}
@@ -252,13 +253,13 @@ const ConversationItem = ({ conv, isActive, onClick, isDark }) => (
     </div>
     <div style={{ flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-        <span style={{ fontWeight: 700, fontSize: 13.5, color: isActive ? '#fff' : (isDark ? '#e9edef' : '#1f1f1f'), whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 140 }}>{conv.name}</span>
-        <span style={{ fontSize: 10.5, color: isActive ? 'rgba(255,255,255,0.75)' : '#999', flexShrink: 0, marginLeft: 4 }}>{conv.time}</span>
+        <span style={{ fontWeight: 700, fontSize: 16, color: isActive ? '#fff' : (isDark ? '#e9edef' : '#1f1f1f'), whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 140 }}>{conv.name}</span>
+        <span style={{ fontSize: 14, color: isActive ? 'rgba(255,255,255,0.75)' : '#999', flexShrink: 0, marginLeft: 4 }}>{conv.time}</span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 12, color: isActive ? 'rgba(255,255,255,0.8)' : (isDark ? '#8696a0' : '#888'), whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }}>{conv.lastMsg}</span>
+        <span style={{ fontSize: 14, color: isActive ? 'rgba(255,255,255,0.8)' : (isDark ? '#8696a0' : '#888'), whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }}>{conv.lastMsg}</span>
         {conv.unread > 0 && !isActive && (
-          <div style={{ minWidth: 18, height: 18, borderRadius: 9, background: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0, paddingInline: 4 }}>{conv.unread}</div>
+          <div style={{ minWidth: 18, height: 18, borderRadius: 9, background: isDark ? '#5ab5e8' : '#D69F6D', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0, paddingInline: 4 }}>{conv.unread}</div>
         )}
       </div>
     </div>
@@ -353,7 +354,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                 position: 'absolute', bottom: 2, right: -2,
                 background: isDark ? '#5ab5e8' : '#D69F6D',
                 borderRadius: 6, padding: '2px 8px',
-                fontSize: 11, fontWeight: 700, color: '#fff',
+                fontSize: 13, fontWeight: 700, color: '#fff',
                 cursor: 'pointer', boxShadow: isDark ? '0 2px 6px rgba(90,181,232,0.4)' : '0 2px 6px rgba(214,159,109,0.4)',
               }}>
                 Edit
@@ -364,11 +365,11 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
             </p>
           </div>
           {/* Name input */}
-          <label style={{ fontSize: 13.5, fontWeight: 600, color: textPrimary, display: 'block', marginBottom: 8 }}>Group name</label>
+          <label style={{ fontSize: 15.5, fontWeight: 600, color: textPrimary, display: 'block', marginBottom: 8 }}>Group name</label>
           <Input
             value={groupName}
             onChange={e => setGroupName(e.target.value)}
-            style={{ ...inputStyle, fontSize: 14 }}
+            style={{ ...inputStyle, fontSize: 16 }}
           />
           <Button
             onClick={() => { if (groupName.trim()) onUpdateGroup(conversation.id, { name: groupName.trim() }); }}
@@ -403,24 +404,24 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                 {member.initials}
               </Avatar>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 13.5, color: textPrimary }}>{member.name}</div>
-                <div style={{ fontSize: 11.5, color: textSecondary, marginTop: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 15, color: textPrimary }}>{member.name}</div>
+                <div style={{ fontSize: 14, color: textSecondary, marginTop: 1 }}>
                   {member.code}&nbsp;&nbsp;{member.email}
                 </div>
                 {member.role === 'admin' ? (
-                  <span style={{ fontSize: 11, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600, background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.12)', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                    <span style={{ fontSize: 10 }}>⭐</span> Group admin
+                  <span style={{ fontSize: 13, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600, background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.12)', borderRadius: 20, padding: '2px 8px', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                    <Star size={14} fill={isDark ? '#5ab5e8' : '#D69F6D'} /> Group admin
                   </span>
                 ) : (
-                  <span style={{ fontSize: 11, color: textSecondary, display: 'block', marginTop: 3 }}>Member</span>
+                  <span style={{ fontSize: 13, color: textSecondary, display: 'block', marginTop: 3 }}>Member</span>
                 )}
               </div>
               {member.id !== 'current' && (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#D69F6D', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                  <span onClick={() => toggleRole(member.id)} style={{ fontSize: 14, color: isDark ? '#5ab5e8' : '#D69F6D', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
                     {member.role === 'admin' ? 'Make member' : 'Make admin'}
                   </span>
-                  <span onClick={() => removeMember(member.id)} style={{ fontSize: 12, color: '#EF4444', cursor: 'pointer', fontWeight: 600 }}>
+                  <span onClick={() => removeMember(member.id)} style={{ fontSize: 14, color: '#EF4444', cursor: 'pointer', fontWeight: 600 }}>
                     Remove
                   </span>
                 </div>
@@ -437,7 +438,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
         <div style={{ display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 220px)' }}>
           {/* Fixed top section */}
           <div style={{ padding: '16px 20px 10px', flexShrink: 0 }}>
-            <p style={{ fontSize: 12.5, color: textSecondary, margin: '0 0 10px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: 14, color: textSecondary, margin: '0 0 10px', lineHeight: 1.6 }}>
               People already in this group are hidden here. Search by name, email, or employee code.
             </p>
             <Input
@@ -472,7 +473,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
                 </Avatar>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 13, color: textPrimary }}>{member.name}</div>
-                  <div style={{ fontSize: 11.5, color: textSecondary }}>
+                  <div style={{ fontSize: 14, color: textSecondary }}>
                     {member.code}&nbsp;&nbsp;{member.email}
                   </div>
                 </div>
@@ -508,7 +509,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
       children: (
         <div style={{ padding: '20px' }}>
           <div style={{ borderRadius: 10, border: '1px solid #FCA5A5', background: isDark ? '#2a1a1a' : '#FFF5F5', padding: '18px 16px' }}>
-            <div style={{ fontWeight: 700, fontSize: 14, color: '#EF4444', marginBottom: 6 }}>Delete this group</div>
+            <div style={{ fontWeight: 700, fontSize: 16, color: '#EF4444', marginBottom: 6 }}>Delete this group</div>
             <p style={{ fontSize: 13, color: isDark ? '#fca5a5' : '#6b7280', margin: '0 0 14px', lineHeight: 1.5 }}>
               Permanently deletes the group, its messages, and member list. This cannot be undone.
             </p>
@@ -522,7 +523,7 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
               </Button>
             ) : (
               <div>
-                <p style={{ fontSize: 12.5, color: '#EF4444', fontWeight: 600, marginBottom: 10 }}>Are you sure? This action cannot be undone.</p>
+                <p style={{ fontSize: 14.5, color: '#EF4444', fontWeight: 600, marginBottom: 10 }}>Are you sure? This action cannot be undone.</p>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <Button onClick={() => setConfirmDelete(false)} style={{ flex: 1, borderRadius: 8, height: 38 }}>Cancel</Button>
                   <Button onClick={handleDeleteGroup} style={{ flex: 1, borderRadius: 8, height: 38, background: '#EF4444', color: '#fff', border: 'none', fontWeight: 700 }}>Yes, Delete</Button>
@@ -547,10 +548,10 @@ const GroupSettingsDrawer = ({ open, onClose, conversation, onUpdateGroup, onDel
       {/* Header — fixed */}
       <div style={{ padding: '18px 24px 14px', background: sectionBg, borderBottom: `1px solid ${borderC}`, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontWeight: 800, fontSize: 18, color: textPrimary }}>Group settings</span>
-          <CloseOutlined onClick={onClose} style={{ fontSize: 14, color: textSecondary, cursor: 'pointer' }} />
+          <span style={{ fontWeight: 800, fontSize: 20, color: textPrimary }}>Group settings</span>
+          <CloseOutlined onClick={onClose} style={{ fontSize: 16, color: textSecondary, cursor: 'pointer' }} />
         </div>
-        <p style={{ fontSize: 12.5, color: textSecondary, margin: 0 }}>
+        <p style={{ fontSize: 14, color: textSecondary, margin: 0 }}>
           Profile, members, and permissions — same actions as before, organized in tabs.
         </p>
       </div>
@@ -605,7 +606,7 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
         <div style={{ padding: '20px 20px 0' }}>
           <label style={{ fontSize: 13, fontWeight: 500, color: isDark ? '#ccc' : '#374151', marginBottom: 6, display: 'block' }}>Group name</label>
           <Input value={groupName} onChange={e => setGroupName(e.target.value)} placeholder="e.g. Project Alpha" style={inputStyle} onPressEnter={() => groupName.trim() && setActiveTab('members')} />
-          <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 10 }}>Next, open the Members tab to search and select people.</p>
+          <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 10 }}>Next, open the Members tab to search and select people.</p>
         </div>
       ),
     },
@@ -626,10 +627,10 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
                 onMouseLeave={e => { e.currentTarget.style.background = selectedMembers.includes(member.id) ? (isDark ? '#133d5e' : '#fefce8') : sectionBg; }}
               >
                 <Checkbox checked={selectedMembers.includes(member.id)} onChange={() => {}} style={{ flexShrink: 0 }} />
-                <Avatar size={36} style={{ background: member.color, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{member.initials}</Avatar>
+                <Avatar size={36} style={{ background: member.color, fontWeight: 700, fontSize: 14, flexShrink: 0 }}>{member.initials}</Avatar>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 13, color: isDark ? '#e9edef' : '#1f1f1f' }}>{member.name}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{member.code}&nbsp;&nbsp;{member.email}</div>
+                  <div style={{ fontSize: 13, color: '#9ca3af' }}>{member.code}&nbsp;&nbsp;{member.email}</div>
                 </div>
               </div>
             ))}
@@ -652,17 +653,17 @@ const CreateGroupDrawer = ({ open, onClose, onCreateGroup, isDark }) => {
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontWeight: 800, fontSize: 17, color: isDark ? '#e9edef' : '#111827' }}>Create group</span>
-          <CloseOutlined onClick={onClose} style={{ fontSize: 14, color: '#9ca3af', cursor: 'pointer' }} />
+          <span style={{ fontWeight: 800, fontSize: 19, color: isDark ? '#e9edef' : '#111827' }}>Create group</span>
+          <CloseOutlined onClick={onClose} style={{ fontSize: 16, color: '#9ca3af', cursor: 'pointer' }} />
         </div>
-        <p style={{ fontSize: 12.5, color: '#9ca3af', margin: 0 }}>Choose a name, then pick people to add.</p>
+        <p style={{ fontSize: 14, color: '#9ca3af', margin: 0 }}>Choose a name, then pick people to add.</p>
       </div>
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabs} tabBarStyle={{ padding: '0 20px', marginBottom: 0, background: sectionBg, borderBottom: `1px solid ${borderC}` }} tabBarGutter={24} />
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
         <Button block disabled={!groupName.trim()} onClick={handleCreate}
-          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: groupName.trim() ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#0a2235' : '#f5f3f0'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
+          style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 16, background: groupName.trim() ? (isDark ? '#5ab5e8' : '#D69F6D') : (isDark ? '#0a2235' : '#f5f3f0'), color: groupName.trim() ? '#fff' : (isDark ? '#555' : '#aaa'), border: 'none' }}
         >
           Create group
         </Button>
@@ -694,10 +695,10 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
     >
       <div style={{ padding: '18px 20px 12px', background: sectionBg, borderBottom: `1px solid ${borderC}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontWeight: 800, fontSize: 17, color: isDark ? '#e9edef' : '#111827' }}>Chat settings</span>
-          <CloseOutlined onClick={onClose} style={{ fontSize: 14, color: '#9ca3af', cursor: 'pointer' }} />
+          <span style={{ fontWeight: 800, fontSize: 19, color: isDark ? '#e9edef' : '#111827' }}>Chat settings</span>
+          <CloseOutlined onClick={onClose} style={{ fontSize: 16, color: '#9ca3af', cursor: 'pointer' }} />
         </div>
-        <p style={{ fontSize: 12.5, color: '#9ca3af', margin: 0 }}>Message retention and deletion alerts for your company.</p>
+        <p style={{ fontSize: 14, color: '#9ca3af', margin: 0 }}>Message retention and deletion alerts for your company.</p>
       </div>
       <div style={{ flex: 1, padding: '24px 20px' }}>
         <div style={{ borderRadius: 12, background: sectionBg, padding: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
@@ -716,7 +717,7 @@ const ChatSettingsDrawer = ({ open, onClose, isDark }) => {
         </div>
       </div>
       <div style={{ padding: '14px 20px', background: sectionBg, borderTop: `1px solid ${borderC}` }}>
-        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 14, background: isDark ? '#5ab5e8' : '#D69F6D', color: '#fff', border: 'none' }}>
+        <Button block onClick={onClose} style={{ height: 44, borderRadius: 10, fontWeight: 700, fontSize: 16, background: isDark ? '#5ab5e8' : '#D69F6D', color: '#fff', border: 'none' }}>
           Save settings
         </Button>
       </div>
@@ -837,12 +838,12 @@ const MessagesPage = () => {
       {/* Header */}
       <div style={{ padding: '14px 16px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${borderColor}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontWeight: 800, fontSize: 18, color: isDark ? '#e9edef' : '#1f1f1f' }}>Chat</span>
-          <span onClick={() => setShowCreateGroup(true)} style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>New Group</span>
-          <span onClick={() => handleSelectConv('broadcast')} style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>Broadcast</span>
+          <span style={{ fontWeight: 800, fontSize: 20, color: isDark ? '#e9edef' : '#1f1f1f' }}>Chat</span>
+          <span onClick={() => setShowCreateGroup(true)} style={{ fontSize: 14, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>New Group</span>
+          <span onClick={() => handleSelectConv('broadcast')} style={{ fontSize: 14, fontWeight: 600, color: isDark ? '#5ab5e8' : '#0B2B44', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>Broadcast</span>
         </div>
         <Tooltip title="Chat settings">
-          <SettingOutlined onClick={() => setShowChatSettings(true)} style={{ fontSize: 16, color: isDark ? '#8696a0' : '#888', cursor: 'pointer' }} />
+          <SettingOutlined onClick={() => setShowChatSettings(true)} style={{ fontSize: 18, color: isDark ? '#8696a0' : '#888', cursor: 'pointer' }} />
         </Tooltip>
       </div>
       {/* Search */}
@@ -853,7 +854,7 @@ const MessagesPage = () => {
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: 6, padding: '0 12px 10px' }}>
         {['All', 'Unread', 'Groups'].map(tab => (
-          <div key={tab} onClick={() => setFilter(tab)} style={{ padding: '5px 14px', borderRadius: 20, fontSize: 12.5, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: filter === tab ? (isDark ? '#0a2235' : '#fff') : 'transparent', color: filter === tab ? (isDark ? '#e9edef' : '#1f1f1f') : (isDark ? '#8696a0' : '#888'), boxShadow: filter === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none', border: filter === tab ? `1px solid ${isDark ? '#1a4d72' : '#e0e0e0'}` : '1px solid transparent' }}>{tab}</div>
+          <div key={tab} onClick={() => setFilter(tab)} style={{ padding: '5px 14px', borderRadius: 20, fontSize: 14.5, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: filter === tab ? (isDark ? '#0a2235' : '#fff') : 'transparent', color: filter === tab ? (isDark ? '#e9edef' : '#1f1f1f') : (isDark ? '#8696a0' : '#888'), boxShadow: filter === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none', border: filter === tab ? `1px solid ${isDark ? '#1a4d72' : '#e0e0e0'}` : '1px solid transparent' }}>{tab}</div>
         ))}
       </div>
       {/* Conversations */}
@@ -861,8 +862,8 @@ const MessagesPage = () => {
         {filter === 'Groups' && groupConvs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 16px' }}>
             <UsergroupAddOutlined style={{ fontSize: 36, color: isDark ? '#5ab5e8' : '#0B2B44', marginBottom: 10 }} />
-            <div style={{ fontWeight: 600, fontSize: 14, color: isDark ? '#e9edef' : '#374151', marginBottom: 6 }}>No groups yet</div>
-            <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 16 }}>Create a group to collaborate with your team</div>
+            <div style={{ fontWeight: 600, fontSize: 16, color: isDark ? '#e9edef' : '#374151', marginBottom: 6 }}>No groups yet</div>
+            <div style={{ fontSize: 14, color: '#9ca3af', marginBottom: 16 }}>Create a group to collaborate with your team</div>
             <Button onClick={() => setShowCreateGroup(true)} icon={<PlusOutlined />} style={{ borderRadius: 8, fontWeight: 600, fontSize: 13, background: '#0B2B44', color: '#fff', border: 'none' }}>Create group</Button>
           </div>
         ) : filteredConvs.length === 0 ? (
@@ -881,7 +882,7 @@ const MessagesPage = () => {
       {/* Chat Header */}
       <div style={{ flexShrink: 0, zIndex: 2, background: isDark ? '#0d3554' : '#f0f2f5', borderBottom: `1px solid ${borderColor}` }}>
         <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px 0 16px' }}>
-          {isMobile && <ArrowLeftOutlined style={{ fontSize: 17, color: isDark ? '#aaa' : '#555', marginRight: 2, cursor: 'pointer' }} onClick={() => setShowChat(false)} />}
+          {isMobile && <ArrowLeftOutlined style={{ fontSize: 19, color: isDark ? '#aaa' : '#555', marginRight: 2, cursor: 'pointer' }} onClick={() => setShowChat(false)} />}
 
           {/* Avatar */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -895,10 +896,10 @@ const MessagesPage = () => {
 
           {/* Name + subtitle */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 14, color: isDark ? '#e9edef' : '#1f1f1f', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#e9edef' : '#1f1f1f', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {activeConv?.name || ''}
             </div>
-            <div style={{ fontSize: 11, color: isGroup ? '#9ca3af' : (activeConv?.online ? '#52C41A' : '#9ca3af') }}>
+            <div style={{ fontSize: 13, color: isGroup ? '#9ca3af' : (activeConv?.online ? '#52C41A' : '#9ca3af') }}>
               {isGroup ? `${memberCount} member${memberCount !== 1 ? 's' : ''}` : (activeConv?.online ? 'Online' : 'Offline')}
             </div>
           </div>
@@ -916,22 +917,22 @@ const MessagesPage = () => {
               />
               <CloseOutlined
                 onClick={() => { setShowChatSearch(false); setChatSearchText(''); }}
-                style={{ fontSize: 14, color: isDark ? '#8696a0' : '#666', cursor: 'pointer', flexShrink: 0 }}
+                style={{ fontSize: 16, color: isDark ? '#8696a0' : '#666', cursor: 'pointer', flexShrink: 0 }}
               />
               <SettingOutlined
                 onClick={e => { e.stopPropagation(); isGroup ? setShowGroupSettings(true) : setShowChatSettings(true); }}
-                style={{ fontSize: 17, color: isDark ? '#8696a0' : '#555', cursor: 'pointer', flexShrink: 0 }}
+                style={{ fontSize: 19, color: isDark ? '#8696a0' : '#555', cursor: 'pointer', flexShrink: 0 }}
               />
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <SearchOutlined
                 onClick={e => { e.stopPropagation(); setShowChatSearch(true); }}
-                style={{ fontSize: 17, color: isDark ? '#8696a0' : '#555', cursor: 'pointer' }}
+                style={{ fontSize: 19, color: isDark ? '#8696a0' : '#555', cursor: 'pointer' }}
               />
               <SettingOutlined
                 onClick={e => { e.stopPropagation(); isGroup ? setShowGroupSettings(true) : setShowChatSettings(true); }}
-                style={{ fontSize: 17, color: isDark ? '#8696a0' : '#555', cursor: 'pointer' }}
+                style={{ fontSize: 19, color: isDark ? '#8696a0' : '#555', cursor: 'pointer' }}
               />
             </div>
           )}
@@ -962,17 +963,17 @@ const MessagesPage = () => {
       {/* Input Bar */}
       <div style={{ height: 60, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', background: isDark ? '#0d3554' : '#f0f2f5', borderTop: `1px solid ${borderColor}`, flexShrink: 0, zIndex: 2, position: 'relative' }}>
         <div onClick={e => { e.stopPropagation(); setShowAttach(v => !v); }}
-          style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: showAttach ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#8696a0' : '#888'), fontSize: 18 }}
+          style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: showAttach ? (isDark ? '#5ab5e8' : '#0B2B44') : (isDark ? '#8696a0' : '#888'), fontSize: 20 }}
           onMouseEnter={e => e.currentTarget.style.background = isDark ? '#133d5e' : '#e0e0e0'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           <PaperClipOutlined />
         </div>
         <Input ref={inputRef} value={inputText} onChange={e => setInputText(e.target.value)} onPressEnter={handleSend} placeholder="Type a message..."
-          style={{ flex: 1, borderRadius: 24, fontSize: 13.5, height: 40, background: isDark ? '#0a2235' : '#ffffff', border: `1px solid ${isDark ? '#1a4d72' : 'transparent'}`, paddingLeft: 16, paddingRight: 16 }}
+          style={{ flex: 1, borderRadius: 24, fontSize: 15.5, height: 40, background: isDark ? '#0a2235' : '#ffffff', border: `1px solid ${isDark ? '#1a4d72' : 'transparent'}`, paddingLeft: 16, paddingRight: 16 }}
         />
         <div onClick={handleSend}
-          style={{ width: 38, height: 38, borderRadius: '50%', background: inputText.trim() ? '#0B2B44' : (isDark ? '#133d5e' : '#e0e0e0'), display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: inputText.trim() ? 'pointer' : 'default', color: inputText.trim() ? '#fff' : (isDark ? '#8696a0' : '#aaa'), fontSize: 16, transition: 'all 0.2s', flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: '50%', background: inputText.trim() ? '#0B2B44' : (isDark ? '#133d5e' : '#e0e0e0'), display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: inputText.trim() ? 'pointer' : 'default', color: inputText.trim() ? '#fff' : (isDark ? '#8696a0' : '#aaa'), fontSize: 18, transition: 'all 0.2s', flexShrink: 0 }}
         >
           {inputText.trim() ? <SendOutlined /> : <AudioOutlined />}
         </div>
@@ -983,8 +984,10 @@ const MessagesPage = () => {
   const emptyState = (
     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isDark ? '#031726' : '#f0f2f5' }}>
       <div style={{ textAlign: 'center', color: '#999' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>💬</div>
-        <div style={{ fontWeight: 600, fontSize: 16 }}>Select a conversation</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+          <MessageSquare size={48} color={isDark ? '#5ab5e8' : '#D69F6D'} />
+        </div>
+        <div style={{ fontWeight: 600, fontSize: 18 }}>Select a conversation</div>
         <div style={{ fontSize: 13, marginTop: 4 }}>Choose from your existing conversations</div>
       </div>
     </div>

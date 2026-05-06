@@ -32,26 +32,26 @@ const ClientCard = ({ client, index, onEdit, onView, isDark, primaryColor }) => 
         style={{
           background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
           color: primaryColor,
-          fontWeight: 700, fontSize: 18, flexShrink: 0,
+          fontWeight: 700, fontSize: 15, flexShrink: 0,
         }}
       >
         {client.clientName.charAt(0)}
       </Avatar>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 700, fontSize: 14 }}>{client.clientName}</div>
-        <div style={{ fontSize: 11, color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div style={{ fontWeight: 700, fontSize: 16 }}>{client.clientName}</div>
+        <div style={{ fontSize: 14, color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {client.legalName}
         </div>
       </div>
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 14, color: '#666' }}>
         <PhoneOutlined style={{ color: '#999' }} /> {client.phone}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 14, color: '#666' }}>
         <MailOutlined style={{ color: '#999' }} /> {client.email || '—'}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#666' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 14, color: '#666' }}>
         <EnvironmentOutlined style={{ color: '#999' }} /> {client.city}, {client.state}
       </div>
     </div>
@@ -101,8 +101,8 @@ const ClientsPage = () => {
             {name.charAt(0)}
           </Avatar>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 13 }}>{name}</div>
-            <div style={{ fontSize: 11, color: '#999' }}>since {row.createdDate}</div>
+            <div style={{ fontWeight: 600, fontSize: 16 }}>{name}</div>
+            <div style={{ fontSize: 14, color: '#999' }}>since {row.createdDate}</div>
           </div>
         </div>
       ),
@@ -112,7 +112,7 @@ const ClientsPage = () => {
       title: 'Phone',
       dataIndex: 'phone',
       width: 150,
-      render: v => <a href={`tel:${v}`} style={{ color: '#1677FF' }}>{v}</a>,
+      render: v => <a href={`tel:${v}`} style={{ color: primaryColor }}>{v}</a>,
     },
     { title: 'City', dataIndex: 'city', width: 110 },
     { title: 'State', dataIndex: 'state', width: 130 },
@@ -120,7 +120,19 @@ const ClientsPage = () => {
       title: 'GST/PAN',
       dataIndex: 'gst',
       width: 160,
-      render: (gst, row) => gst ? <Tag color="gold" style={{ borderRadius: 6 }}>{gst}</Tag> : (row.pan ? <Tag style={{ borderRadius: 6 }}>{row.pan}</Tag> : '—'),
+      render: (gst, row) => {
+        const display = gst || row.pan;
+        if (!display) return '—';
+        return (
+          <Tag style={{
+            background: `${primaryColor}18`, color: primaryColor,
+            border: `1px solid ${primaryColor}40`,
+            borderRadius: 6, fontSize: 14, fontWeight: 500
+          }}>
+            {display}
+          </Tag>
+        );
+      },
     },
     {
       title: 'Actions',
@@ -133,7 +145,7 @@ const ClientsPage = () => {
               items: [
                 {
                   key: 'view',
-                  icon: <EyeOutlined style={{ color: '#1677FF' }} />,
+                  icon: <EyeOutlined style={{ color: primaryColor }} />,
                   label: 'View',
                   onClick: (e) => {
                     e.domEvent.stopPropagation();
@@ -157,7 +169,7 @@ const ClientsPage = () => {
             <Button
               type="text"
               size="small"
-              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
+              icon={<MoreOutlined style={{ fontSize: 18, color: '#999' }} />}
             />
           </Dropdown>
         </div>

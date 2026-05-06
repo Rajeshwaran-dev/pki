@@ -358,10 +358,10 @@ const InventoryPage = () => {
       render: (text, r) => (
         <Space>
           <Avatar shape="square" size={40} icon={<DropboxOutlined />}
-            style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#f5f5f5', color: primaryColor, fontSize: 18 }} />
+            style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#f5f5f5', color: primaryColor, fontSize: 20 }} />
           <div>
-            <div style={{ fontWeight: 600, fontSize: 13 }}>{text}</div>
-            <div style={{ fontSize: 11, color: textSecondary }}>SKU: {r.sku} · {r.brand}</div>
+            <div style={{ fontWeight: 600, fontSize: 16 }}>{text}</div>
+            <div style={{ fontSize: 14, color: textSecondary }}>SKU: {r.sku} · {r.brand}</div>
           </div>
         </Space>
       ),
@@ -378,7 +378,7 @@ const InventoryPage = () => {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
               <span style={{ fontWeight: 700 }}>{r.quantity} {r.unit}</span>
-              <span style={{ fontSize: 11, color: textSecondary }}>min: {r.minStock}</span>
+              <span style={{ fontSize: 13, color: textSecondary }}>min: {r.minStock}</span>
             </div>
             <Progress percent={pct} showInfo={false} strokeColor={color} size="small" />
           </div>
@@ -438,7 +438,7 @@ const InventoryPage = () => {
       dataIndex: 'date',
       key: 'date',
       width: 150,
-      render: (d) => <Text style={{ fontSize: 12 }}>{d}</Text>,
+      render: (d) => <Text style={{ fontSize: 14 }}>{d}</Text>,
     },
     {
       title: 'Product',
@@ -446,8 +446,8 @@ const InventoryPage = () => {
       width: 200,
       render: (_, r) => (
         <div>
-          <div style={{ fontWeight: 600, fontSize: 13 }}>{r.product}</div>
-          <div style={{ fontSize: 11, color: textSecondary }}>SKU: {r.sku}</div>
+          <div style={{ fontWeight: 600, fontSize: 16 }}>{r.product}</div>
+          <div style={{ fontSize: 14, color: textSecondary }}>SKU: {r.sku}</div>
         </div>
       ),
     },
@@ -471,7 +471,7 @@ const InventoryPage = () => {
       key: 'quantity',
       width: 110,
       render: (q) => (
-        <Text strong style={{ color: q > 0 ? '#52C41A' : q < 0 ? '#FF4D4F' : '#FAAD14', fontSize: 15 }}>
+        <Text strong style={{ color: q > 0 ? '#52C41A' : q < 0 ? '#FF4D4F' : '#FAAD14', fontSize: 18 }}>
           {q > 0 ? `+${q}` : q}
         </Text>
       ),
@@ -481,14 +481,14 @@ const InventoryPage = () => {
       key: 'balance',
       width: 140,
       render: (_, r) => (
-        <Text style={{ fontSize: 12 }}>
+        <Text style={{ fontSize: 16 }}>
           <span style={{ color: textSecondary }}>{r.balanceBefore}</span>
           <span style={{ margin: '0 4px', color: textSecondary }}>→</span>
           <span style={{ fontWeight: 700 }}>{r.balanceAfter}</span>
         </Text>
       ),
     },
-    { title: 'Reference', dataIndex: 'reference', key: 'reference', width: 120, render: (v) => <Text code style={{ fontSize: 11 }}>{v}</Text> },
+    { title: 'Reference', dataIndex: 'reference', key: 'reference', width: 120, render: (v) => <Text code style={{ fontSize: 15 }}>{v}</Text> },
     { title: 'Notes', dataIndex: 'notes', key: 'notes', ellipsis: true },
     { title: 'User', dataIndex: 'user', key: 'user', width: 90 },
   ];
@@ -500,12 +500,12 @@ const InventoryPage = () => {
       width: 240,
       render: (_, r) => (
         <Space>
-          <Avatar size={38} style={{ background: primaryColor, fontWeight: 700, fontSize: 14 }}>
+          <Avatar size={38} style={{ background: primaryColor, fontWeight: 700, fontSize: 18 }}>
             {r.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
           </Avatar>
           <div>
             <div style={{ fontWeight: 600 }}>{r.name}</div>
-            <div style={{ fontSize: 11, color: textSecondary }}>{r.contact}</div>
+            <div style={{ fontSize: 15, color: textSecondary }}>{r.contact}</div>
           </div>
         </Space>
       ),
@@ -520,7 +520,7 @@ const InventoryPage = () => {
       dataIndex: 'rating',
       key: 'rating',
       width: 130,
-      render: v => <Rate disabled defaultValue={v} style={{ fontSize: 12 }} />,
+      render: v => <Rate disabled defaultValue={v} style={{ fontSize: 14 }} />,
     },
     {
       title: 'Status',
@@ -596,7 +596,7 @@ const InventoryPage = () => {
             style={{ background: isDark ? 'rgba(255,255,255,0.07)' : '#f5f5f5', color: primaryColor }} />
           <div>
             <div style={{ fontWeight: 600 }}>{r.name}</div>
-            <div style={{ fontSize: 11, color: textSecondary }}>{r.description}</div>
+            <div style={{ fontSize: 13, color: textSecondary }}>{r.description}</div>
           </div>
         </Space>
       ),
@@ -839,11 +839,11 @@ const InventoryPage = () => {
           <Col xs={24} sm={12} lg={6} key={idx}>
             <Card style={{ borderRadius: 12, background: cardBg, border: `1px solid ${borderColor}` }}>
               <Statistic
-                title={<span style={{ color: textSecondary, fontSize: 13 }}>{item.title}</span>}
+                title={<span style={{ color: textSecondary, fontSize: 15 }}>{item.title}</span>}
                 value={item.noFormat ? undefined : item.value}
                 formatter={item.noFormat ? () => <span style={{ color: isDark ? '#f0f0f0' : '#1f1f1f', fontWeight: 700, fontSize: 22 }}>{item.value}</span> : undefined}
                 suffix={item.suffix}
-                prefix={<span style={{ color: item.color, marginRight: 8, fontSize: 18 }}>{item.icon}</span>}
+                prefix={<span style={{ color: item.color, marginRight: 8, fontSize: 20 }}>{item.icon}</span>}
                 valueStyle={{ color: isDark ? '#f0f0f0' : '#1f1f1f', fontWeight: 700 }}
               />
             </Card>
@@ -883,7 +883,7 @@ const InventoryPage = () => {
         destroyOnClose
       >
         <Form form={itemForm} layout="vertical" size="middle">
-          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 12, borderColor }}>
+          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 14, borderColor }}>
             Basic Information
           </Divider>
           <Row gutter={16}>
@@ -918,7 +918,7 @@ const InventoryPage = () => {
             </Col>
           </Row>
 
-          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 12, borderColor }}>
+          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 14, borderColor }}>
             Stock Details
           </Divider>
           <Row gutter={16}>
@@ -951,7 +951,7 @@ const InventoryPage = () => {
             </Col>
           </Row>
 
-          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 12, borderColor }}>
+          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 14, borderColor }}>
             Pricing & Supplier
           </Divider>
           <Row gutter={16}>
@@ -974,7 +974,7 @@ const InventoryPage = () => {
             </Col>
           </Row>
 
-          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 12, borderColor }}>
+          <Divider orientation="left" orientationMargin={0} style={{ color: textSecondary, fontSize: 14, borderColor }}>
             Additional Details
           </Divider>
           <Row gutter={16}>
@@ -984,7 +984,7 @@ const InventoryPage = () => {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label={<span style={formLabelStyle}>Tags</span>} name="tags" extra={<Text style={{ fontSize: 11, color: textSecondary }}>Comma-separated: laptop, apple, premium</Text>}>
+              <Form.Item label={<span style={formLabelStyle}>Tags</span>} name="tags" extra={<Text style={{ fontSize: 13, color: textSecondary }}>Comma-separated: laptop, apple, premium</Text>}>
                 <Input placeholder="laptop, apple, premium" />
               </Form.Item>
             </Col>
@@ -1025,9 +1025,9 @@ const InventoryPage = () => {
                   </Col>
                   <Col flex={1}>
                     <Title level={5} style={{ margin: 0 }}>{r.name}</Title>
-                    <Text style={{ color: textSecondary, fontSize: 12 }}>SKU: {r.sku} · {r.brand}</Text><br />
+                    <Text style={{ color: textSecondary, fontSize: 14 }}>SKU: {r.sku} · {r.brand}</Text><br />
                     <Space wrap style={{ marginTop: 6 }}>
-                      {r.tags?.map(t => <Tag key={t} style={{ fontSize: 11 }}>{t}</Tag>)}
+                      {r.tags?.map(t => <Tag key={t} style={{ fontSize: 13 }}>{t}</Tag>)}
                     </Space>
                   </Col>
                 </Row>
@@ -1041,8 +1041,8 @@ const InventoryPage = () => {
                 ].map((s, i) => (
                   <Col span={8} key={i}>
                     <Card size="small" style={{ background: isDark ? '#031726' : '#fafafa', border: `1px solid ${borderColor}`, borderRadius: 8, textAlign: 'center' }}>
-                      <div style={{ fontSize: 18, fontWeight: 800, color: s.color }}>{s.value}</div>
-                      <div style={{ fontSize: 11, color: textSecondary }}>{s.label}</div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div>
+                      <div style={{ fontSize: 13, color: textSecondary }}>{s.label}</div>
                     </Card>
                   </Col>
                 ))}
@@ -1050,13 +1050,13 @@ const InventoryPage = () => {
 
               <div style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <Text style={{ fontSize: 12, color: textSecondary }}>Stock Level</Text>
-                  <Text style={{ fontSize: 12 }}>{r.quantity} / {r.maxStock} {r.unit}</Text>
+                  <Text style={{ fontSize: 14, color: textSecondary }}>Stock Level</Text>
+                  <Text style={{ fontSize: 14 }}>{r.quantity} / {r.maxStock} {r.unit}</Text>
                 </div>
                 <Progress percent={pct} strokeColor={statusColor} size={[null, 8]} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                  <Text style={{ fontSize: 11, color: textSecondary }}>Min: {r.minStock} {r.unit}</Text>
-                  <Text style={{ fontSize: 11, color: textSecondary }}>Max: {r.maxStock} {r.unit}</Text>
+                  <Text style={{ fontSize: 13, color: textSecondary }}>Min: {r.minStock} {r.unit}</Text>
+                  <Text style={{ fontSize: 13, color: textSecondary }}>Max: {r.maxStock} {r.unit}</Text>
                 </div>
               </div>
 
@@ -1074,15 +1074,15 @@ const InventoryPage = () => {
               </Descriptions>
 
               <Divider style={{ borderColor, margin: '16px 0' }} />
-              <Text style={{ fontWeight: 600, color: textSecondary, fontSize: 12 }}>RECENT MOVEMENTS</Text>
+              <Text style={{ fontWeight: 600, color: textSecondary, fontSize: 14 }}>RECENT MOVEMENTS</Text>
               <div style={{ marginTop: 10 }}>
                 {movements.filter(m => m.sku === r.sku).slice(0, 4).map(m => (
                   <div key={m.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', borderRadius: 8, background: isDark ? '#031726' : '#f9f9f9', marginBottom: 6 }}>
                     <Space size={8}>
                       <span style={{ color: movementTypeConfig[m.type]?.color }}>{movementTypeConfig[m.type]?.icon}</span>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 600 }}>{m.type}</div>
-                        <div style={{ fontSize: 11, color: textSecondary }}>{m.date}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600 }}>{m.type}</div>
+                        <div style={{ fontSize: 13, color: textSecondary }}>{m.date}</div>
                       </div>
                     </Space>
                     <Text strong style={{ color: m.quantity > 0 ? '#52C41A' : '#FF4D4F' }}>
@@ -1091,7 +1091,7 @@ const InventoryPage = () => {
                   </div>
                 ))}
                 {movements.filter(m => m.sku === r.sku).length === 0 && (
-                  <Text style={{ color: textSecondary, fontSize: 12 }}>No movements recorded yet.</Text>
+                  <Text style={{ color: textSecondary, fontSize: 14 }}>No movements recorded yet.</Text>
                 )}
               </div>
             </>
@@ -1118,8 +1118,8 @@ const InventoryPage = () => {
                 <Select placeholder="Select product" showSearch>
                   {items.map(i => (
                     <Select.Option key={i.key} value={i.sku}>
-                      <div style={{ fontSize: 12 }}>{i.name}</div>
-                      <div style={{ fontSize: 10, color: textSecondary }}>{i.sku} · Stock: {i.quantity}</div>
+                      <div style={{ fontSize: 14 }}>{i.name}</div>
+                      <div style={{ fontSize: 14, color: textSecondary }}>{i.sku} · Stock: {i.quantity}</div>
                     </Select.Option>
                   ))}
                 </Select>

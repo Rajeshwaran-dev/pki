@@ -44,8 +44,8 @@ export default function AutomationRules() {
             <div key={r.label}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 700 }}>{r.label}</div>
-                  <Text type="secondary" style={{ fontSize: 12 }}>{r.help}</Text>
+                  <div style={{ fontWeight: 700, fontSize: 16 }}>{r.label}</div>
+                  <Text type="secondary" style={{ fontSize: 14 }}>{r.help}</Text>
                 </div>
                 <Switch checked={r.value} onChange={r.onChange} />
               </div>
@@ -81,7 +81,7 @@ export default function AutomationRules() {
 
       {lastSaved && (
         <div style={{ marginTop: 10 }}>
-          <Text type="secondary" style={{ fontSize: 12 }}>
+          <Text type="secondary" style={{ fontSize: 14 }}>
             Last saved: {lastSaved.toLocaleString()}
           </Text>
         </div>

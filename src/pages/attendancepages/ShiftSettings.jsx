@@ -86,10 +86,10 @@ export default function ShiftSettings() {
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    <div style={{ fontWeight: 800 }}>{s.name}</div>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>{s.name}</div>
                   </div>
 
-                  <div style={{ marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap', color: muted, fontSize: 12 }}>
+                  <div style={{ marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap', color: muted, fontSize: 14 }}>
                     <span>{s.type}</span>
                     {s.start && s.end ? <span>{s.start} – {s.end}</span> : null}
                     {s.grace ? <span>Grace: {s.grace}</span> : null}
@@ -97,7 +97,7 @@ export default function ShiftSettings() {
                   </div>
 
                   {s.extra?.length ? (
-                    <div style={{ marginTop: 6, display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12 }}>
+                    <div style={{ marginTop: 6, display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 14 }}>
                       {s.extra.map((e) => (
                         <Tag key={e} style={{ borderRadius: 999 }}>{e}</Tag>
                       ))}
@@ -105,13 +105,13 @@ export default function ShiftSettings() {
                   ) : null}
 
                   {s.pattern ? (
-                    <div style={{ marginTop: 6, fontSize: 12 }}>
+                    <div style={{ marginTop: 6, fontSize: 14 }}>
                       <b>Pattern:</b> <Text type="secondary">{s.pattern}</Text>
                     </div>
                   ) : null}
 
                   {typeof s.assignedStaff === 'number' ? (
-                    <div style={{ marginTop: 6, fontSize: 12 }}>
+                    <div style={{ marginTop: 6, fontSize: 14 }}>
                       <Text style={{ color: accentText, fontWeight: 700 }}>Assigned staff: {s.assignedStaff}</Text>
                     </div>
                   ) : null}

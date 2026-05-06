@@ -25,8 +25,8 @@ const InfoRow = ({ icon, label, value, isDark, buffColor, caputMortuum }) => (
       {icon}
     </div>
     <div>
-      <div style={{ fontSize: 11, color: '#999', marginBottom: 1 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 500 }}>{value}</div>
+      <div style={{ fontSize: 13, color: '#999', marginBottom: 1 }}>{label}</div>
+      <div style={{ fontSize: 15, fontWeight: 500 }}>{value}</div>
     </div>
   </div>
 );
@@ -44,7 +44,7 @@ const AppHeader = () => {
   const caputMortuum = '#4F312A';
   const buffColor = isDark ? '#0B2B44' : '#D69F6D';
   const bg = isDark ? '#031726' : '#ffffff';
-  const marginLeft = isMobile ? 0 : collapsed ? 72 : 240;
+  const marginLeft = isMobile ? 0 : collapsed ? 72 : 260;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -85,7 +85,7 @@ const AppHeader = () => {
             <Button
               type="text"
               shape="circle"
-              icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: 17 }} /> : <MenuFoldOutlined style={{ fontSize: 17 }} />}
+              icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: 19 }} /> : <MenuFoldOutlined style={{ fontSize: 19 }} />}
               onClick={() => dispatch(setSidebarCollapsed(!collapsed))}
             />
           )}
@@ -103,7 +103,7 @@ const AppHeader = () => {
             <Button
               type="text"
               shape="circle"
-              icon={<BellOutlined style={{ fontSize: 17 }} />}
+              icon={<BellOutlined style={{ fontSize: 19 }} />}
             />
           </Badge>
 
@@ -131,8 +131,8 @@ const AppHeader = () => {
               </Avatar>
               {!isMobile && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{user?.name}</div>
-                  <div style={{ fontSize: 11, color: isDark ? '#5ab5e8' : buffColor, lineHeight: 1.1, fontWeight: 500 }}>{user?.role}</div>
+                  <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1 }}>{user?.name}</div>
+                  <div style={{ fontSize: 13, color: isDark ? '#5ab5e8' : buffColor, lineHeight: 1.1, fontWeight: 500 }}>{user?.role}</div>
                 </div>
               )}
             </div>
@@ -177,7 +177,7 @@ const AppHeader = () => {
             borderRadius: 20,
             background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
             color: isDark ? '#5ab5e8' : caputMortuum,
-            fontSize: 12,
+            fontSize: 16,
             fontWeight: 600,
           }}>
             {user?.role || 'Super Admin'}

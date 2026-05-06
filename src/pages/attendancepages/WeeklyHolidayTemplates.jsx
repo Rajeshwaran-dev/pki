@@ -77,7 +77,7 @@ export default function WeeklyHolidayTemplates() {
             >
               <div style={{ minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <div style={{ fontWeight: 800 }}>{t.name}</div>
+                  <div style={{ fontWeight: 800, fontSize: 16 }}>{t.name}</div>
                   {t.active ? (
                     <Tag color="success" style={{ borderRadius: 999 }}>Active</Tag>
                   ) : (
@@ -85,7 +85,7 @@ export default function WeeklyHolidayTemplates() {
                   )}
                 </div>
 
-                <div style={{ marginTop: 6, fontSize: 12 }}>
+                <div style={{ marginTop: 6, fontSize: 14 }}>
                   <Text type="secondary">
                     Created By: {t.createdBy || '—'} |{' '}
                     <a onClick={() => navigate(`/attendance/weekly-holidays/templates/${t.id}/staff`)}>
@@ -94,7 +94,7 @@ export default function WeeklyHolidayTemplates() {
                   </Text>
                 </div>
 
-                <div style={{ marginTop: 10, display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12 }}>
+                <div style={{ marginTop: 10, display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 14 }}>
                   <div>
                     <Text type="secondary"><b>Pattern:</b> {t.pattern || '—'}</Text>
                   </div>

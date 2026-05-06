@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Table, Tag, Typography } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 
 const { Text } = Typography;
@@ -37,8 +37,8 @@ export default function AttendanceTemplateStaff() {
       dataIndex: 'name',
       render: (_v, r) => (
         <div>
-          <div style={{ fontWeight: 700 }}>{r.name}</div>
-          <Text type="secondary" style={{ fontSize: 12 }}>{r.role}</Text>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>{r.name}</div>
+          <Text type="secondary" style={{ fontSize: 14 }}>{r.role}</Text>
         </div>
       ),
     },
@@ -62,9 +62,13 @@ export default function AttendanceTemplateStaff() {
         title="Template Staff Assignment"
         subtitle={`Template: ${templateId}`}
         actions={[
-          <Button key="back" icon={<ArrowLeftOutlined />} onClick={() => navigate('/attendance/templates')}>
-            Back
-          </Button>,
+          <div key="back" style={{ position: 'relative', zIndex: 1000 }}>
+            <Link to="/attendance/templates" onClick={(e) => e.stopPropagation()}>
+              <Button icon={<ArrowLeftOutlined />}>
+                Back
+              </Button>
+            </Link>
+          </div>,
         ]}
       />
 

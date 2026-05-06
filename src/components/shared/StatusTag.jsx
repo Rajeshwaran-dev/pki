@@ -58,7 +58,7 @@ const StatusTag = ({ value, type = 'stage', colors: customColors }) => {
         border: `1px solid ${color}${isDark ? '60' : '45'}`,
         borderRadius: 6,
         fontWeight: 600,
-        fontSize: 11,
+        fontSize: 14,
         padding: '2px 8px',
         lineHeight: 1.5,
         whiteSpace: 'nowrap',

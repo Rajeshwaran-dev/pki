@@ -4,6 +4,7 @@ import { CheckOutlined, CloseOutlined, EyeOutlined, LeftOutlined, RightOutlined,
 import PageHeader from '@/components/shared/PageHeader';
 import dayjs from 'dayjs';
 import { useAppSelector } from '@/store';
+import useIsMobile from '@/hooks/useIsMobile';
 
 const { Text } = Typography;
 
@@ -30,6 +31,7 @@ const demoEmployees = [
 
 export default function AdminAttendance() {
   const theme = useAppSelector(s => s.ui.theme);
+  const isMobile = useIsMobile();
   const isDark = theme === 'dark';
   const [selectedDate, setSelectedDate] = useState(() => dayjs('2026-04-08'));
   const [activeTab, setActiveTab] = useState('All');
@@ -131,16 +133,18 @@ export default function AdminAttendance() {
       <PageHeader
         title="Employee Attendance"
         actions={[
-          <Space key="date" size={8}>
-            <Button icon={<LeftOutlined />} onClick={() => setSelectedDate(d => d.subtract(1, 'day'))} />
-            <DatePicker value={selectedDate} onChange={(d) => setSelectedDate(d || dayjs())} />
-            <Button icon={<RightOutlined />} onClick={() => setSelectedDate(d => d.add(1, 'day'))} />
+          <Space key="date" size={8} direction={isMobile ? 'vertical' : 'horizontal'} style={{ width: isMobile ? '100%' : 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
+              <Button icon={<LeftOutlined />} onClick={() => setSelectedDate(d => d.subtract(1, 'day'))} />
+              <DatePicker value={selectedDate} onChange={(d) => setSelectedDate(d || dayjs())} style={{ flex: 1 }} />
+              <Button icon={<RightOutlined />} onClick={() => setSelectedDate(d => d.add(1, 'day'))} />
+            </div>
           </Space>,
         ]}
       />
 
       <Card className="crm-card" style={{ marginBottom: 16 }}>
-        <Text style={{ fontWeight: 700, display: 'block', marginBottom: 10 }}>Statistics</Text>
+        <Text style={{ fontWeight: 700, display: 'block', marginBottom: 10, fontSize: 18 }}>Statistics</Text>
         <Row gutter={[12, 12]}>
           {[
             { label: 'Present', value: stats.present, color: '#52C41A', bg: 'rgba(82,196,26,0.08)' },
@@ -155,8 +159,8 @@ export default function AdminAttendance() {
             <Col key={s.label} xs={12} sm={8} md={6} lg={3}>
               <div style={{ border: `1px solid ${subtleBorder}`, borderRadius: 10, padding: 10, background: isDark ? 'rgba(255,255,255,0.03)' : s.bg }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 12, color: textSecondary }}>{s.label}</Text>
-                  <Text style={{ fontWeight: 800, color: s.color }}>{s.value}</Text>
+                  <Text style={{ fontSize: 14, color: textSecondary }}>{s.label}</Text>
+                  <Text style={{ fontWeight: 800, color: s.color, fontSize: 16 }}>{s.value}</Text>
                 </div>
               </div>
             </Col>
@@ -165,33 +169,36 @@ export default function AdminAttendance() {
       </Card>
 
       <Card className="crm-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ fontWeight: 800 }}>
-            <span style={{ color: textPrimary }}>Attendance for {selectedDate.format('dddd, MMMM D, YYYY')}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}>
+          <div style={{ fontWeight: 800, fontSize: 15 }}>
+            <span style={{ color: textPrimary, fontSize: 16 }}>Attendance for {selectedDate.format('dddd, MMMM D, YYYY')}</span>
           </div>
-          <Space wrap>
-            <Button style={actionBtnStyle} icon={<DownloadOutlined />} onClick={() => message.info('Sample file not configured')}>Sample File</Button>
-            <Button style={actionBtnStyle} icon={<FileTextOutlined />} onClick={() => message.info('Daily report not configured')}>Daily Report</Button>
-            <Button style={actionBtnStyle} icon={<UploadOutlined />} onClick={() => message.info('Import not configured')}>Import Attendance</Button>
-            <Button style={actionBtnStyle} icon={<ReloadOutlined />} onClick={() => message.success('Refreshed')}>Refresh</Button>
+          <Space wrap size={8}>
+            <Button size={isMobile ? 'small' : 'middle'} style={actionBtnStyle} icon={<DownloadOutlined />} onClick={() => message.info('Sample file not configured')}>Sample</Button>
+            <Button size={isMobile ? 'small' : 'middle'} style={actionBtnStyle} icon={<FileTextOutlined />} onClick={() => message.info('Daily report not configured')}>Report</Button>
+            <Button size={isMobile ? 'small' : 'middle'} style={actionBtnStyle} icon={<UploadOutlined />} onClick={() => message.info('Import not configured')}>Import</Button>
+            <Button size={isMobile ? 'small' : 'middle'} style={actionBtnStyle} icon={<ReloadOutlined />} onClick={() => message.success('Refreshed')}>Refresh</Button>
           </Space>
         </div>
 
         <Divider style={{ margin: '14px 0' }} />
 
-        <Segmented
-          value={activeTab}
-          onChange={setActiveTab}
-          options={[
-            { label: <>All <Text type="secondary">({stats.total})</Text></>, value: 'All' },
-            { label: <>Pending <Badge count={stats.pending} style={{ backgroundColor: '#faad14' }} /></>, value: 'Pending' },
-            { label: <>Present <Badge count={stats.present} style={{ backgroundColor: '#52c41a' }} /></>, value: 'Present' },
-            { label: <>Half Day</>, value: 'Half Day' },
-            { label: <>Absent</>, value: 'Absent' },
-            { label: <>On Leave</>, value: 'On Leave' },
-            { label: <>Holiday</>, value: 'Holiday' },
-          ]}
-        />
+        <div style={{ overflowX: 'auto', paddingBottom: 4, marginBottom: -4 }}>
+          <Segmented
+            value={activeTab}
+            onChange={setActiveTab}
+            options={[
+              { label: <>All <Text type="secondary">({stats.total})</Text></>, value: 'All' },
+              { label: <>Pending <Badge count={stats.pending} style={{ backgroundColor: '#faad14' }} /></>, value: 'Pending' },
+              { label: <>Present <Badge count={stats.present} style={{ backgroundColor: '#52c41a' }} /></>, value: 'Present' },
+              { label: <>Half Day</>, value: 'Half Day' },
+              { label: <>Absent</>, value: 'Absent' },
+              { label: <>On Leave</>, value: 'On Leave' },
+              { label: <>Holiday</>, value: 'Holiday' },
+            ]}
+            style={{ minWidth: isMobile ? 'max-content' : 'auto' }}
+          />
+        </div>
 
         <div style={{ marginTop: 14 }}>
           <Input
@@ -219,8 +226,8 @@ export default function AdminAttendance() {
         <div style={{ marginTop: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 12px', borderRadius: 10, background: templateHeaderBg, border: `1px solid ${templateHeaderBorder}` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <Text style={{ fontWeight: 800, color: isDark ? '#e9edef' : '#b07a45' }}>Standard Template</Text>
-              <Text style={{ fontSize: 12, color: textSecondary }}>(10:00 – 19:00)</Text>
+              <Text style={{ fontWeight: 800, color: isDark ? '#e9edef' : '#b07a45', fontSize: 15 }}>Standard Template</Text>
+              <Text style={{ fontSize: 14, color: textSecondary }}>(10:00 – 19:00)</Text>
             </div>
             <Tag style={{ borderRadius: 999, background: tagBg, borderColor: tagBorder, color: textPrimary }}>
               {demoEmployees.length} Employees
@@ -256,29 +263,29 @@ export default function AdminAttendance() {
 
                     <div style={{ flex: 1, padding: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
                       {/* employee info */}
-                      <div style={{ display: 'flex', gap: 12, minWidth: 260, alignItems: 'center' }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 12, background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: textPrimary }}>
+                      <div style={{ display: 'flex', gap: 12, minWidth: isMobile ? '100%' : 260, alignItems: 'center' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: textPrimary, flexShrink: 0 }}>
                           {e.avatar}
                         </div>
                         <div>
-                          <div style={{ fontWeight: 800, color: textPrimary }}>{e.name}</div>
-                          <Text style={{ fontSize: 12, color: textSecondary }}>
+                          <div style={{ fontWeight: 800, color: textPrimary, fontSize: 16 }}>{e.name}</div>
+                          <Text style={{ fontSize: 14, color: textSecondary }}>
                             {e.employeeId}{e.role ? ` · ${e.role}` : ''}
                           </Text>
                           <div style={{ marginTop: 4 }}>
-                            <Text style={{ fontSize: 12, color: textSecondary }}>
+                            <Text style={{ fontSize: 14, color: textSecondary }}>
                               {st === 'Not Marked' ? 'No punch record' : `Status: ${st}`}
                             </Text>
                           </div>
                           <div style={{ marginTop: 4 }}>
-                            <a style={{ fontSize: 12, color: isDark ? '#5ab5e8' : undefined }} onClick={() => message.info('Add note not configured')}>Add Note</a>
+                            <a style={{ fontSize: 14, color: isDark ? '#5ab5e8' : undefined }} onClick={() => message.info('Add note not configured')}>Add Note</a>
                           </div>
                         </div>
                       </div>
 
                       {/* right button grid like screenshot */}
-                      <div style={{ width: 360, maxWidth: '100%' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+                      <div style={{ width: isMobile ? '100%' : 360, maxWidth: '100%', marginTop: isMobile ? 12 : 0 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
                           <Button style={st !== 'Present' ? actionBtnStyle : undefined} size="small" onClick={() => setStatusForEmployee(e.id, 'Present')} type={st === 'Present' ? 'primary' : 'default'}>
                             P&nbsp;&nbsp;Present
                           </Button>

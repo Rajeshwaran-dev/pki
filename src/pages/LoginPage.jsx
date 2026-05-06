@@ -32,7 +32,7 @@ const LoginPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#f9f5f0',
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "'Outfit', sans-serif",
         padding: '24px',
       }}
     >
@@ -71,14 +71,14 @@ const LoginPage = () => {
                 margin: 0,
                 fontWeight: 700,
                 letterSpacing: '-0.4px',
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
                 color: '#2a1a16'
               }}
             >
               Welcome back
             </Typography.Title>
             <Typography.Text
-              style={{ fontSize: 14, color: '#8b7068', fontFamily: "'Poppins', sans-serif" }}
+              style={{ fontSize: 16, color: '#8b7068', fontFamily: "'Outfit', sans-serif" }}
             >
               Sign in to your workspace
             </Typography.Text>
@@ -89,7 +89,7 @@ const LoginPage = () => {
           <Form.Item
             name="email"
             label={
-              <span style={{ fontWeight: 500, fontSize: 13, color: '#4F312A', fontFamily: "'Poppins', sans-serif" }}>
+              <span style={{ fontWeight: 500, fontSize: 14, color: '#4F312A', fontFamily: "'Outfit', sans-serif" }}>
                 Email address
               </span>
             }
@@ -99,7 +99,7 @@ const LoginPage = () => {
               prefix={<MailOutlined style={{ color: '#b8a6a1', marginRight: 6 }} />}
               placeholder="you@company.com"
               style={{
-                borderRadius: 12, height: 50, fontFamily: "'Poppins', sans-serif",
+                borderRadius: 12, height: 50, fontFamily: "'Outfit', sans-serif",
                 background: '#faf9f7', border: '1px solid #efeae6'
               }}
             />
@@ -108,7 +108,7 @@ const LoginPage = () => {
           <Form.Item
             name="password"
             label={
-              <span style={{ fontWeight: 500, fontSize: 13, color: '#4F312A', fontFamily: "'Poppins', sans-serif" }}>
+              <span style={{ fontWeight: 500, fontSize: 14, color: '#4F312A', fontFamily: "'Outfit', sans-serif" }}>
                 Password
               </span>
             }
@@ -118,7 +118,7 @@ const LoginPage = () => {
               prefix={<LockOutlined style={{ color: '#b8a6a1', marginRight: 6 }} />}
               placeholder="••••••••"
               style={{
-                borderRadius: 12, height: 50, fontFamily: "'Poppins', sans-serif",
+                borderRadius: 12, height: 50, fontFamily: "'Outfit', sans-serif",
                 background: '#faf9f7', border: '1px solid #efeae6'
               }}
             />
@@ -132,16 +132,16 @@ const LoginPage = () => {
               marginBottom: 28,
             }}
           >
-            <Checkbox style={{ fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>
+            <Checkbox style={{ fontSize: 14, fontFamily: "'Outfit', sans-serif" }}>
               Remember me
             </Checkbox>
             <Button
               type="link"
               style={{
                 padding: 0,
-                fontSize: 13,
+                fontSize: 14,
                 color: '#D69F6D',
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               Forgot password?
@@ -157,11 +157,11 @@ const LoginPage = () => {
               height: 52,
               borderRadius: 12,
               fontWeight: 600,
-              fontSize: 15,
+              fontSize: 16,
               background: 'linear-gradient(135deg, #4F312A 0%, #C07230 60%, #D69F6D 100%)',
               border: 'none',
               boxShadow: '0 8px 24px rgba(79,49,42,0.32)',
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               letterSpacing: '0.3px',
             }}
           >

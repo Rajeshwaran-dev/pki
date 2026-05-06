@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, label, isDark }) => {
     }}>
       <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
       {payload.map((p, i) => (
-        <div key={i} style={{ color: p.color, fontSize: 13 }}>
+        <div key={i} style={{ color: p.color, fontSize: 14 }}>
           {p.name}: <strong>{p.value}</strong>
         </div>
       ))}
@@ -60,24 +60,24 @@ const ReportStatCard = ({ title, value, icon, color, trend, prefix, suffix, form
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
           background: `${color}22`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, color,
+          fontSize: 20, color,
         }}>
           {icon}
         </div>
-        <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}>
           {prefix}{displayValue}{suffix}
         </div>
       </div>
       {/* Row 2: title left, trend right */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>{title}</span>
+        <span style={{ fontSize: 14, fontWeight: 500, color: '#999' }}>{title}</span>
         {trend && (
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 2,
             background: `${color}18`, borderRadius: 20,
-            padding: '1px 7px', fontSize: 10, color, fontWeight: 600,
+            padding: '1px 7px', fontSize: 14, color, fontWeight: 600,
           }}>
-            <ArrowUpOutlined style={{ fontSize: 8 }} /> {trend}
+            <ArrowUpOutlined style={{ fontSize: 12 }} /> {trend}
           </span>
         )}
       </div>
@@ -132,8 +132,8 @@ const ProjectsReport = ({ projects, isDark }) => {
     { title: 'Code', dataIndex: 'projectCode', key: 'code', width: 100, render: v => <span style={{ fontWeight: 600, color: primaryColor }}>{v}</span> },
     { title: 'Project', dataIndex: 'projectName', key: 'name', render: (v, r) => (
       <div>
-        <div style={{ fontWeight: 600, fontSize: 13 }}>{v}</div>
-        <div style={{ fontSize: 11, color: '#999' }}>{r.city}, {r.state}</div>
+        <div style={{ fontWeight: 600, fontSize: 16 }}>{v}</div>
+        <div style={{ fontSize: 14, color: '#999' }}>{r.city}, {r.state}</div>
       </div>
     )},
     { title: 'Client', dataIndex: 'clientName', key: 'client' },
@@ -150,8 +150,8 @@ const ProjectsReport = ({ projects, isDark }) => {
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={stageData} barSize={34}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Projects" radius={[8, 8, 0, 0]}>
                   {stageData.map((entry, idx) => <Cell key={idx} fill={(isDark ? DARK_STAGE_COLORS : LIGHT_STAGE_COLORS)[entry.name] || (isDark ? DARK_PALETTE : LIGHT_PALETTE)[idx % 6]} />)}
@@ -168,7 +168,7 @@ const ProjectsReport = ({ projects, isDark }) => {
                   {cityData.map((_, idx) => <Cell key={idx} fill={(isDark ? DARK_PALETTE : LIGHT_PALETTE)[idx % 6]} stroke="none" />)}
                 </Pie>
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 11 }}>{v}</span>} />
+                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 14 }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
           </Card>
@@ -244,21 +244,21 @@ const TasksReport = ({ tasks, isDark }) => {
   const columns = [
     { title: 'Task', dataIndex: 'title', key: 'title', render: (v, r) => (
       <div>
-        <div style={{ fontWeight: 600, fontSize: 13 }}>{v}</div>
-        <div style={{ fontSize: 11, color: '#999' }}>{r.type}</div>
+        <div style={{ fontWeight: 600, fontSize: 16 }}>{v}</div>
+        <div style={{ fontSize: 14, color: '#999' }}>{r.type}</div>
       </div>
     )},
     { title: 'Project', dataIndex: 'projectName', key: 'project' },
     { title: 'Assignee', dataIndex: 'assignee', key: 'assignee', render: v => (
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <Avatar size={22} style={{ background: `${primaryColor}20`, color: primaryColor, fontSize: 11, fontWeight: 700 }}>
+        <Avatar size={22} style={{ background: `${primaryColor}20`, color: primaryColor, fontSize: 12, fontWeight: 700 }}>
           {v.charAt(0)}
         </Avatar>
-        <span style={{ fontSize: 12 }}>{v}</span>
+        <span style={{ fontSize: 14 }}>{v}</span>
       </div>
     )},
     { title: 'Status', dataIndex: 'status', key: 'status', render: v => (
-      <Tag style={{ borderRadius: 6, fontWeight: 600, fontSize: 11, padding: '2px 8px' }} color={statusColors[v] || '#888'}>{v}</Tag>
+      <Tag style={{ borderRadius: 6, fontWeight: 600, fontSize: 14, padding: '2px 8px' }} color={statusColors[v] || '#888'}>{v}</Tag>
     )},
     { title: 'Priority', dataIndex: 'priority', key: 'priority', render: v => <StatusTag value={v} type="priority" /> },
     { title: 'Due Date', dataIndex: 'dueDate', key: 'due', sorter: (a, b) => new Date(a.dueDate) - new Date(b.dueDate) },
@@ -272,8 +272,8 @@ const TasksReport = ({ tasks, isDark }) => {
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={statusData} barSize={28} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} horizontal={false} />
-                <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} width={72} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 13 }} axisLine={false} tickLine={false} width={72} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="count" name="Tasks" radius={[0, 6, 6, 0]}>
                   {statusData.map((d, idx) => <Cell key={idx} fill={statusColors[d.name] || '#888'} />)}
@@ -290,7 +290,7 @@ const TasksReport = ({ tasks, isDark }) => {
                   {priorityData.map((d, idx) => <Cell key={idx} fill={priorityColors[d.name]} stroke="none" />)}
                 </Pie>
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
-                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 11 }}>{v}</span>} />
+                <Legend iconType="circle" iconSize={8} formatter={v => <span style={{ fontSize: 14 }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
           </Card>
@@ -302,8 +302,8 @@ const TasksReport = ({ tasks, isDark }) => {
               return (
                 <div key={a.name} style={{ marginBottom: 12 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 12, fontWeight: 500 }}>{a.name}</span>
-                    <span style={{ fontSize: 11, color: '#52C41A', fontWeight: 600 }}>{a.completed}/{a.total}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500 }}>{a.name}</span>
+                    <span style={{ fontSize: 14, color: '#52C41A', fontWeight: 600 }}>{a.completed}/{a.total}</span>
                   </div>
                   <Progress percent={pct} size="small" showInfo={false}
                     strokeColor={{ '0%': primaryColor, '100%': isDark ? '#1e5c8a' : '#D69F6D' }} trailColor={isDark ? '#2a2a2a' : '#f0f0f0'} strokeLinecap="round" />
@@ -369,8 +369,8 @@ const FinancialReport = ({ projects, isDark }) => {
   const columns = [
     { title: 'Project', dataIndex: 'projectName', key: 'name', render: (v, r) => (
       <div>
-        <div style={{ fontWeight: 600, fontSize: 13 }}>{v}</div>
-        <div style={{ fontSize: 11, color: '#999' }}>{r.projectCode}</div>
+        <div style={{ fontWeight: 600, fontSize: 16 }}>{v}</div>
+        <div style={{ fontSize: 14, color: '#999' }}>{r.projectCode}</div>
       </div>
     )},
     { title: 'Client', dataIndex: 'clientName', key: 'client' },
@@ -407,8 +407,8 @@ const FinancialReport = ({ projects, isDark }) => {
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={budgetByStage} barSize={34}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} formatter={(v) => [`₹${v.toFixed(1)}L`]} />
                 <Bar dataKey="budget" name="Budget (L)" radius={[8, 8, 0, 0]}>
                   {budgetByStage.map((_, idx) => <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />)}
@@ -422,8 +422,8 @@ const FinancialReport = ({ projects, isDark }) => {
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={budgetByCity} barSize={28} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f0f0f0'} horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} width={70} />
+                <XAxis type="number" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 13 }} axisLine={false} tickLine={false} width={70} />
                 <RTooltip content={<CustomTooltip isDark={isDark} />} />
                 <Bar dataKey="budget" name="Budget (L)" radius={[0, 6, 6, 0]}>
                   {budgetByCity.map((_, idx) => <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />)}

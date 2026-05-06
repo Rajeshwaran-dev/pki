@@ -20,14 +20,14 @@ export default function OrganisationSettings() {
   const InfoField = ({ label, value, icon }) => (
     <div style={{ marginBottom: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-        {icon && <span style={{ fontSize: 12, opacity: 0.7 }}>{icon}</span>}
-        <Text type="secondary" style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</Text>
+        {icon && <span style={{ fontSize: 16, opacity: 0.7 }}>{icon}</span>}
+        <Text type="secondary" style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</Text>
       </div>
       <div style={{
         padding: '12px 16px', borderRadius: 10,
         background: isDark ? '#0d3554' : '#fff',
         border: `1px solid ${sectionBorder}`,
-        fontSize: 13, fontWeight: 600,
+        fontSize: 15, fontWeight: 600,
         color: isDark ? '#e0e8f0' : '#1f1f1f',
         boxShadow: isDark ? 'none' : '0 1px 2px rgba(0,0,0,0.03)',
       }}>
@@ -43,8 +43,8 @@ export default function OrganisationSettings() {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20 }}>{icon}</span>
-          <Title level={5} style={{ margin: 0, fontWeight: 700 }}>{title}</Title>
+          <span style={{ fontSize: 22 }}>{icon}</span>
+          <Title level={5} style={{ margin: 0, fontWeight: 700, fontSize: 18 }}>{title}</Title>
         </div>
         <Button
           icon={<EditOutlined />}
@@ -64,7 +64,7 @@ export default function OrganisationSettings() {
       <div className="animate-fade-in" style={{ paddingBottom: 40 }}>
         <Row gutter={20}>
           <Col xs={24} lg={16}>
-            <Section title="Company Information" icon={<ShopOutlined style={{ fontSize: 24, color: primaryColor }} />}>
+            <Section title="Company Information" icon={<ShopOutlined style={{ fontSize: 26, color: primaryColor }} />}>
               <Row gutter={20}>
                 <Col xs={24} md={12}>
                   <InfoField label="Legal Company Name" value="PERSPECTIVE KITCHENS AND INTERIORS PVT LTD" icon={<BankOutlined />} />
@@ -81,7 +81,7 @@ export default function OrganisationSettings() {
               </Row>
             </Section>
 
-            <Section title="Company Address" icon={<EnvironmentOutlined style={{ fontSize: 24, color: primaryColor }} />}>
+            <Section title="Company Address" icon={<EnvironmentOutlined style={{ fontSize: 26, color: primaryColor }} />}>
               <Row gutter={20}>
                 <Col xs={24} md={12}>
                   <InfoField label="Address Line 1" value="No 691/13, NGGO's Colony" />
@@ -101,7 +101,7 @@ export default function OrganisationSettings() {
               </Row>
             </Section>
 
-            <Section title="Bank Details" icon={<AccountBookOutlined style={{ fontSize: 24, color: primaryColor }} />}>
+            <Section title="Bank Details" icon={<AccountBookOutlined style={{ fontSize: 26, color: primaryColor }} />}>
               <Row gutter={20}>
                 <Col xs={24} md={12}>
                   <InfoField label="Bank Name" value="" />
@@ -126,7 +126,7 @@ export default function OrganisationSettings() {
               position: 'sticky', top: 20, textAlign: 'center',
             }}>
               <Title level={5} style={{ marginBottom: 20, textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ display: 'flex', alignItems: 'center' }}><PictureOutlined style={{ fontSize: 24, color: primaryColor }} /></span> Company Logo
+                <span style={{ display: 'flex', alignItems: 'center' }}><PictureOutlined style={{ fontSize: 26, color: primaryColor }} /></span> Company Logo
               </Title>
               <div style={{
                 margin: '0 auto 20px', width: 160, height: 160, borderRadius: 24,
@@ -152,7 +152,7 @@ export default function OrganisationSettings() {
               >
                 Upload New Logo
               </Button>
-              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginTop: 12 }}>
+              <Text type="secondary" style={{ fontSize: 14, display: 'block', marginTop: 12 }}>
                 Recommended size: 512×512px. Max 2MB.
               </Text>
             </div>

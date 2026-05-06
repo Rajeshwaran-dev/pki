@@ -4,6 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { useAppSelector } from '@/store';
+import useIsMobile from '@/hooks/useIsMobile';
 
 const { Text } = Typography;
 
@@ -47,6 +48,7 @@ const initialTemplates = [
 export default function AttendanceTemplates() {
   const navigate = useNavigate();
   const theme = useAppSelector(s => s.ui.theme);
+  const isMobile = useIsMobile();
   const isDark = theme === 'dark';
   const borderColor = isDark ? '#1a4d72' : 'rgba(0,0,0,0.06)';
   const tileBg = isDark ? '#0d3554' : 'rgba(255,255,255,0.6)';
@@ -161,14 +163,15 @@ export default function AttendanceTemplates() {
                     padding: 14,
                     background: tileBg,
                     display: 'flex',
-                    alignItems: 'flex-start',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'stretch' : 'flex-start',
                     justifyContent: 'space-between',
                     gap: 12,
                   }}
                 >
                   <div style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                      <div style={{ fontWeight: 800 }}>{t.name}</div>
+                      <div style={{ fontWeight: 800, fontSize: 16 }}>{t.name}</div>
                       {t.isActive ? (
                         <Tag color="success" style={{ borderRadius: 999 }}>Active</Tag>
                       ) : (
@@ -176,7 +179,7 @@ export default function AttendanceTemplates() {
                       )}
                     </div>
 
-                    <div style={{ marginTop: 6, fontSize: 12 }}>
+                    <div style={{ marginTop: 6, fontSize: 14 }}>
                       <Text type="secondary">
                         Created By: {t.createdBy || '—'} |{' '}
                         <a onClick={() => navigate(`/attendance/templates/${t.id}/staff`)}>
@@ -193,7 +196,7 @@ export default function AttendanceTemplates() {
                     </div>
                   </div>
 
-                  <Space>
+                  <Space style={{ width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'flex-end' : 'flex-start' }}>
                     <Button icon={<EditOutlined />} onClick={() => openEdit(t)}>
                       Edit
                     </Button>

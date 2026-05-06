@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Row, Col, Card, Space, Button, Typography, Tag,
   Avatar, Divider, Tooltip, Empty, Modal, Form, Input, Select, Table
@@ -28,21 +28,21 @@ const InfoRow = ({ label, value, icon, isDark }) => (
       width: 32, height: 32, borderRadius: 8, flexShrink: 0,
       background: isDark ? 'rgba(255,255,255,0.05)' : '#f5f5f5',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      marginRight: 12, fontSize: 14, color: isDark ? '#5ab5e8' : '#D69F6D'
+      marginRight: 12, fontSize: 16, color: isDark ? '#5ab5e8' : '#D69F6D'
     }}>
       {icon}
     </div>
     <div style={{ flex: 1 }}>
-      <div style={{ fontSize: 11, color: '#999', fontWeight: 500, marginBottom: 2 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: isDark ? '#f0f0f0' : '#333' }}>{value || '—'}</div>
+      <div style={{ fontSize: 14, color: '#999', fontWeight: 500, marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 16, fontWeight: 600, color: isDark ? '#f0f0f0' : '#333' }}>{value || '—'}</div>
     </div>
   </div>
 );
 
 const SectionHeader = ({ title, icon, isDark }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-    <div style={{ fontSize: 16, color: isDark ? '#5ab5e8' : '#D69F6D' }}>{icon}</div>
-    <Title level={5} style={{ margin: 0, fontSize: 15, fontWeight: 700 }}>{title}</Title>
+    <div style={{ fontSize: 18, color: isDark ? '#5ab5e8' : '#D69F6D' }}>{icon}</div>
+    <Title level={5} style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{title}</Title>
   </div>
 );
 
@@ -66,18 +66,18 @@ const ProjectSmallCard = ({ project, isDark, onNavigate }) => {
             width: 42, height: 42, borderRadius: 10, flexShrink: 0,
             background: isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 18, color: primaryColor, fontWeight: 700
+            fontSize: 20, color: primaryColor, fontWeight: 700
           }}>
             {project.projectName.charAt(0)}
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: isDark ? '#fff' : '#333' }}>{project.projectName}</div>
-            <div style={{ fontSize: 11, color: '#999' }}>{project.projectCode} • {project.stage}</div>
+            <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#fff' : '#333' }}>{project.projectName}</div>
+            <div style={{ fontSize: 14, color: '#999' }}>{project.projectCode} • {project.stage}</div>
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontWeight: 700, fontSize: 14, color: primaryColor }}>₹{(project.budget / 100000).toFixed(1)}L</div>
-          <div style={{ fontSize: 10, color: '#999' }}>Total Budget</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: primaryColor }}>₹{(project.budget / 100000).toFixed(1)}L</div>
+          <div style={{ fontSize: 14, color: '#999' }}>Total Budget</div>
         </div>
       </div>
     </Card>
@@ -183,12 +183,18 @@ const ClientDetailPage = () => {
       <PageHeader
         title={
           <Space size={12}>
-            <Button 
-              type="text" 
-              icon={<ArrowLeftOutlined />} 
-              onClick={() => navigate('/clients')}
-              style={{ fontSize: 18, color: '#999' }}
-            />
+            <div style={{ position: 'relative', zIndex: 1000 }}>
+              <Button 
+                type="text" 
+                icon={<ArrowLeftOutlined />} 
+                style={{ fontSize: 20, color: '#999', cursor: 'pointer', pointerEvents: 'auto' }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate('/clients');
+                }}
+              />
+            </div>
             <span style={{ fontWeight: 800 }}>{client.clientName}</span>
           </Space>
         }
@@ -231,11 +237,11 @@ const ClientDetailPage = () => {
                   background: activeTab === tab.key ? (isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.1)') : 'transparent',
                   color: activeTab === tab.key ? primaryColor : (isDark ? '#a8b0ba' : '#555'),
                   fontWeight: activeTab === tab.key ? 700 : 500,
-                  fontSize: 14,
+                  fontSize: 15,
                   marginBottom: 4
                 }}
               >
-                <span style={{ fontSize: 16 }}>{tab.icon}</span>
+                <span style={{ fontSize: 18 }}>{tab.icon}</span>
                 {tab.label}
                 {tab.key === 'projects' && (
                   <Badge count={clientProjects.length} style={{ backgroundColor: primaryColor, marginLeft: 'auto' }} />
@@ -470,7 +476,7 @@ const Badge = ({ count, style }) => (
   count > 0 ? (
     <span style={{ 
       display: 'inline-flex', padding: '2px 8px', borderRadius: 10, 
-      fontSize: 10, color: '#fff', fontWeight: 700, ...style 
+      fontSize: 14, color: '#fff', fontWeight: 700, ...style 
     }}>
       {count}
     </span>

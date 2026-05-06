@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { updateProject } from '@/store/slices/projectSlice';
 import useIsMobile from '@/hooks/useIsMobile';
@@ -14,6 +14,11 @@ import {
   SnippetsOutlined, AppstoreOutlined, CreditCardOutlined, FileAddOutlined,
   UserOutlined, UnorderedListOutlined, CheckCircleOutlined,
 } from '@ant-design/icons';
+import { 
+  ClipboardList, Folder, Hammer, FileText, Flag, 
+  Calendar, CreditCard, TrendingUp, FileSignature,
+  User, HardHat
+} from 'lucide-react';
 
 /* ─────────────── MOCK DATA ─────────────── */
 const MOCK_FILES = {
@@ -77,15 +82,14 @@ const MOCK_PAYMENTS = [
 
 /* ─────────────── SIDEBAR NAV TABS ─────────────── */
 const SIDEBAR_TABS = [
-  { key: 'Project Detail', label: 'Project Detail', icon: '📋' },
-  { key: 'Files', label: 'Files', icon: '📁' },
-  { key: 'Scope of Work', label: 'Scope of Work', icon: '⚒️' },
-  { key: 'Order Sheet', label: 'Order Sheet', icon: '📄' },
-  { key: 'Project Planning', label: 'Project Planning', icon: '🚩' },
-  { key: 'Schedule', label: 'Schedule', icon: '📅' },
-  { key: 'Payment Schedule', label: 'Payment Schedule', icon: '💳' },
-  { key: 'Tracker', label: 'Tracker', icon: '📈' },
-  { key: 'Raise Invoice', label: 'Raise Invoice', icon: '📝' },
+  { key: 'Project Detail', label: 'Project Detail', icon: <ClipboardList size={19} /> },
+  { key: 'Files', label: 'Files', icon: <Folder size={19} /> },
+  { key: 'Scope of Work', label: 'Scope of Work', icon: <Hammer size={19} /> },
+  { key: 'Order Sheet', label: 'Order Sheet', icon: <FileText size={19} /> },
+  { key: 'Project Planning', label: 'Project Planning', icon: <Flag size={19} /> },
+  { key: 'Schedule', label: 'Schedule', icon: <Calendar size={19} /> },
+  { key: 'Payment Schedule', label: 'Payment Schedule', icon: <CreditCard size={19} /> },
+  { key: 'Raise Invoice', label: 'Raise Invoice', icon: <FileSignature size={19} /> },
 ];
 
 const subStages = {
@@ -113,8 +117,8 @@ const formatDisplayDate = (value) => {
 /* ── small helpers ── */
 const InfoRow = ({ label, value, isDark }) => (
   <div style={{ marginBottom: 10 }}>
-    <div style={{ fontSize: 11, color: isDark ? '#6a7f95' : '#aaa', fontWeight: 500, marginBottom: 2 }}>{label}</div>
-    <div style={{ fontSize: 13, color: isDark ? '#e0e8f0' : '#1f1f1f', fontWeight: 500 }}>{value || '—'}</div>
+    <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#aaa', fontWeight: 500, marginBottom: 2 }}>{label}</div>
+    <div style={{ fontSize: 16, color: isDark ? '#e0e8f0' : '#1f1f1f', fontWeight: 500 }}>{value || '—'}</div>
   </div>
 );
 
@@ -131,7 +135,7 @@ const StatusBadge = ({ status }) => {
       display: 'inline-block',
       padding: '3px 10px',
       borderRadius: 999,
-      fontSize: 12,
+      fontSize: 14,
       fontWeight: 600,
       background: style.bg,
       color: style.color,
@@ -150,11 +154,11 @@ const PdfFileRow = ({ file }) => (
   }}>
     <FilePdfOutlined style={{ color: '#ef4444', fontSize: 26, flexShrink: 0 }} />
     <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ fontWeight: 600, fontSize: 13, color: '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{file.name}</div>
-      <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{file.date}</div>
+      <div style={{ fontWeight: 600, fontSize: 15, color: '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{file.name}</div>
+      <div style={{ fontSize: 14, color: '#9ca3af', marginTop: 2 }}>{file.date}</div>
     </div>
-    <DeleteOutlined style={{ color: '#ef4444', fontSize: 14, cursor: 'pointer', flexShrink: 0 }} />
-    <DownloadOutlined style={{ color: '#3b82f6', fontSize: 14, cursor: 'pointer', flexShrink: 0 }} />
+    <DeleteOutlined style={{ color: '#ef4444', fontSize: 16, cursor: 'pointer', flexShrink: 0 }} />
+    <DownloadOutlined style={{ color: 'var(--primary)', fontSize: 16, cursor: 'pointer', flexShrink: 0 }} />
   </div>
 );
 
@@ -163,15 +167,15 @@ const FileColumn = ({ title, files, primary }) => (
     <div style={{
       borderRadius: 10, border: '1px solid #e5e7eb', background: '#fff', overflow: 'hidden',
     }}>
-      <div style={{ height: 3, background: primary }} />
+      <div style={{ height: 3, background: 'var(--primary)' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px 10px', borderBottom: '1px solid #f0f0f0' }}>
-        <span style={{ fontWeight: 700, fontSize: 14, color: '#1f1f1f' }}>{title}</span>
+        <span style={{ fontWeight: 700, fontSize: 16, color: '#1f1f1f' }}>{title}</span>
         <Button type="text" icon={<PlusOutlined />} size="small" style={{ border: '1px solid #e5e7eb', borderRadius: 6, width: 26, height: 26, padding: 0 }} />
       </div>
       <div style={{ padding: '10px 10px 6px' }}>
         {files.map(f => <PdfFileRow key={f.id} file={f} />)}
         {files.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '20px 0', color: '#9ca3af', fontSize: 13 }}>No files</div>
+          <div style={{ textAlign: 'center', padding: '20px 0', color: '#9ca3af', fontSize: 15 }}>No files</div>
         )}
       </div>
     </div>
@@ -190,7 +194,7 @@ const ProjectDetailPage = () => {
   const isDark = theme === 'dark';
   const project = projects.find(p => p.id === id) || projects[0];
 
-  const [activeTab, setActiveTab] = useState('Files');
+  const [activeTab, setActiveTab] = useState('Project Detail');
   const [mainStage, setMainStage] = useState(project?.stage || 'Designing');
   const [subStage, setSubStage] = useState((subStages[project?.stage] || subStages.Designing)[0]);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -221,7 +225,7 @@ const ProjectDetailPage = () => {
     '--primary': isDark ? '#5ab5e8' : '#D69F6D',
     '--primary-soft': isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.1)',
     '--nav-active-bg': isDark ? 'rgba(90,181,232,0.15)' : '#eff6ff',
-    '--nav-active-color': isDark ? '#5ab5e8' : '#2563eb',
+    '--nav-active-color': isDark ? '#5ab5e8' : '#D69F6D',
     '--shadow': isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.07)',
   };
 
@@ -279,15 +283,15 @@ const ProjectDetailPage = () => {
       flex: 1,
       minWidth: 0,
     };
-    const sectionTitleColor = isDark ? '#5ab5e8' : '#1677FF';
+    const sectionTitleColor = isDark ? '#5ab5e8' : '#D69F6D';
 
     return (
       <div style={{ display: 'flex', gap: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
         {/* Primary Information */}
         <div style={sectionBox}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <span style={{ fontSize: 16 }}>👤</span>
-            <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Client Details</span>
+            <User size={18} color={sectionTitleColor} />
+            <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Client Details</span>
           </div>
           <InfoRow label="Client Name" value={project.clientName} isDark={isDark} />
           <InfoRow label="Email" value={project.email} isDark={isDark} />
@@ -302,8 +306,8 @@ const ProjectDetailPage = () => {
         {/* Project Details */}
         <div style={sectionBox}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <span style={{ fontSize: 16 }}>🏗️</span>
-            <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Project Information</span>
+            <HardHat size={18} color={sectionTitleColor} />
+            <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Project Information</span>
           </div>
           <InfoRow label="Project Code" value={project.projectCode} isDark={isDark} />
           <InfoRow label="Project Name" value={project.projectName} isDark={isDark} />
@@ -321,9 +325,9 @@ const ProjectDetailPage = () => {
   const renderFiles = () => (
     <div>
       <div style={{ display: 'flex', gap: 14, overflowX: 'auto', paddingBottom: 4 }}>
-        <FileColumn title="Design Files" files={MOCK_FILES.designFiles} primary="#3b82f6" />
-        <FileColumn title="Schedules" files={MOCK_FILES.schedules} primary="#3b82f6" />
-        <FileColumn title="Other Records" files={MOCK_FILES.otherRecords} primary="#3b82f6" />
+        <FileColumn title="Design Files" files={MOCK_FILES.designFiles} primary="var(--primary)" />
+        <FileColumn title="Schedules" files={MOCK_FILES.schedules} primary="var(--primary)" />
+        <FileColumn title="Other Records" files={MOCK_FILES.otherRecords} primary="var(--primary)" />
       </div>
     </div>
   );
@@ -332,7 +336,7 @@ const ProjectDetailPage = () => {
     <div style={{ ...card, padding: 20 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>Select Space</span>
+          <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-muted)' }}>Select Space</span>
           <Select
             value={selectedSpace}
             onChange={setSelectedSpace}
@@ -347,21 +351,21 @@ const ProjectDetailPage = () => {
 
       {/* Components */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 10 }}>Components</div>
+        <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)', marginBottom: 10 }}>Components</div>
         <div style={{ border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr', background: '#f9fafb', borderBottom: '1px solid var(--border)' }}>
             {['Name', 'Type / Unit', 'Length (ft.inch)', 'Height (ft.inch)', 'Depth (ft.inch)', 'Quantity'].map(col => (
-              <div key={col} style={{ padding: '10px 14px', fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
+              <div key={col} style={{ padding: '10px 14px', fontSize: 14, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
             ))}
           </div>
           {MOCK_COMPONENTS.map((comp, i) => (
             <div key={comp.id} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr', borderBottom: i < MOCK_COMPONENTS.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.name}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.type}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.length}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.height}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.depth}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{comp.qty}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.name}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.type}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.length}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.height}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.depth}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{comp.qty}</div>
             </div>
           ))}
         </div>
@@ -369,18 +373,18 @@ const ProjectDetailPage = () => {
 
       {/* Accessories */}
       <div>
-        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 10 }}>Accessories</div>
+        <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)', marginBottom: 10 }}>Accessories</div>
         <div style={{ border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr', background: '#f9fafb', borderBottom: '1px solid var(--border)' }}>
             {['Name', 'Brand', 'Quantity'].map(col => (
-              <div key={col} style={{ padding: '10px 14px', fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
+              <div key={col} style={{ padding: '10px 14px', fontSize: 14, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
             ))}
           </div>
           {MOCK_ACCESSORIES.map((acc, i) => (
             <div key={acc.id} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr', borderBottom: i < MOCK_ACCESSORIES.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{acc.name}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{acc.brand}</div>
-              <div style={{ padding: '12px 14px', fontSize: 13, color: 'var(--text)' }}>{acc.qty}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{acc.name}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{acc.brand}</div>
+              <div style={{ padding: '12px 14px', fontSize: 15, color: 'var(--text)' }}>{acc.qty}</div>
             </div>
           ))}
         </div>
@@ -422,16 +426,16 @@ const ProjectDetailPage = () => {
         <div style={{ padding: 20, maxWidth: 680 }}>
           <Row gutter={20} style={{ marginBottom: 16 }}>
             <Col span={12}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Display No</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Display No</div>
               <Input defaultValue="ORDER-736-005" style={{ borderRadius: 8 }} />
             </Col>
             <Col span={12}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Expiry Date</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Expiry Date</div>
               <Input type="date" defaultValue="2026-03-12" style={{ borderRadius: 8, width: '100%' }} />
             </Col>
           </Row>
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Subject</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>Subject</div>
             <Input.TextArea rows={4} placeholder="Dear Mr..." style={{ borderRadius: 8 }} />
           </div>
           <Button style={{ background: '#D69F6D', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, paddingInline: 24 }}>
@@ -449,23 +453,23 @@ const ProjectDetailPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
                 <span style={{
                   background: '#D69F6D', color: '#fff', borderRadius: 999, padding: '4px 12px',
-                  fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap',
+                  fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap',
                 }}>
                   #{v.id}
                 </span>
                 <div>
-                  <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 14 }}>Version {v.version}</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 16 }}>Version {v.version}</div>
                   <div style={{ display: 'flex', gap: 16, marginTop: 4 }}>
-                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><CalendarOutlined style={{ marginRight: 4 }} />{v.date}</span>
-                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{v.amount}</span>
+                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}><CalendarOutlined style={{ marginRight: 4 }} />{v.date}</span>
+                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>{v.amount}</span>
                   </div>
                 </div>
               </div>
               <Space wrap size={[8, 8]}>
-                <Button type="link" icon={<EyeOutlined />} size="small" style={{ color: '#3b82f6', padding: 0, fontWeight: 600 }}>View</Button>
-                <Button type="link" icon={<EditOutlined />} size="small" style={{ color: '#3b82f6', padding: 0, fontWeight: 600 }}>Edit</Button>
-                <Button type="link" icon={<AppstoreOutlined />} size="small" style={{ color: '#3b82f6', padding: 0, fontWeight: 600 }}>Edit BOQ</Button>
-                <Button type="link" icon={<DownloadOutlined />} size="small" style={{ color: '#3b82f6', padding: 0, fontWeight: 600 }}>Download</Button>
+                <Button type="link" icon={<EyeOutlined />} size="small" style={{ color: 'var(--primary)', padding: 0, fontWeight: 600 }}>View</Button>
+                <Button type="link" icon={<EditOutlined />} size="small" style={{ color: 'var(--primary)', padding: 0, fontWeight: 600 }}>Edit</Button>
+                <Button type="link" icon={<AppstoreOutlined />} size="small" style={{ color: 'var(--primary)', padding: 0, fontWeight: 600 }}>Edit BOQ</Button>
+                <Button type="link" icon={<DownloadOutlined />} size="small" style={{ color: 'var(--primary)', padding: 0, fontWeight: 600 }}>Download</Button>
                 <Button type="link" icon={<DeleteOutlined />} size="small" style={{ color: '#ef4444', padding: 0, fontWeight: 600 }}>Delete</Button>
               </Space>
             </div>
@@ -485,10 +489,10 @@ const ProjectDetailPage = () => {
               key={tab}
               onClick={() => setPlanTab(tab)}
               style={{
-                padding: '7px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                padding: '7px 16px', fontSize: 15, fontWeight: 600, cursor: 'pointer',
                 border: 'none', background: 'transparent',
-                color: planTab === tab ? '#3b82f6' : 'var(--text-muted)',
-                borderBottom: planTab === tab ? '2px solid #3b82f6' : '2px solid transparent',
+                color: planTab === tab ? 'var(--primary)' : 'var(--text-muted)',
+                borderBottom: planTab === tab ? '2px solid var(--primary)' : '2px solid transparent',
               }}
             >
               {tab}
@@ -503,7 +507,7 @@ const ProjectDetailPage = () => {
       {planTab === 'Milestone List' && (
         <div>
           <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-soft)' }}>
-            <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>
+            <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>
               <UnorderedListOutlined style={{ marginRight: 8 }} />Milestone List
             </span>
           </div>
@@ -511,7 +515,7 @@ const ProjectDetailPage = () => {
           {/* Table header */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1.5fr 0.8fr 1.5fr 1.5fr 80px', background: '#f9fafb', borderBottom: '1px solid var(--border)', padding: '10px 16px', gap: 8 }}>
             {['MILESTONE / PHASE', 'STATUS', 'PROGRESS', 'DURATION', 'EXPECTED SCHEDULE', 'ACTUAL ACT.', ''].map(col => (
-              <div key={col} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
+              <div key={col} style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
             ))}
           </div>
 
@@ -522,19 +526,19 @@ const ProjectDetailPage = () => {
               borderBottom: i < MOCK_MILESTONES.length - 1 ? '1px solid var(--border-soft)' : 'none',
             }}>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 13 }}>{m.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 2 }}>{m.phase}</div>
+                <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 15 }}>{m.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-soft)', marginTop: 2 }}>{m.phase}</div>
               </div>
               <div><StatusBadge status={m.status} /></div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Progress percent={m.progress} size="small" strokeColor="#16a34a" style={{ flex: 1, marginBottom: 0 }} />
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text)' }}>{m.duration}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: 15, color: 'var(--text)' }}>{m.duration}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                 <div>{m.expStart}</div>
                 <div>{m.expEnd}</div>
               </div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                 <div>{m.actStart}</div>
                 <div>{m.actEnd}</div>
               </div>
@@ -571,10 +575,10 @@ const ProjectDetailPage = () => {
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <InfoCircleOutlined style={{ color: '#3b82f6' }} />
+              <InfoCircleOutlined style={{ color: 'var(--primary)' }} />
               <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>Project Schedules</span>
             </div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
               {MOCK_MILESTONES.length} milestones · Track project progress and timelines
             </div>
           </div>
@@ -596,12 +600,12 @@ const ProjectDetailPage = () => {
             { label: 'EXPECTED END', value: MOCK_SCHEDULE_INFO.expectedEnd, icon: <CalendarOutlined />, color: '#D69F6D' },
           ].map(item => (
             <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, flexShrink: 0 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 18, flexShrink: 0 }}>
                 {item.icon}
               </div>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: 0.5 }}>{item.label}</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{item.value}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: 0.5 }}>{item.label}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>{item.value}</div>
               </div>
             </div>
           ))}
@@ -611,14 +615,14 @@ const ProjectDetailPage = () => {
       {/* Milestones & Tasks table */}
       <div style={card}>
         <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-soft)' }}>
-          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>
+          <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>
             <UnorderedListOutlined style={{ marginRight: 8 }} />Milestones & Tasks
           </span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '36px 2fr 1.2fr 0.8fr 1.5fr 1.5fr 1.5fr', background: '#f9fafb', borderBottom: '1px solid var(--border)', padding: '10px 16px', gap: 8 }}>
           {['', 'MILESTONE / PHASE', 'STATUS', 'DURATION', 'PROGRESS', 'EXPECTED SCHEDULE', 'ACTUAL ACC.'].map(col => (
-            <div key={col} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
+            <div key={col} style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
           ))}
         </div>
 
@@ -630,19 +634,19 @@ const ProjectDetailPage = () => {
           }}>
             <Button type="text" size="small" style={{ color: 'var(--text-muted)', padding: 0 }}>▾</Button>
             <div>
-              <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 13 }}>{m.name}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 2 }}>{m.phase}</div>
+              <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 15 }}>{m.name}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-soft)', marginTop: 2 }}>{m.phase}</div>
             </div>
             <div><StatusBadge status={m.status} /></div>
-            <div style={{ fontSize: 13, color: 'var(--text)' }}>{m.duration}</div>
+            <div style={{ fontSize: 15, color: 'var(--text)' }}>{m.duration}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <Progress percent={m.progress} size="small" strokeColor="#16a34a" style={{ flex: 1, marginBottom: 0 }} />
             </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               <div>{m.expStart}</div>
               <div>{m.expEnd}</div>
             </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               <div>{m.actStart}</div>
               <div>{m.actEnd}</div>
             </div>
@@ -662,12 +666,12 @@ const ProjectDetailPage = () => {
           { label: 'BALANCE', value: '₹48,861', icon: <CreditCardOutlined />, iconBg: '#f59e0b' },
         ].map(item => (
           <div key={item.label} style={{ ...card, padding: 16, display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 46, height: 46, borderRadius: 10, background: item.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20, flexShrink: 0 }}>
+            <div style={{ width: 46, height: 46, borderRadius: 10, background: item.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, flexShrink: 0 }}>
               {item.icon}
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>{item.value}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)' }}>{item.value}</div>
             </div>
           </div>
         ))}
@@ -678,13 +682,13 @@ const ProjectDetailPage = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--border-soft)', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>Payment Schedule</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>4 payments recorded</div>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 2 }}>4 payments recorded</div>
           </div>
           <Select defaultValue="All Milestones" style={{ width: 180 }} options={['All Milestones', ...MOCK_MILESTONES.map(m => m.name)].map(v => ({ value: v, label: v }))} />
         </div>
 
         <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-soft)' }}>
-          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>
+          <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>
             <UnorderedListOutlined style={{ marginRight: 8 }} />Milestones & Payments
           </span>
         </div>
@@ -692,7 +696,7 @@ const ProjectDetailPage = () => {
         {/* Table header */}
         <div style={{ display: 'grid', gridTemplateColumns: '36px 2fr 1.2fr 0.8fr 1.5fr 1.5fr 60px', background: '#f9fafb', borderBottom: '1px solid var(--border)', padding: '10px 16px', gap: 8 }}>
           {['', 'MILESTONE / PHASE', 'STATUS', 'PAYMENT %', 'EXPECTED AMOUNT', 'RECEIVED AMOUNT', 'ACTION'].map(col => (
-            <div key={col} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
+            <div key={col} style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>{col}</div>
           ))}
         </div>
 
@@ -704,43 +708,37 @@ const ProjectDetailPage = () => {
           }}>
             <Button type="text" size="small" style={{ color: 'var(--text-muted)', padding: 0 }}>▾</Button>
             <div>
-              <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 13 }}>{p.milestone}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 2 }}>{p.phase}</div>
+              <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 15 }}>{p.milestone}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-soft)', marginTop: 2 }}>{p.phase}</div>
             </div>
             <div><StatusBadge status={p.status} /></div>
-            <div style={{ fontSize: 13, color: 'var(--text)' }}>{p.pct}%</div>
-            <div style={{ fontSize: 13, color: 'var(--text)' }}>{p.expected}</div>
-            <div style={{ fontSize: 13, color: 'var(--text)' }}>{p.received}</div>
-            <Button type="text" icon={<EditOutlined />} size="small" style={{ color: '#3b82f6' }} />
+            <div style={{ fontSize: 15, color: 'var(--text)' }}>{p.pct}%</div>
+            <div style={{ fontSize: 15, color: 'var(--text)' }}>{p.expected}</div>
+            <div style={{ fontSize: 15, color: 'var(--text)' }}>{p.received}</div>
+            <Button type="text" icon={<EditOutlined />} size="small" style={{ color: 'var(--primary)' }} />
           </div>
         ))}
 
         {/* Total row */}
         <div style={{ display: 'grid', gridTemplateColumns: '36px 2fr 1.2fr 0.8fr 1.5fr 1.5fr 60px', padding: '12px 16px', gap: 8, borderTop: '2px solid var(--border)', background: '#fafafa' }}>
           <div /><div /><div /><div />
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#22c55e' }}>₹9,72,477</div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#22c55e' }}>₹9,23,615</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#22c55e' }}>₹9,72,477</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#22c55e' }}>₹9,23,615</div>
           <div />
         </div>
       </div>
     </div>
   );
 
-  const renderTracker = () => (
-    <div style={{ ...card, padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
-      <LineChartOutlined style={{ fontSize: 48, marginBottom: 14 }} />
-      <div style={{ fontWeight: 700, fontSize: 16 }}>Tracker</div>
-      <div style={{ fontSize: 13, marginTop: 6 }}>Project tracker coming soon</div>
-    </div>
-  );
+
 
   const renderRaiseInvoice = () => (
     <div style={{ display: 'flex', gap: 16, flexDirection: isCompact ? 'column' : 'row', alignItems: 'flex-start' }}>
       {/* Left: main form */}
       <div style={{ ...card, flex: 1, minWidth: 0, padding: 20 }}>
-        <div style={{ fontWeight: 800, fontSize: 18, color: 'var(--text)', marginBottom: 16 }}>Invoice</div>
+        <div style={{ fontWeight: 800, fontSize: 20, color: 'var(--text)', marginBottom: 16 }}>Invoice</div>
 
-        <div style={{ display: 'flex', gap: 24, marginBottom: 18, flexWrap: 'wrap', fontSize: 13, color: 'var(--text-muted)' }}>
+        <div style={{ display: 'flex', gap: 24, marginBottom: 18, flexWrap: 'wrap', fontSize: 15, color: 'var(--text-muted)' }}>
           <div><span style={{ fontWeight: 600, color: 'var(--text)' }}>Project Name</span><br />{project.projectName}</div>
           <div><span style={{ fontWeight: 600, color: 'var(--text)' }}>Project Number</span><br />{project.projectCode}</div>
           <div><span style={{ fontWeight: 600, color: 'var(--text)' }}>Invoice Number</span><br />INV-2026-001</div>
@@ -748,31 +746,31 @@ const ProjectDetailPage = () => {
 
         {/* Bill To */}
         <div style={{ marginBottom: 20 }}>
-          <div style={{ fontWeight: 700, fontSize: 14, color: '#3b82f6', marginBottom: 12 }}>Bill To (User Details)</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--primary)', marginBottom: 12 }}>Bill To (User Details)</div>
           <Row gutter={[14, 14]}>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Name *</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Name *</div>
               <Input defaultValue={project.clientName} style={{ borderRadius: 8 }} />
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Email</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Email</div>
               <Input defaultValue={project.email || ''} style={{ borderRadius: 8 }} />
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Phone *</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Phone *</div>
               <Input.Group compact>
                 <Select defaultValue="+91" style={{ width: 80 }} options={[{ value: '+91', label: '🇮🇳 +91' }]} />
                 <Input defaultValue={project.phone?.replace(/^\+91\s*/, '') || ''} style={{ width: 'calc(100% - 80px)', borderRadius: '0 8px 8px 0' }} />
               </Input.Group>
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>GST number <InfoCircleOutlined /></div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>GST number <InfoCircleOutlined /></div>
               <Input placeholder="Enter GST number" style={{ borderRadius: 8 }} />
             </Col>
             <Col xs={24} sm={16}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Address</span>
-                <label style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)' }}>Address</span>
+                <label style={{ fontSize: 14, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Checkbox checked={sameAddress} onChange={e => setSameAddress(e.target.checked)} />
                   Apply same details to ship to
                 </label>
@@ -784,29 +782,29 @@ const ProjectDetailPage = () => {
 
         {/* Ship To */}
         <div style={{ marginBottom: 20 }}>
-          <div style={{ fontWeight: 700, fontSize: 14, color: '#3b82f6', marginBottom: 12 }}>Ship To (User Details)</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--primary)', marginBottom: 12 }}>Ship To (User Details)</div>
           <Row gutter={[14, 14]}>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Name</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Name</div>
               <Input placeholder="Enter name" style={{ borderRadius: 8 }} value={sameAddress ? project.clientName : undefined} />
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Email</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Email</div>
               <Input placeholder="Enter email" style={{ borderRadius: 8 }} />
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Phone</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Phone</div>
               <Input.Group compact>
                 <Select defaultValue="+91" style={{ width: 80 }} options={[{ value: '+91', label: '🇮🇳 +91' }]} />
                 <Input placeholder="Enter phone" style={{ width: 'calc(100% - 80px)', borderRadius: '0 8px 8px 0' }} />
               </Input.Group>
             </Col>
             <Col xs={24} sm={8}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>GST number <InfoCircleOutlined /></div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>GST number <InfoCircleOutlined /></div>
               <Input placeholder="Enter GST number" style={{ borderRadius: 8 }} />
             </Col>
             <Col xs={24} sm={16}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Address</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Address</div>
               <Input placeholder="Enter address" style={{ borderRadius: 8 }} />
             </Col>
           </Row>
@@ -815,7 +813,7 @@ const ProjectDetailPage = () => {
         {/* Other Details */}
         <div style={{ marginBottom: 24 }}>
           <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', marginBottom: 12 }}>Other Details</div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Notes</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Notes</div>
           <Input.TextArea rows={4} placeholder="Enter Notes" style={{ borderRadius: 8 }} />
         </div>
 
@@ -829,35 +827,35 @@ const ProjectDetailPage = () => {
       <div style={{ ...card, width: isCompact ? '100%' : 280, flexShrink: 0, padding: 16 }}>
         <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', marginBottom: 14 }}>Invoice Details</div>
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Invoice Date *</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Invoice Date *</div>
           <Input type="date" style={{ borderRadius: 8, width: '100%' }} />
         </div>
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Due Date</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Due Date</div>
           <Input type="date" style={{ borderRadius: 8, width: '100%' }} />
         </div>
         <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Invoice Type *</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Invoice Type *</div>
           <Select placeholder="Select" style={{ width: '100%' }} options={[{ value: 'tax', label: 'Tax Invoice' }, { value: 'proforma', label: 'Proforma Invoice' }]} />
         </div>
 
         <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', marginBottom: 12 }}>Invoice Amount Details</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Sub Total</span>
-          <span style={{ fontSize: 13, color: 'var(--text)' }}>₹0</span>
+          <span style={{ fontSize: 15, color: 'var(--text-muted)' }}>Sub Total</span>
+          <span style={{ fontSize: 15, color: 'var(--text)' }}>₹0</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>GST Amount</span>
-          <span style={{ fontSize: 13, color: 'var(--text)' }}>₹0</span>
+          <span style={{ fontSize: 15, color: 'var(--text-muted)' }}>GST Amount</span>
+          <span style={{ fontSize: 15, color: 'var(--text)' }}>₹0</span>
         </div>
         <div style={{ background: '#1e3a5f', borderRadius: 8, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Total Amount</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>₹0</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Total Amount</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>₹0</span>
         </div>
 
         <div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6 }}>Bank Details & Payment Instructions</div>
-          <div style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 10, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.8 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6 }}>Bank Details & Payment Instructions</div>
+          <div style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 10, fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8 }}>
             Account Name : Company Name<br />
             Account No : 12345678<br />
             Bank Name : Bank Name
@@ -876,7 +874,6 @@ const ProjectDetailPage = () => {
       case 'Project Planning': return renderProjectPlanning();
       case 'Schedule': return renderSchedule();
       case 'Payment Schedule': return renderPaymentSchedule();
-      case 'Tracker': return renderTracker();
       case 'Raise Invoice': return renderRaiseInvoice();
       default: return null;
     }
@@ -888,14 +885,25 @@ const ProjectDetailPage = () => {
   return (
     <div style={{ ...css }}>
       {/* Back button */}
-      <Button
-        type="text"
-        icon={<ArrowLeftOutlined />}
-        onClick={() => navigate('/projects')}
-        style={{ marginBottom: 14, color: isDark ? '#8a9ab0' : '#666', fontWeight: 500 }}
-      >
-        Back to Projects
-      </Button>
+      <div style={{ marginBottom: 14, position: 'relative', zIndex: 1000 }}>
+        <Button
+          type="text"
+          icon={<ArrowLeftOutlined />}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate('/projects');
+          }}
+          style={{ 
+            color: isDark ? '#8a9ab0' : '#666', 
+            fontWeight: 500,
+            cursor: 'pointer',
+            pointerEvents: 'auto'
+          }}
+        >
+          Back to Projects
+        </Button>
+      </div>
 
       {/* ── Header card ── */}
       <div
@@ -920,17 +928,17 @@ const ProjectDetailPage = () => {
               background: 'var(--primary)',
               color: '#fff',
               fontWeight: 800,
-              fontSize: 18,
+              fontSize: 20,
               flexShrink: 0,
             }}
           >
             {initials}
           </Avatar>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: 'var(--text)' }}>
               {project.clientName}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--primary)', fontWeight: 600 }}>
+            <div style={{ fontSize: 14, color: 'var(--primary)', fontWeight: 600 }}>
               {project.projectCode}
             </div>
           </div>
@@ -941,7 +949,7 @@ const ProjectDetailPage = () => {
             icon={<EditOutlined />}
             onClick={openEditModal}
             style={{
-              background: '#1677FF',
+              background: 'var(--primary)',
               color: '#fff',
               border: 'none',
               borderRadius: 8,
@@ -1005,7 +1013,7 @@ const ProjectDetailPage = () => {
                     border: 'none',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: activeTab === tab.key ? 600 : 500,
                     color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
                     background: activeTab === tab.key ? 'var(--primary)' : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
@@ -1030,7 +1038,7 @@ const ProjectDetailPage = () => {
                     padding: '10px 14px',
                     borderRadius: 10,
                     cursor: 'pointer',
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: isActive ? 600 : 500,
                     color: isActive ? 'var(--primary)' : (isDark ? '#8a9ab0' : '#666'),
                     background: isActive
@@ -1118,7 +1126,7 @@ const ProjectDetailPage = () => {
                 <Col xs={24} sm={8}><Form.Item name="clientName" label="Name"><Input /></Form.Item></Col>
                 <Col xs={24} sm={8}><Form.Item name="email" label="Email"><Input /></Form.Item></Col>
                 <Col xs={24} sm={8}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 8 }}>Phone</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#333', marginBottom: 8 }}>Phone</div>
                   <Row gutter={8}>
                     <Col span={8}><Form.Item name="phoneCode" style={{ marginBottom: 0 }}><Select options={[{ value: '+91', label: '+91' }]} /></Form.Item></Col>
                     <Col span={16}><Form.Item name="phoneNumber" style={{ marginBottom: 0 }}><Input /></Form.Item></Col>

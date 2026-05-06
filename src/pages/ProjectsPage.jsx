@@ -19,6 +19,7 @@ import { stages, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
+import { Folder, Users, MapPin } from 'lucide-react';
 
 const { RangePicker } = DatePicker;
 const { Text, Title } = Typography;
@@ -71,8 +72,8 @@ const KanbanCard = ({ project, onView, isDark }) => {
   >
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
       <div>
-        <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>{project.projectCode}</div>
-        <div style={{ fontWeight: 700, fontSize: 13, marginTop: 2 }}>{project.projectName}</div>
+        <div style={{ fontSize: 14, color: '#999', fontWeight: 500 }}>{project.projectCode}</div>
+        <div style={{ fontWeight: 700, fontSize: 16, marginTop: 2 }}>{project.projectName}</div>
       </div>
       <Button
         type="text" size="small" icon={<ArrowRightOutlined style={{ color: primaryColor }} />}
@@ -80,13 +81,13 @@ const KanbanCard = ({ project, onView, isDark }) => {
         onClick={e => { e.stopPropagation(); onView(project); }}
       />
     </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#666', marginTop: 8 }}>
-      <UserOutlined style={{ fontSize: 11, color: '#999' }} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, color: '#666', marginTop: 8 }}>
+      <UserOutlined style={{ fontSize: 15, color: '#999' }} />
       <span>{project.clientName}</span>
     </div>
     {project.phone && (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#666', marginTop: 4 }}>
-        <PhoneOutlined style={{ fontSize: 11, color: '#999' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, color: '#666', marginTop: 4 }}>
+        <PhoneOutlined style={{ fontSize: 15, color: '#999' }} />
         <span>{project.phone}</span>
       </div>
     )}
@@ -106,7 +107,7 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
     <Drawer
       title={
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 700, fontSize: 15 }}>Project Overview</span>
+          <span style={{ fontWeight: 700, fontSize: 18 }}>Project Overview</span>
           <Button type="text" size="small" icon={<CloseOutlined />} onClick={onClose} />
         </div>
       }
@@ -121,9 +122,9 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
       <div style={{ padding: '16px 20px', borderBottom: '1px solid #f0f0f0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <Space size={8} wrap>
-            <span style={{ fontWeight: 800, fontSize: 16 }}>{project.projectName}</span>
-            <Tag style={{ borderRadius: 6, fontWeight: 600, fontSize: 11 }}>{project.projectCode}</Tag>
-            <Tag color={color} style={{ borderRadius: 6, fontSize: 11 }}>{project.stage}</Tag>
+            <span style={{ fontWeight: 800, fontSize: 18 }}>{project.projectName}</span>
+            <Tag style={{ borderRadius: 6, fontWeight: 600, fontSize: 15 }}>{project.projectCode}</Tag>
+            <Tag color={color} style={{ borderRadius: 6, fontSize: 15 }}>{project.stage}</Tag>
           </Space>
           <Space size={4}>
             <Button type="text" size="small" icon={<ClockCircleOutlined style={{ color: '#999' }} />} />
@@ -136,7 +137,7 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
             />
           </Space>
         </div>
-        <div style={{ display: 'flex', gap: 16, fontSize: 13, color: '#555' }}>
+        <div style={{ display: 'flex', gap: 16, fontSize: 15, color: '#555' }}>
           <span><UserOutlined style={{ marginRight: 5, color: '#999' }} />{project.clientName}</span>
           {project.phone && <span><PhoneOutlined style={{ marginRight: 5, color: '#999' }} />{project.phone}</span>}
         </div>
@@ -145,13 +146,13 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
       {/* Budget + Assignees */}
       <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', display: 'flex', gap: 32 }}>
         <div>
-          <Text type="secondary" style={{ fontSize: 11 }}>Total Budget</Text>
-          <div style={{ fontWeight: 700, fontSize: 15, marginTop: 2 }}>₹{(project.budget / 100000).toFixed(1)}L</div>
+          <Text type="secondary" style={{ fontSize: 15 }}>Total Budget</Text>
+          <div style={{ fontWeight: 700, fontSize: 18, marginTop: 2 }}>₹{(project.budget / 100000).toFixed(1)}L</div>
         </div>
         <div>
-          <Text type="secondary" style={{ fontSize: 11 }}>Project Assignees</Text>
+          <Text type="secondary" style={{ fontSize: 15 }}>Project Assignees</Text>
           <div style={{ marginTop: 4 }}>
-            <Avatar size={28} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 12 }}>T</Avatar>
+            <Avatar size={28} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 16 }}>T</Avatar>
           </div>
         </div>
       </div>
@@ -163,7 +164,7 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
             key={t}
             onClick={() => setTab(t)}
             style={{
-              flex: 1, padding: '10px 0', border: 'none', cursor: 'pointer', fontSize: 13,
+              flex: 1, padding: '10px 0', border: 'none', cursor: 'pointer', fontSize: 15,
               borderBottom: tab === t ? `2px solid ${primaryColor}` : '2px solid transparent',
               background: 'transparent', color: tab === t ? primaryColor : '#555',
               fontWeight: tab === t ? 600 : 400,
@@ -179,22 +180,22 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
         <div style={{ padding: '16px 20px' }}>
           {/* Project Details */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
               <InfoCircleOutlined style={{ color: '#555' }} /> Project Details
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px', marginBottom: 10 }}>
               <div>
-                <Text type="secondary" style={{ fontSize: 11 }}>Created on</Text>
-                <div style={{ fontSize: 13, fontWeight: 500 }}>{project.createdDate}</div>
+                <Text type="secondary" style={{ fontSize: 15 }}>Created on</Text>
+                <div style={{ fontSize: 15, fontWeight: 500 }}>{project.createdDate}</div>
               </div>
               <div>
-                <Text type="secondary" style={{ fontSize: 11 }}>Last updated on</Text>
-                <div style={{ fontSize: 13, fontWeight: 500 }}>{project.createdDate}</div>
+                <Text type="secondary" style={{ fontSize: 15 }}>Last updated on</Text>
+                <div style={{ fontSize: 15, fontWeight: 500 }}>{project.createdDate}</div>
               </div>
             </div>
             <div>
-              <Text type="secondary" style={{ fontSize: 11 }}>Description</Text>
-              <div style={{ fontSize: 13, color: '#999' }}>-</div>
+              <Text type="secondary" style={{ fontSize: 15 }}>Description</Text>
+              <div style={{ fontSize: 15, color: '#999' }}>-</div>
             </div>
           </div>
 
@@ -202,12 +203,14 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
 
           {/* Team Members */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 12 }}>👥 Team Members</div>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Users size={18} color="#555" /> Team Members
+            </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Avatar size={34} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700 }}>T</Avatar>
               <div>
-                <div style={{ fontWeight: 600, fontSize: 13 }}>Thara</div>
-                <div style={{ fontSize: 11, color: '#999' }}>Member</div>
+                <div style={{ fontWeight: 600, fontSize: 15 }}>Thara</div>
+                <div style={{ fontSize: 15, color: '#999' }}>Member</div>
               </div>
             </div>
           </div>
@@ -216,23 +219,25 @@ const ProjectOverviewDrawer = ({ project, open, onClose, onNavigate }) => {
 
           {/* Address Details */}
           <div>
-            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 12 }}>📍 Address Details</div>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <MapPin size={18} color="#555" /> Address Details
+            </div>
             <div style={{ marginBottom: 10 }}>
-              <Text type="secondary" style={{ fontSize: 11 }}>Address</Text>
-              <div style={{ fontSize: 13, color: '#999' }}>-</div>
+              <Text type="secondary" style={{ fontSize: 15 }}>Address</Text>
+              <div style={{ fontSize: 15, color: '#999' }}>-</div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
               <div>
-                <Text type="secondary" style={{ fontSize: 11 }}>City</Text>
-                <div style={{ fontSize: 13, fontWeight: 500 }}>{project.city}</div>
+                <Text type="secondary" style={{ fontSize: 15 }}>City</Text>
+                <div style={{ fontSize: 15, fontWeight: 500 }}>{project.city}</div>
               </div>
               <div>
-                <Text type="secondary" style={{ fontSize: 11 }}>State</Text>
-                <div style={{ fontSize: 13, fontWeight: 500 }}>{project.state}</div>
+                <Text type="secondary" style={{ fontSize: 15 }}>State</Text>
+                <div style={{ fontSize: 15, fontWeight: 500 }}>{project.state}</div>
               </div>
               <div>
-                <Text type="secondary" style={{ fontSize: 11 }}>Pincode</Text>
-                <div style={{ fontSize: 13, color: '#999' }}>-</div>
+                <Text type="secondary" style={{ fontSize: 15 }}>Pincode</Text>
+                <div style={{ fontSize: 15, color: '#999' }}>-</div>
               </div>
             </div>
           </div>
@@ -275,11 +280,11 @@ const FilterDrawer = ({ open, onClose, onApply }) => {
       }
     >
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Created Date</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Created Date</div>
         <RangePicker style={{ width: '100%', borderRadius: 8 }} onChange={v => set('dateRange', v)} />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Client</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Client</div>
         <Select
           placeholder="Select client" style={{ width: '100%' }} allowClear
           options={clients.map(c => ({ value: c.clientName, label: c.clientName }))}
@@ -287,7 +292,7 @@ const FilterDrawer = ({ open, onClose, onApply }) => {
         />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Stage</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Stage</div>
         <Select
           placeholder="Select stage" style={{ width: '100%' }} allowClear
           options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))}
@@ -295,26 +300,26 @@ const FilterDrawer = ({ open, onClose, onApply }) => {
         />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Assigned To</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Assigned To</div>
         <Select placeholder="Search assignee" style={{ width: '100%' }} allowClear
           options={[{ value: 'Arjun M.', label: 'Arjun M.' }, { value: 'Kavya S.', label: 'Kavya S.' }, { value: 'Rohan K.', label: 'Rohan K.' }]}
           onChange={v => set('assignee', v)}
         />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>City</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>City</div>
         <Input placeholder="Enter city" style={{ borderRadius: 8 }} onChange={e => set('city', e.target.value)} />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Client Phone</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Client Phone</div>
         <Input placeholder="Enter phone" style={{ borderRadius: 8 }} onChange={e => set('phone', e.target.value)} />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Client Email</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Client Email</div>
         <Input placeholder="Enter email" style={{ borderRadius: 8 }} onChange={e => set('email', e.target.value)} />
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Budget</div>
+        <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Budget</div>
         <Input placeholder="Enter budget" style={{ borderRadius: 8 }} onChange={e => set('budget', e.target.value)} />
       </div>
     </Drawer>
@@ -475,12 +480,12 @@ const ProjectsPage = () => {
           style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
           onClick={() => navigate(`/projects/${row.id}`)}
         >
-          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: isDark ? '#5ab5e8' : primaryColor, fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+          <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: isDark ? '#5ab5e8' : primaryColor, fontWeight: 700, fontSize: 15, flexShrink: 0 }}>
             {name.charAt(0)}
           </Avatar>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 13, color: isDark ? '#a8cce8' : primaryColor }}>{name}</div>
-            <div style={{ fontSize: 11, color: '#999' }}>{row.projectCode}</div>
+            <div style={{ fontWeight: 600, fontSize: 16, color: isDark ? '#a8cce8' : primaryColor }}>{name}</div>
+            <div style={{ fontSize: 15, color: '#999' }}>{row.projectCode}</div>
           </div>
         </div>
       ),
@@ -525,7 +530,7 @@ const ProjectsPage = () => {
             <Button
               type="text"
               size="small"
-              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
+              icon={<MoreOutlined style={{ fontSize: 18, color: '#999' }} />}
             />
           </Dropdown>
         </div>
@@ -611,7 +616,7 @@ const ProjectsPage = () => {
               onMouseEnter={e => { if (!isActive) e.currentTarget.style.transform = 'scale(1.03)'; }}
               onMouseLeave={e => { if (!isActive) e.currentTarget.style.transform = 'scale(1)'; }}
               style={{
-                padding: '5px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
+                padding: '5px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 15,
                 border: isActive ? 'none' : `1px solid ${chipBorder}`,
                 background: isActive ? (isDark ? '#133d5e' : primaryColor) : chipBg,
                 color: isActive ? 'white' : (isDark ? '#a8b0ba' : '#555'),
@@ -647,9 +652,9 @@ const ProjectsPage = () => {
               >
                 {/* Column header */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px 8px' }}>
-                  <span style={{ fontWeight: 700, fontSize: 13 }}>{stage}</span>
+                  <span style={{ fontWeight: 700, fontSize: 15 }}>{stage}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ background: `${color}20`, color, borderRadius: 10, fontSize: 11, fontWeight: 700, padding: '1px 8px' }}>
+                    <span style={{ background: `${color}20`, color, borderRadius: 10, fontSize: 15, fontWeight: 700, padding: '1px 8px' }}>
                       {stageProjects.length}
                     </span>
                     <Button type="text" size="small" icon={<MoreOutlined />} style={{ padding: 2 }} />
@@ -660,8 +665,10 @@ const ProjectsPage = () => {
                 <div style={{ flex: 1, padding: '4px 10px 8px' }}>
                   {stageProjects.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '32px 0', color: '#bbb' }}>
-                      <div style={{ fontSize: 28, marginBottom: 8 }}>📁</div>
-                      <div style={{ fontSize: 12 }}>No projects in this stage</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+                        <Folder size={30} color="#bbb" />
+                      </div>
+                      <div style={{ fontSize: 16 }}>No projects in this stage</div>
                     </div>
                   ) : (
                     stageProjects.map(p => (
@@ -845,9 +852,9 @@ const ProjectsPage = () => {
             <Form form={form} layout="vertical" className="crm-form-shell">
               <div style={{ display: 'flex', alignItems: isMobile ? 'stretch' : 'center', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row', gap: 16, marginBottom: 18 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: isDark ? '#e9edef' : '#111827' }}>{editingProject.clientName} ({editingProject.projectName}) {editingProject.createdDate}</span>
-                  <EditOutlined style={{ color: isDark ? '#5ab5e8' : '#0B2B44', fontSize: 14 }} />
-                  <MoreOutlined style={{ color: isDark ? '#8696a0' : '#111827', fontSize: 16 }} />
+                  <span style={{ fontSize: 20, fontWeight: 800, color: isDark ? '#e9edef' : '#111827' }}>{editingProject.clientName} ({editingProject.projectName}) {editingProject.createdDate}</span>
+                  <EditOutlined style={{ color: isDark ? '#5ab5e8' : '#0B2B44', fontSize: 18 }} />
+                  <MoreOutlined style={{ color: isDark ? '#8696a0' : '#111827', fontSize: 20 }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(140px, 1fr))', gap: 12, width: isMobile ? '100%' : 300 }}>
                   <Form.Item name="stage" label="Main Stage" style={{ marginBottom: 0 }}><Select placeholder="Select stage" options={stages.filter(s => s !== 'All').map(s => ({ value: s, label: s }))} /></Form.Item>
@@ -861,7 +868,7 @@ const ProjectsPage = () => {
                     <Form.Item name="clientName" label="Name"><Input /></Form.Item>
                     <Form.Item name="email" label="Email"><Input /></Form.Item>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: isDark ? '#a8cce8' : '#333', marginBottom: 8 }}>Phone *</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#a8cce8' : '#333', marginBottom: 8 }}>Phone *</div>
                       <Row gutter={10}>
                         <Col span={8}><Form.Item name="phoneCode" style={{ marginBottom: 0 }}><Select options={phoneCodeOptions} /></Form.Item></Col>
                         <Col span={16}><Form.Item name="phoneNumber" style={{ marginBottom: 0 }}><Input /></Form.Item></Col>
@@ -874,8 +881,8 @@ const ProjectsPage = () => {
                 <div className="crm-panel-card__head">Project Details</div>
                 <div className="crm-panel-card__body">
                   <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 14, marginBottom: 12 }}>
-                    <div><div style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Created on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
-                    <div><div style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Last updated on</div><div style={{ fontSize: 12 }}>{editingProject.createdDate}</div></div>
+                    <div><div style={{ fontSize: 15, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Created on</div><div style={{ fontSize: 16 }}>{editingProject.createdDate}</div></div>
+                    <div><div style={{ fontSize: 15, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827', marginBottom: 8 }}>Last updated on</div><div style={{ fontSize: 16 }}>{editingProject.createdDate}</div></div>
                     <Form.Item name="budget" label="Budget"><Input /></Form.Item>
                   </div>
                   <Form.Item name="description" label="Description" style={{ maxWidth: 320, marginBottom: 0 }}><Input.TextArea rows={2} /></Form.Item>
@@ -920,7 +927,7 @@ const ProjectsPage = () => {
                   </Space>
                 </div>
                 <div className="crm-panel-card__body">
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 11, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827' }}><div>Name</div><div>Role</div><div /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, marginBottom: 10, fontSize: 15, fontWeight: 700, color: isDark ? '#a8cce8' : '#111827' }}><div>Name</div><div>Role</div><div /></div>
                   {projectUsers.map(user => (
                     <div key={user.key} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 14, padding: '8px 0', borderTop: `1px solid ${isDark ? '#1a4d72' : '#ededed'}` }}>
                       <div>{user.name}</div><div>{user.role}</div>

@@ -19,7 +19,7 @@ export default function FineCalculation() {
       />
 
       <Card className="crm-card">
-        <Title level={5} style={{ marginTop: 0 }}>Fine Calculation Configuration</Title>
+        <Title level={5} style={{ marginTop: 0, fontSize: 18 }}>Fine Calculation Configuration</Title>
         <Text type="secondary" style={{ display: 'block', marginBottom: 14 }}>
           Enable and configure automatic fine calculation for late arrivals and early exits
         </Text>
@@ -27,16 +27,16 @@ export default function FineCalculation() {
         <div style={{ display: 'grid', gap: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Enable Fine Calculation</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Automatically calculate fines from attendance records</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Enable Fine Calculation</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Automatically calculate fines from attendance records</Text>
             </div>
             <Switch checked={enabled} onChange={setEnabled} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Apply Fines in Payroll</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Deduct calculated fines from employee payroll</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Apply Fines in Payroll</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Deduct calculated fines from employee payroll</Text>
             </div>
             <Switch checked={applyInPayroll} onChange={setApplyInPayroll} />
           </div>
@@ -45,7 +45,7 @@ export default function FineCalculation() {
         <Divider style={{ margin: '18px 0' }} />
 
         <div>
-          <div style={{ fontWeight: 600, marginBottom: 8 }}>Calculation Method</div>
+          <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 15 }}>Calculation Method</div>
           <Select
             value={method}
             onChange={setMethod}
@@ -55,7 +55,7 @@ export default function FineCalculation() {
               { value: 'fixed', label: 'Fixed (Flat amount per late/early event)' },
             ]}
           />
-          <Text type="secondary" style={{ fontSize: 12, display: 'block', marginTop: 10 }}>
+          <Text type="secondary" style={{ fontSize: 14, display: 'block', marginTop: 10 }}>
             Fine = (Daily Salary ÷ Shift Hours) × (Late Minutes ÷ 60). Example: if shift is 9 hours (10 AM – 7 PM),
             daily salary is ₹1000, hourly rate = ₹111.11/hour. For 60 minutes (1 hour) late: Fine = ₹111.11 × (60 ÷ 60) = ₹111.11
           </Text>

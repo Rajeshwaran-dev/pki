@@ -1,6 +1,6 @@
 import { Button, Card, Descriptions, Space, Tag, Typography } from 'antd';
 import { ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 
 const { Text } = Typography;
@@ -42,9 +42,13 @@ export default function PayrollPreview() {
         title="Payroll Preview"
       
         actions={[
-          <Button key="back" icon={<ArrowLeftOutlined />} onClick={() => navigate('/payroll')}>
-            Back
-          </Button>,
+          <div key="back" style={{ position: 'relative', zIndex: 1000 }}>
+            <Link to="/payroll" onClick={(e) => e.stopPropagation()}>
+              <Button icon={<ArrowLeftOutlined />}>
+                Back
+              </Button>
+            </Link>
+          </div>,
           <Button key="download" icon={<DownloadOutlined />} onClick={() => {}}>
             Download (stub)
           </Button>,

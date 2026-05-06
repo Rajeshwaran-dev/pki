@@ -57,7 +57,7 @@ const StatusBadge = ({ status }) => {
       border: `1px solid ${color}${isDark ? '60' : '45'}`,
       borderRadius: 10,
       fontWeight: 600,
-      fontSize: 10,
+      fontSize: 14,
       padding: '2px 8px',
       lineHeight: 1.5,
       whiteSpace: 'nowrap',
@@ -99,6 +99,8 @@ const darkBorder = '#1a4d72';
 
 /* ── Task Card (Kanban) ── */
 const TaskCard = ({ task, overlay, onEdit }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -120,17 +122,17 @@ const TaskCard = ({ task, overlay, onEdit }) => {
         styles={{ body: { padding: '12px 14px' } }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
+          <div style={{ fontWeight: 600, fontSize: 16 }}>{task.title}</div>
           <StatusBadge status={task.status} />
         </div>
-        <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
+        <div style={{ fontSize: 15, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <StatusTag value={task.priority} type="priority" />
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}>
+            <span style={{ fontSize: 15, color: '#bbb' }}>
               <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
             </span>
-            <Avatar size={20} style={{ background: '#D69F6D', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
+            <Avatar size={20} style={{ background: primaryColor, fontSize: 13 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
       </Card>
@@ -150,17 +152,17 @@ const TaskCard = ({ task, overlay, onEdit }) => {
         styles={{ body: { padding: '12px 14px' } }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <div style={{ fontWeight: 600, fontSize: 13 }}>{task.title}</div>
+          <div style={{ fontWeight: 600, fontSize: 16 }}>{task.title}</div>
           <StatusBadge status={task.status} />
         </div>
-        <div style={{ fontSize: 11, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
+        <div style={{ fontSize: 15, color: '#999', marginBottom: 10 }}>{task.projectName} · {task.clientName}</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <StatusTag value={task.priority} type="priority" />
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}>
+            <span style={{ fontSize: 15, color: '#bbb' }}>
               <ClockCircleOutlined /> {task.dueDate}{task.dueTime ? ` • ${task.dueTime}` : ''}
             </span>
-            <Avatar size={20} style={{ background: '#D69F6D', fontSize: 10 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
+            <Avatar size={20} style={{ background: primaryColor, fontSize: 14 }}>{task.assignee?.charAt(0) || 'A'}</Avatar>
           </Space>
         </div>
         {onEdit && (
@@ -192,11 +194,11 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, padding: '0 2px' }}>
-        <span style={{ fontWeight: 700, fontSize: 13 }}>{status}</span>
+        <span style={{ fontWeight: 700, fontSize: 15 }}>{status}</span>
         <span style={{
           background: `${(isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status]}20`,
           color: (isDark ? DARK_STATUS_COLORS : LIGHT_STATUS_COLORS)[status],
-          borderRadius: 10, fontSize: 11, fontWeight: 700, padding: '2px 8px',
+          borderRadius: 10, fontSize: 15, fontWeight: 700, padding: '2px 8px',
         }}>
           {tasks.length}
         </span>
@@ -205,7 +207,7 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
         {children}
       </SortableContext>
       {tasks.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '24px 0', color: '#999', fontSize: 12 }}>
+        <div style={{ textAlign: 'center', padding: '24px 0', color: '#999', fontSize: 16 }}>
           Drop tasks here
         </div>
       )}
@@ -215,6 +217,8 @@ const KanbanColumn = ({ status, tasks, children, isDark }) => {
 
 /* ── Request Card ── */
 const RequestCard = ({ request, overlay, onEdit }) => {
+  const isDark = useAppSelector(s => s.ui.theme === 'dark');
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: request.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -224,20 +228,20 @@ const RequestCard = ({ request, overlay, onEdit }) => {
   if (overlay) {
     return (
       <Card size="small" hoverable style={{ borderRadius: 12, marginBottom: 10, cursor: 'grabbing', boxShadow: '0 12px 32px rgba(0,0,0,0.2)', transform: 'scale(1.05)', zIndex: 1000 }} styles={{ body: { padding: '14px 16px' } }}>
-        <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{request.title}</div>
-        <a style={{ color: '#1677FF', fontSize: 12, fontWeight: 500 }}>{request.projectName}</a>
-        <Typography.Text type="secondary" style={{ fontSize: 11 }}> ({request.projectCode})</Typography.Text>
+        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{request.title}</div>
+        <a style={{ color: primaryColor, fontSize: 15, fontWeight: 500 }}>{request.projectName}</a>
+        <Typography.Text type="secondary" style={{ fontSize: 15 }}> ({request.projectCode})</Typography.Text>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginTop: 12 }}>
           {[['Client', request.clientName], ['Assignee', request.assignee], ['Created', request.createdDate], ['Due', request.dueDate]].map(([label, val]) => (
             <div key={label}>
-              <div style={{ fontSize: 10, color: '#bbb' }}>{label}</div>
-              <div style={{ fontSize: 12 }}>{val}</div>
+              <div style={{ fontSize: 14, color: '#bbb' }}>{label}</div>
+              <div style={{ fontSize: 15 }}>{val}</div>
             </div>
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
+            <span style={{ fontSize: 15, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
             <StatusBadge status={request.status} />
           </Space>
           {onEdit && (
@@ -253,20 +257,20 @@ const RequestCard = ({ request, overlay, onEdit }) => {
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Card size="small" hoverable style={{ borderRadius: 12, marginBottom: 10, cursor: isDragging ? 'grabbing' : 'grab', opacity: isDragging ? 0.5 : 1 }} styles={{ body: { padding: '14px 16px' } }}>
-        <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{request.title}</div>
-        <a style={{ color: '#1677FF', fontSize: 12, fontWeight: 500 }}>{request.projectName}</a>
-        <Typography.Text type="secondary" style={{ fontSize: 11 }}> ({request.projectCode})</Typography.Text>
+        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{request.title}</div>
+        <a style={{ color: primaryColor, fontSize: 15, fontWeight: 500 }}>{request.projectName}</a>
+        <Typography.Text type="secondary" style={{ fontSize: 15 }}> ({request.projectCode})</Typography.Text>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginTop: 12 }}>
           {[['Client', request.clientName], ['Assignee', request.assignee], ['Created', request.createdDate], ['Due', request.dueDate]].map(([label, val]) => (
             <div key={label}>
-              <div style={{ fontSize: 10, color: '#bbb' }}>{label}</div>
-              <div style={{ fontSize: 12 }}>{val}</div>
+              <div style={{ fontSize: 14, color: '#bbb' }}>{label}</div>
+              <div style={{ fontSize: 15 }}>{val}</div>
             </div>
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 10, paddingTop: 8, borderTop: '1px solid #f5f5f5' }}>
           <Space size={8}>
-            <span style={{ fontSize: 11, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
+            <span style={{ fontSize: 15, color: '#bbb' }}><ClockCircleOutlined /> 00:00:00</span>
             <StatusBadge status={request.status} />
           </Space>
           {onEdit && (
@@ -281,11 +285,13 @@ const RequestCard = ({ request, overlay, onEdit }) => {
 };
 
 /* ── Detail Panel (shared for task and request) ── */
-const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark }) => (
+const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  return (
   <div>
     <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', marginBottom: 16, background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       {showBack && (
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: isDark ? '#5ab5e8' : '#D69F6D' }}>
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onClose} style={{ marginBottom: 10, padding: 0, color: primaryColor }}>
           Back to list
         </Button>
       )}
@@ -296,8 +302,8 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
             <Tag style={{ borderRadius: 10 }}>{type === 'task' ? item.type : 'Request'}</Tag>
           </Space>
           <div style={{ marginTop: 4 }}>
-            <a style={{ color: '#1677FF', fontSize: 13 }}>{item.projectName}</a>
-            {item.projectCode && <Typography.Text type="secondary" style={{ fontSize: 12 }}> ({item.projectCode})</Typography.Text>}
+            <a style={{ color: primaryColor, fontSize: 15 }}>{item.projectName}</a>
+            {item.projectCode && <Typography.Text type="secondary" style={{ fontSize: 15 }}> ({item.projectCode})</Typography.Text>}
           </div>
         </div>
         <Space wrap>
@@ -327,8 +333,8 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
           ['Time Spent', '00:00:00'],
         ].map(([label, val]) => (
           <div key={label}>
-            <div style={{ fontSize: 11, color: '#bbb', marginBottom: 4 }}>{label}</div>
-            <div style={{ fontSize: 13, fontWeight: 500 }}>{val}</div>
+            <div style={{ fontSize: 15, color: '#bbb', marginBottom: 4 }}>{label}</div>
+            <div style={{ fontSize: 15, fontWeight: 500 }}>{val}</div>
           </div>
         ))}
       </div>
@@ -341,16 +347,16 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
           [type === 'task' ? 'Completed' : 'Project', type === 'task' ? (item.status === 'Completed' ? item.dueDate : 'N/A') : item.projectName],
         ].map(([label, val]) => (
           <div key={label}>
-            <div style={{ fontSize: 11, color: '#bbb', marginBottom: 4 }}>{label}</div>
-            <div style={{ fontSize: 13, fontWeight: 500 }}>{val}</div>
+            <div style={{ fontSize: 15, color: '#bbb', marginBottom: 4 }}>{label}</div>
+            <div style={{ fontSize: 15, fontWeight: 500 }}>{val}</div>
           </div>
         ))}
       </div>
 
       {item.description && (
         <div style={{ marginTop: 8, padding: '12px 16px', background: isDark ? darkSurfaceBg : '#fafafa', borderRadius: 10, border: isDark ? `1px solid ${darkBorder}` : 'none' }}>
-          <div style={{ fontSize: 11, color: '#bbb', marginBottom: 4 }}>Description</div>
-          <div style={{ fontSize: 13 }}>{item.description}</div>
+          <div style={{ fontSize: 15, color: '#bbb', marginBottom: 4 }}>Description</div>
+          <div style={{ fontSize: 15 }}>{item.description}</div>
         </div>
       )}
     </Card>
@@ -358,19 +364,22 @@ const DetailPanel = ({ item, type = 'task', onClose, onEdit, showBack, isDark })
     <Card style={{ borderRadius: 14, border: isDark ? `1px solid ${darkBorder}` : 'none', background: isDark ? darkPanelBg : undefined }} styles={{ body: { padding: '20px 24px' } }}>
       <Typography.Title level={5} style={{ margin: '0 0 14px' }}>
         Comments (0)
-        <Button type="link" size="small" style={{ fontSize: 12, color: '#1677FF', marginLeft: 8 }}>Hide</Button>
+        <Button type="link" size="small" style={{ fontSize: 15, color: primaryColor, marginLeft: 8 }}>Hide</Button>
       </Typography.Title>
       <Input.TextArea rows={2} placeholder="Add a comment…" style={{ borderRadius: 10, marginBottom: 16 }} />
       <div style={{ textAlign: 'center', padding: '24px 0' }}>
         <MessageOutlined style={{ fontSize: 36, color: '#e0e0e0' }} />
-        <div style={{ marginTop: 8, color: '#bbb', fontSize: 13 }}>No comments yet</div>
+        <div style={{ marginTop: 8, color: '#bbb', fontSize: 15 }}>No comments yet</div>
       </div>
     </Card>
   </div>
-);
+  );
+};
 
 /* ── List Item Card ── */
-const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit, onMore }) => (
+const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit, onMore }) => {
+  const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
+  return (
   <Card
     size="small"
     hoverable
@@ -385,21 +394,21 @@ const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit
     styles={{ body: { padding: '12px 14px' } }}
   >
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-      <span style={{ fontWeight: 600, fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <span style={{ fontWeight: 600, fontSize: 15, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {item.title}
       </span>
       <StatusBadge status={item.status} />
     </div>
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <span style={{ fontSize: 11, color: '#999' }}>
+      <span style={{ fontSize: 15, color: '#999' }}>
         <UserOutlined style={{ marginRight: 4 }} />{item.assignee}
       </span>
-      <span style={{ fontSize: 11, color: '#bbb' }}>
+      <span style={{ fontSize: 15, color: '#bbb' }}>
         <ClockCircleOutlined style={{ marginRight: 3 }} />{item.dueDate}
       </span>
     </div>
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
-      <a style={{ color: '#1677FF', fontSize: 11 }}>{item.projectName}</a>
+      <a style={{ color: primaryColor, fontSize: 15 }}>{item.projectName}</a>
       <Space size={8}>
         <Dropdown
           menu={{ items: getMoreMenuItems(type), onClick: ({ key }) => onMore?.(key, item) }}
@@ -415,7 +424,8 @@ const ListItemCard = ({ item, type = 'task', isSelected, isDark, onClick, onEdit
       </Space>
     </div>
   </Card>
-);
+  );
+};
 
 /* ── Main Page ── */
 const TasksPage = () => {
@@ -722,7 +732,7 @@ const TasksPage = () => {
                   background: isActive ? (isDark ? 'rgba(90,181,232,0.18)' : 'rgba(214,159,109,0.12)') : (isDark ? darkSurfaceBg : '#f7f7f7'),
                   color: isActive ? primaryColor : (isDark ? '#a8b0ba' : '#666'),
                   fontWeight: isActive ? 700 : 400,
-                  fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+                  fontSize: 15, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 }}
               >
                 {tab.icon} {tab.label}

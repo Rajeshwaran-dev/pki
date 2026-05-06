@@ -10,7 +10,7 @@ const { Content } = Layout;
 const AppLayout = () => {
   const collapsed = useAppSelector(s => s.ui.sidebarCollapsed);
   const isMobile = useIsMobile();
-  const marginLeft = isMobile ? 0 : collapsed ? 72 : 240;
+  const marginLeft = isMobile ? 0 : collapsed ? 72 : 260;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

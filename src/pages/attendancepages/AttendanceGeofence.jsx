@@ -83,8 +83,8 @@ export default function AttendanceGeofence() {
             ⛭
           </div>
           <div>
-            <div style={{ fontWeight: 700 }}>{r.name}</div>
-            {r.badge ? <Tag style={{ marginTop: 4, borderRadius: 8 }}>{r.badge}</Tag> : null}
+            <div style={{ fontWeight: 700, fontSize: 16 }}>{r.name}</div>
+            {r.badge ? <Tag style={{ marginTop: 4, borderRadius: 8, fontSize: 14 }}>{r.badge}</Tag> : null}
           </div>
         </div>
       ),
@@ -93,7 +93,7 @@ export default function AttendanceGeofence() {
       title: 'Branch Code',
       dataIndex: 'code',
       width: 120,
-      render: v => <Tag style={{ borderRadius: 8, background: chipBg, borderColor: 'transparent', color: isDark ? '#e9edef' : undefined }}>{v}</Tag>,
+      render: v => <Tag style={{ borderRadius: 8, background: chipBg, borderColor: 'transparent', color: isDark ? '#e9edef' : undefined, fontSize: 14 }}>{v}</Tag>,
     },
     { title: 'Address', dataIndex: 'address' },
     {

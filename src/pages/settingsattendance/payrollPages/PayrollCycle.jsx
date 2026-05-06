@@ -21,10 +21,10 @@ export default function PayrollCycle() {
       />
 
       <Card className="crm-card">
-        <Title level={5} style={{ marginTop: 0 }}>Cycle Settings</Title>
+        <Title level={5} style={{ marginTop: 0, fontSize: 18 }}>Cycle Settings</Title>
 
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>Payroll Cycle Type</div>
+          <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 15 }}>Payroll Cycle Type</div>
           <Select
             value={cycleType}
             onChange={setCycleType}
@@ -39,8 +39,8 @@ export default function PayrollCycle() {
 
         <Row gutter={[16, 16]} style={{ marginTop: 14 }}>
           <Col xs={24} md={12}>
-            <div style={{ fontWeight: 600 }}>Cycle Start Date</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Day of month</Text>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>Cycle Start Date</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Day of month</Text>
             <InputNumber
               min={1}
               max={31}
@@ -50,8 +50,8 @@ export default function PayrollCycle() {
             />
           </Col>
           <Col xs={24} md={12}>
-            <div style={{ fontWeight: 600 }}>Cycle End Date</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Day of month</Text>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>Cycle End Date</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Day of month</Text>
             <InputNumber
               min={1}
               max={31}
@@ -61,8 +61,8 @@ export default function PayrollCycle() {
             />
           </Col>
           <Col xs={24} md={12}>
-            <div style={{ fontWeight: 600 }}>Payment Date</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Day of month when salary is paid</Text>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>Payment Date</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Day of month when salary is paid</Text>
             <InputNumber
               min={1}
               max={31}
@@ -72,8 +72,8 @@ export default function PayrollCycle() {
             />
           </Col>
           <Col xs={24} md={12}>
-            <div style={{ fontWeight: 600 }}>Cutoff Date</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Last day for attendance/data inclusion</Text>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>Cutoff Date</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Last day for attendance/data inclusion</Text>
             <InputNumber
               min={1}
               max={31}

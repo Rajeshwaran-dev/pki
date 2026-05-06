@@ -5,6 +5,7 @@ import {
   ContactsOutlined, DollarOutlined,
   BankOutlined, UserOutlined, LockOutlined,
   SafetyCertificateOutlined, CreditCardOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -69,10 +70,24 @@ const AppSidebar = () => {
 
   const selectedKey = useMemo(() => {
     const p = location.pathname;
+    // Special case for dashboard
+    if (p === '/') return '/';
+    
+    // Find the menu item that best matches the current path
+    // We check for exact match first, then for partial match (starts with)
     const direct = menuItems
       .flatMap((i) => (i.children ? i.children : [i]))
       .find((i) => i.key === p);
-    return direct?.key || '/';
+    
+    if (direct) return direct.key;
+
+    // If no exact match, find the first menu item that the path starts with
+    // (excluding root '/' and settingsKey)
+    const partial = menuItems
+      .flatMap((i) => (i.children ? i.children : [i]))
+      .find((i) => i.key !== '/' && i.key !== settingsMenuKey && p.startsWith(i.key));
+
+    return partial?.key || '/';
   }, [location.pathname]);
 
   const defaultOpenKeys = useMemo(() => {
@@ -95,6 +110,7 @@ const AppSidebar = () => {
           gap: 12,
           overflow: 'visible',
           background: isDark ? 'transparent' : logoContainerBg,
+          position: 'relative',
         }}
       >
         {isDark ? (
@@ -108,6 +124,7 @@ const AppSidebar = () => {
               objectFit: 'contain',
               display: 'block',
               flexShrink: 1,
+              pointerEvents: 'none'
             }}
           />
         ) : (
@@ -122,9 +139,33 @@ const AppSidebar = () => {
               display: 'block',
               flexShrink: 0,
               transform: collapsed && !isMobile ? 'none' : 'scale(3.2)',
-              transformOrigin: 'center'
+              transformOrigin: 'center',
+              pointerEvents: 'none'
             }}
           />
+        )}
+
+        {isMobile && (
+          <div
+            onClick={() => dispatch(setMobileSidebarOpen(false))}
+            style={{
+              position: 'absolute',
+              right: 12,
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+              cursor: 'pointer',
+              color: isDark ? '#fff' : '#000',
+              zIndex: 10,
+              pointerEvents: 'auto'
+            }}
+          >
+            <CloseOutlined style={{ fontSize: 16 }} />
+          </div>
         )}
       </div>
 
@@ -146,7 +187,7 @@ const AppSidebar = () => {
             background: 'transparent',
             borderInlineEnd: 'none',
             color: isDark ? '#b2bdc8' : '#4f312a',
-            fontSize: 15,
+            fontSize: 17,
           }}
           theme={isDark ? 'dark' : 'light'}
         />
@@ -165,15 +206,15 @@ const AppSidebar = () => {
           >
             <Avatar
               size={34}
-              style={{ background: buffColor, fontWeight: 700, fontSize: 13, flexShrink: 0 }}
+              style={{ background: buffColor, fontWeight: 700, fontSize: 15, flexShrink: 0 }}
             >
               {user?.avatar || 'SA'}
             </Avatar>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#f0f0f0' : '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: 17, fontWeight: 600, color: isDark ? '#f0f0f0' : '#1f1f1f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.name || 'Super Admin'}
               </div>
-              <div style={{ fontSize: 13, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>
+              <div style={{ fontSize: 15, color: isDark ? '#5ab5e8' : buffColor, fontWeight: 500 }}>
                 {user?.role || 'Super Admin'}
               </div>
             </div>
@@ -188,13 +229,13 @@ const AppSidebar = () => {
               padding: collapsed && !isMobile ? '12px 0' : '10px 14px',
               justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
               borderRadius: 10, cursor: 'pointer',
-              color: '#FF4D4F', fontSize: 13.5, fontWeight: 500,
+              color: '#FF4D4F', fontSize: 15.5, fontWeight: 500,
               transition: 'background 0.2s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,77,79,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
           >
-            <span style={{ fontSize: 18, display: 'flex', alignItems: 'center' }}><LogoutOutlined /></span>
+            <span style={{ fontSize: 20, display: 'flex', alignItems: 'center' }}><LogoutOutlined /></span>
             {(!collapsed || isMobile) && <span>Sign Out</span>}
           </div>
         </Tooltip>
@@ -208,9 +249,9 @@ const AppSidebar = () => {
         placement="left"
         open={mobileOpen}
         onClose={() => dispatch(setMobileSidebarOpen(false))}
-        size="large"
+        width={260}
         styles={{
-          body: { padding: 0, background: siderBg, display: 'flex', flexDirection: 'column', height: '100%' },
+          body: { padding: 0, background: siderBg, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'visible' },
           header: { display: 'none' },
         }}
       >
@@ -225,7 +266,7 @@ const AppSidebar = () => {
       collapsed={collapsed}
       onCollapse={val => dispatch(setSidebarCollapsed(val))}
       trigger={null}
-      width={240}
+      width={260}
       collapsedWidth={72}
       style={{
         background: siderBg,
@@ -234,7 +275,7 @@ const AppSidebar = () => {
         position: 'fixed',
         left: 0, top: 0,
         zIndex: 100,
-        overflowX: 'hidden',
+        overflow: 'visible',
         transition: 'width 0.3s cubic-bezier(0.2,0,0,1)',
       }}
     >

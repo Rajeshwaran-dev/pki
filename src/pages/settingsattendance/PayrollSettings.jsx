@@ -78,12 +78,12 @@ export default function PayrollSettings() {
               onMouseLeave={(e) => { e.currentTarget.style.background = rowBg; }}
             >
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 14 }}>{it.title}</div>
-                <Text type="secondary" style={{ fontSize: 12 }}>
+                <div style={{ fontWeight: 700, fontSize: 18 }}>{it.title}</div>
+                <Text type="secondary" style={{ fontSize: 14 }}>
                   {it.desc}
                 </Text>
               </div>
-              <RightOutlined style={{ fontSize: 12, color: chevronColor }} />
+              <RightOutlined style={{ fontSize: 16, color: chevronColor }} />
             </div>
           ))}
         </div>

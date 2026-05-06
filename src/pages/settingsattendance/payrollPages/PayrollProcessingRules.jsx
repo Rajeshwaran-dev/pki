@@ -21,20 +21,20 @@ export default function PayrollProcessingRules() {
       />
 
       <Card className="crm-card">
-        <Title level={5} style={{ marginTop: 0 }}>Processing Configuration</Title>
+        <Title level={5} style={{ marginTop: 0, fontSize: 18 }}>Processing Configuration</Title>
 
         <div style={{ display: 'grid', gap: 14, marginTop: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Auto-Process Payroll</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Automatically process payroll on the scheduled date</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Auto-Process Payroll</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Automatically process payroll on the scheduled date</Text>
             </div>
             <Switch checked={autoProcess} onChange={setAutoProcess} />
           </div>
 
           <div>
-            <div style={{ fontWeight: 600 }}>Payroll Processing Date</div>
-            <Text type="secondary" style={{ fontSize: 12 }}>Day of the month when payroll should be processed (1–28)</Text>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>Payroll Processing Date</div>
+            <Text type="secondary" style={{ fontSize: 14 }}>Day of the month when payroll should be processed (1–28)</Text>
             <div style={{ marginTop: 8, maxWidth: 520 }}>
               <InputNumber min={1} max={28} value={processingDate} onChange={(v) => setProcessingDate(Number(v || 1))} style={{ width: '100%' }} />
             </div>
@@ -42,24 +42,24 @@ export default function PayrollProcessingRules() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Allow Manual Adjustments</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Allow HR to manually adjust payroll before processing</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Allow Manual Adjustments</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Allow HR to manually adjust payroll before processing</Text>
             </div>
             <Switch checked={allowManualAdjustments} onChange={setAllowManualAdjustments} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Require Approval</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Require manager approval before finalizing payroll</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Require Approval</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Require manager approval before finalizing payroll</Text>
             </div>
             <Switch checked={requireApproval} onChange={setRequireApproval} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Notify on Completion</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>Send notifications when payroll processing is complete</Text>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Notify on Completion</div>
+              <Text type="secondary" style={{ fontSize: 14 }}>Send notifications when payroll processing is complete</Text>
             </div>
             <Switch checked={notifyOnCompletion} onChange={setNotifyOnCompletion} />
           </div>

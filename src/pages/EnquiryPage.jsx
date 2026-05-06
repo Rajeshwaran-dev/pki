@@ -88,7 +88,7 @@ const EnquiryPage = () => {
       dataIndex: 'id',
       width: 140,
       render: (id) => (
-        <span style={{ color: primaryColor, fontWeight: 600, fontSize: 12.5 }}>{id}</span>
+        <span style={{ color: primaryColor, fontWeight: 600, fontSize: 16 }}>{id}</span>
       ),
     },
     {
@@ -111,14 +111,14 @@ const EnquiryPage = () => {
             style={{
               background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
               color: primaryColor,
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: 700,
               flexShrink: 0,
             }}
           >
             {name.replace('Mr. ', '').replace('Ms. ', '').charAt(0)}
           </Avatar>
-          <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
+          <span style={{ fontWeight: 600, fontSize: 16 }}>{name}</span>
         </div>
       ),
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -128,7 +128,7 @@ const EnquiryPage = () => {
       dataIndex: 'phone',
       width: 150,
       render: (v) => (
-        <a href={`tel:${v}`} style={{ color: isDark ? '#5ab5e8' : '#1677FF', fontSize: 12.5 }}>{v}</a>
+        <a href={`tel:${v}`} style={{ color: primaryColor, fontSize: 15 }}>{v}</a>
       ),
     },
     {
@@ -137,7 +137,7 @@ const EnquiryPage = () => {
       width: 190,
       ellipsis: true,
       render: (v) => (
-        <a href={`mailto:${v}`} style={{ color: isDark ? '#a8b0ba' : '#666', fontSize: 12.5 }}>{v || '—'}</a>
+        <a href={`mailto:${v}`} style={{ color: isDark ? '#a8b0ba' : '#666', fontSize: 15 }}>{v || '—'}</a>
       ),
     },
     {
@@ -149,7 +149,7 @@ const EnquiryPage = () => {
           style={{
             borderRadius: 6,
             fontWeight: 500,
-            fontSize: 11,
+            fontSize: 15,
             border: 'none',
             background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)',
             color: primaryColor,
@@ -168,7 +168,7 @@ const EnquiryPage = () => {
           style={{
             borderRadius: 6,
             fontWeight: 500,
-            fontSize: 11,
+            fontSize: 15,
             border: 'none',
             background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)',
             color: primaryColor,
@@ -189,7 +189,7 @@ const EnquiryPage = () => {
               items: [
                 {
                   key: 'view',
-                  icon: <EyeOutlined style={{ color: isDark ? '#5ab5e8' : '#1677FF' }} />,
+                  icon: <EyeOutlined style={{ color: primaryColor }} />,
                   label: 'View',
                   onClick: (e) => {
                     e.domEvent.stopPropagation();
@@ -219,7 +219,7 @@ const EnquiryPage = () => {
             <Button
               type="text"
               size="small"
-              icon={<MoreOutlined style={{ fontSize: 16, color: '#999' }} />}
+              icon={<MoreOutlined style={{ fontSize: 22, color: '#999' }} />}
             />
           </Dropdown>
         </div>
@@ -333,13 +333,13 @@ const EnquiryPage = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <span style={{ fontWeight: 700, fontSize: 13, color: primaryColor }}>{type}</span>
+                <span style={{ fontWeight: 700, fontSize: 15, color: primaryColor }}>{type}</span>
                 <span style={{
                   background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)',
                   color: primaryColor,
                   borderRadius: 20,
                   padding: '1px 8px',
-                  fontSize: 11,
+                  fontSize: 15,
                   fontWeight: 600,
                 }}>{items.length}</span>
               </div>
@@ -360,17 +360,17 @@ const EnquiryPage = () => {
                     onMouseLeave={e => { e.currentTarget.style.borderColor = isDark ? '#0a2e4a' : '#eee'; }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <Avatar size={26} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontSize: 11, fontWeight: 700 }}>
+                      <Avatar size={26} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontSize: 15, fontWeight: 700 }}>
                         {e.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0)}
                       </Avatar>
-                      <span style={{ fontWeight: 600, fontSize: 12.5 }}>{e.name}</span>
+                      <span style={{ fontWeight: 600, fontSize: 16 }}>{e.name}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: isDark ? '#8a98a8' : '#999', marginBottom: 4 }}>{e.id}</div>
+                    <div style={{ fontSize: 15, color: isDark ? '#8a98a8' : '#999', marginBottom: 4 }}>{e.id}</div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <Tag style={{ fontSize: 10, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)', color: primaryColor }}>
+                      <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)', color: primaryColor }}>
                         {e.source}
                       </Tag>
-                      <Tag style={{ fontSize: 10, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', color: isDark ? '#aaa' : '#666' }}>
+                      <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', color: isDark ? '#aaa' : '#666' }}>
                         {e.phone}
                       </Tag>
                     </div>

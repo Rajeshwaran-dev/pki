@@ -3,15 +3,9 @@ import { Table, Button, Tag, Space, Avatar, Tooltip, Modal, Form, Input, Select,
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import PageHeader from '@/components/shared/PageHeader';
 import { useAppSelector } from '@/store';
+import useIsMobile from '@/hooks/useIsMobile';
 
-const roleColors = {
-  'Super Admin': '#4F312A',
-  'Admin':       '#D69F6D',
-  'Designer':    '#52c41a',
-  'Site Manager':'#1677FF',
-  'Accountant':  '#722ed1',
-  'Viewer':      '#8c8c8c',
-};
+// Single source of truth for colors moved inside component to use theme primary
 
 const internalUsers = [
   { key: '1',  name: 'Anantha Narayana', initials: 'AN', phone: '+91 9944166332', joiningDate: '2022-04-01', email: 'ananth@perspectivekitchens.com',      role: 'Super Admin', status: 'Active' },
@@ -27,26 +21,29 @@ const internalUsers = [
 ];
 
 const SubTabs = ({ tabs, active, onChange, primaryColor, sectionBorder }) => (
-  <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-    {tabs.map(t => {
-      const isActive = active === t.key;
-      return (
-        <button
-          key={t.key}
-          onClick={() => onChange(t.key)}
-          style={{
-            padding: '5px 16px', borderRadius: 20, cursor: 'pointer', fontSize: 13,
-            border: `1.5px solid ${isActive ? primaryColor : sectionBorder}`,
-            background: isActive ? `${primaryColor}18` : 'transparent',
-            color: isActive ? primaryColor : '#888',
-            fontWeight: isActive ? 600 : 400,
-            transition: 'all 0.15s',
-          }}
-        >
-          {t.label}
-        </button>
-      );
-    })}
+  <div style={{ overflowX: 'auto', marginBottom: 16, paddingBottom: 4 }}>
+    <div style={{ display: 'flex', gap: 6, width: 'max-content' }}>
+      {tabs.map(t => {
+        const isActive = active === t.key;
+        return (
+          <button
+            key={t.key}
+            onClick={() => onChange(t.key)}
+            style={{
+              padding: '5px 16px', borderRadius: 20, cursor: 'pointer', fontSize: 14,
+              border: `1.5px solid ${isActive ? primaryColor : sectionBorder}`,
+              background: isActive ? `${primaryColor}18` : 'transparent',
+              color: isActive ? primaryColor : '#888',
+              fontWeight: isActive ? 600 : 400,
+              transition: 'all 0.15s',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {t.label}
+          </button>
+        );
+      })}
+    </div>
   </div>
 );
 
@@ -56,6 +53,7 @@ export default function UserManagementSettings() {
   const [addModal, setAddModal] = useState(false);
   const [form] = Form.useForm();
   const theme = useAppSelector(s => s.ui.theme);
+  const isMobile = useIsMobile();
   const isDark = theme === 'dark';
 
   const primaryColor  = isDark ? '#5ab5e8'  : '#D69F6D';
@@ -77,8 +75,9 @@ export default function UserManagementSettings() {
       <div className="animate-fade-in">
         {/* Toolbar */}
         <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          flexWrap: 'wrap', gap: 10, marginBottom: 4,
+          display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between',
+          flexDirection: isMobile ? 'column' : 'row',
+          flexWrap: 'wrap', gap: 12, marginBottom: 16,
         }}>
           <SubTabs
             tabs={[
@@ -91,13 +90,13 @@ export default function UserManagementSettings() {
             primaryColor={primaryColor}
             sectionBorder={sectionBorder}
           />
-          <Space>
+          <Space wrap={isMobile} style={{ width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'space-between' : 'flex-end' }}>
             <Input
-              placeholder="Search users..."
+              placeholder="Search..."
               prefix={<SearchOutlined style={{ color: '#aaa' }} />}
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ width: 200, borderRadius: 8 }}
+              style={{ width: isMobile ? 'calc(100% - 100px)' : 180, borderRadius: 8 }}
               size="small"
             />
             <Button
@@ -106,7 +105,7 @@ export default function UserManagementSettings() {
               onClick={() => setAddModal(true)}
               style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
             >
-              Add User
+              Add
             </Button>
           </Space>
         </div>
@@ -123,15 +122,16 @@ export default function UserManagementSettings() {
             dataSource={sub === 'internal' ? filtered : []}
             size="small"
             pagination={{ pageSize: 10, showTotal: t => `${t} users` }}
+            scroll={{ x: 'max-content' }}
             columns={[
               {
                 title: 'Name', dataIndex: 'name', width: 210,
                 render: (v, r) => (
                   <Space>
-                    <Avatar size={28} style={{ background: roleColors[r.role] || primaryColor, fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                    <Avatar size={32} style={{ background: primaryColor, fontSize: 16, fontWeight: 700, flexShrink: 0 }}>
                       {r.initials}
                     </Avatar>
-                    <span style={{ fontWeight: 500 }}>{v}</span>
+                    <span style={{ fontWeight: 500, fontSize: 16 }}>{v}</span>
                   </Space>
                 ),
               },
@@ -141,10 +141,10 @@ export default function UserManagementSettings() {
               {
                 title: 'Role', dataIndex: 'role', width: 130,
                 render: v => (
-                  <Tag style={{
-                    background: `${roleColors[v]}18`, color: roleColors[v],
-                    border: `1px solid ${roleColors[v]}40`,
-                    borderRadius: 6, fontSize: 11, fontWeight: 500,
+                    <Tag style={{
+                    background: `${primaryColor}18`, color: primaryColor,
+                    border: `1px solid ${primaryColor}40`,
+                    borderRadius: 6, fontSize: 14, fontWeight: 500,
                   }}>
                     {v}
                   </Tag>
@@ -153,7 +153,7 @@ export default function UserManagementSettings() {
               {
                 title: 'Status', dataIndex: 'status', width: 90,
                 render: v => (
-                  <Tag color={v === 'Active' ? 'success' : 'default'} style={{ borderRadius: 6, fontSize: 11 }}>
+                  <Tag color={v === 'Active' ? 'success' : 'default'} style={{ borderRadius: 6, fontSize: 14 }}>
                     {v}
                   </Tag>
                 ),
@@ -197,7 +197,7 @@ export default function UserManagementSettings() {
           </Form.Item>
           <Form.Item name="role" label="Role" rules={[{ required: true }]}>
             <Select placeholder="Select role">
-              {Object.keys(roleColors).map(r => <Select.Option key={r} value={r}>{r}</Select.Option>)}
+              {['Super Admin', 'Admin', 'Designer', 'Site Manager', 'Accountant', 'Viewer'].map(r => <Select.Option key={r} value={r}>{r}</Select.Option>)}
             </Select>
           </Form.Item>
           <Form.Item name="joiningDate" label="Joining Date">

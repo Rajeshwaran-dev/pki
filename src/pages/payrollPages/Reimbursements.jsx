@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Table, Tag, Typography, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import PageHeader from '@/components/shared/PageHeader';
+import useIsMobile from '@/hooks/useIsMobile';
 
 const { Text } = Typography;
 
@@ -13,6 +14,7 @@ const demo = [
 const formatINR = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`;
 
 export default function Reimbursements() {
+  const isMobile = useIsMobile();
   const [q, setQ] = useState('');
   const [rows, setRows] = useState(demo);
 
@@ -23,7 +25,7 @@ export default function Reimbursements() {
   }, [q, rows]);
 
   const columns = [
-    { title: 'Employee', dataIndex: 'employee', render: v => <span style={{ fontWeight: 700 }}>{v}</span> },
+    { title: 'Employee', dataIndex: 'employee', render: v => <span style={{ fontWeight: 700, fontSize: 16 }}>{v}</span> },
     { title: 'Type', dataIndex: 'type', width: 140 },
     { title: 'Amount', dataIndex: 'amount', width: 120, align: 'right', render: v => formatINR(v) },
     { title: 'Status', dataIndex: 'status', width: 120, render: v => <Tag color={v === 'Approved' ? 'success' : 'default'}>{v}</Tag> },
@@ -50,14 +52,14 @@ export default function Reimbursements() {
       />
 
       <Card className="crm-card" style={{ marginBottom: 16 }}>
-        <Space wrap>
-          <Input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} style={{ width: 240 }} />
+        <Space wrap direction={isMobile ? 'vertical' : 'horizontal'} style={{ width: '100%' }}>
+          <Input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} style={{ width: isMobile ? '100%' : 240 }} />
           <Text type="secondary">Hook backend later if required.</Text>
         </Space>
       </Card>
 
       <Card className="crm-card" styles={{ body: { padding: 0 } }}>
-        <Table rowKey="id" columns={columns} dataSource={data} pagination={{ pageSize: 10, showSizeChanger: false }} />
+        <Table rowKey="id" columns={columns} dataSource={data} pagination={{ pageSize: 10, showSizeChanger: false }} scroll={{ x: 'max-content' }} />
       </Card>
     </div>
   );

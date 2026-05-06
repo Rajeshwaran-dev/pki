@@ -24,7 +24,7 @@ export default function PayrollAttendance() {
     {
       title: 'Employee',
       dataIndex: 'employee',
-      render: v => <span style={{ fontWeight: 700 }}>{v}</span>,
+      render: v => <span style={{ fontWeight: 700, fontSize: 16 }}>{v}</span>,
     },
     { title: 'Date', dataIndex: 'date', width: 130 },
     {

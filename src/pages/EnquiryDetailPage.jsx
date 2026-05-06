@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button, Avatar, Modal, Form, Input, Select, DatePicker,
   TimePicker, Tag, Space, Row, Col, Tooltip, message, Upload,
@@ -14,6 +14,10 @@ import {
   updateEnquiry, deleteEnquiry, addFollowUp,
   addProposal, deleteProposal, addFile, deleteFile,
 } from '@/store/slices/enquirySlice';
+import { 
+  ClipboardList, Folder, Phone, FileText, CheckCircle, 
+  User, HardHat, Search, Mail
+} from 'lucide-react';
 import useIsMobile from '@/hooks/useIsMobile';
 import dayjs from 'dayjs';
 
@@ -32,8 +36,8 @@ const OCCUPATIONS = ['IT', 'Business', 'Engineer', 'Doctor', 'Lawyer', 'Architec
 /* ── small helpers ── */
 const InfoRow = ({ label, value, isDark }) => (
   <div style={{ marginBottom: 10 }}>
-    <div style={{ fontSize: 11, color: isDark ? '#6a7f95' : '#aaa', fontWeight: 500, marginBottom: 2 }}>{label}</div>
-    <div style={{ fontSize: 13, color: isDark ? '#e0e8f0' : '#1f1f1f', fontWeight: 500 }}>{value || '—'}</div>
+    <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#aaa', fontWeight: 500, marginBottom: 2 }}>{label}</div>
+    <div style={{ fontSize: 16, color: isDark ? '#e0e8f0' : '#1f1f1f', fontWeight: 500 }}>{value || '—'}</div>
   </div>
 );
 
@@ -63,29 +67,29 @@ const FileCard = ({ file, onDelete, isDark, primaryColor }) => (
       }}
     >
       {file.type === 'pdf'
-        ? <FilePdfOutlined style={{ color: '#FF4D4F', fontSize: 18 }} />
-        : <FileImageOutlined style={{ color: '#1677FF', fontSize: 18 }} />
+        ? <FilePdfOutlined style={{ color: '#FF4D4F', fontSize: 20 }} />
+        : <FileImageOutlined style={{ color: primaryColor, fontSize: 20 }} />
       }
     </div>
     <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#d8e8f8' : '#1f1f1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#1f1f1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {file.name}
       </div>
-      <div style={{ fontSize: 11, color: isDark ? '#6a7f95' : '#aaa' }}>{file.date}</div>
+      <div style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#aaa' }}>{file.date}</div>
     </div>
     <Space size={4}>
       <Tooltip title="Delete">
         <Button type="text" size="small" icon={<DeleteOutlined />} danger onClick={onDelete} />
       </Tooltip>
       <Tooltip title="Download">
-        <Button type="text" size="small" icon={<DownloadOutlined />} style={{ color: isDark ? '#5ab5e8' : '#1677FF' }} />
+        <Button type="text" size="small" icon={<DownloadOutlined />} style={{ color: primaryColor }} />
       </Tooltip>
     </Space>
   </div>
 );
 
 const FollowUpCard = ({ fu, isDark, primaryColor }) => {
-  const prospectColor = fu.prospectStatus === 'Hot' ? '#FF4D4F' : fu.prospectStatus === 'Warm' ? '#FAAD14' : '#1677FF';
+  const prospectColor = fu.prospectStatus === 'Hot' ? '#FF4D4F' : fu.prospectStatus === 'Warm' ? '#FAAD14' : primaryColor;
   return (
     <div
       style={{
@@ -103,16 +107,16 @@ const FollowUpCard = ({ fu, isDark, primaryColor }) => {
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', marginBottom: 8 }}>
           <div>
-            <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Date</div>
-            <div style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{fu.date}</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Date</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{fu.date}</div>
           </div>
           <div>
-            <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Prospect Status</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Prospect Status</div>
             <Tag
               style={{
                 borderRadius: 6,
                 fontWeight: 600,
-                fontSize: 11,
+                fontSize: 13,
                 border: 'none',
                 background: `${prospectColor}18`,
                 color: prospectColor,
@@ -123,21 +127,21 @@ const FollowUpCard = ({ fu, isDark, primaryColor }) => {
             </Tag>
           </div>
           <div>
-            <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Follow Up Status</div>
-            <div style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.followUpStatus}</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Follow Up Status</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.followUpStatus}</div>
           </div>
           <div>
-            <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Next Follow Up</div>
-            <div style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.nextFollowUp}</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Next Follow Up</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.nextFollowUp}</div>
           </div>
           <div>
-            <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Follow Up By</div>
-            <div style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.followUpBy}</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Follow Up By</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222', marginTop: 3 }}>{fu.followUpBy}</div>
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 10, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>Remarks</div>
-          <div style={{ fontSize: 12.5, color: isDark ? '#a8b8c8' : '#444' }}>{fu.remarks}</div>
+          <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>Remarks</div>
+          <div style={{ fontSize: 15, color: isDark ? '#a8b8c8' : '#444' }}>{fu.remarks}</div>
         </div>
       </div>
       <div
@@ -150,7 +154,7 @@ const FollowUpCard = ({ fu, isDark, primaryColor }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: 700,
           flexShrink: 0,
           marginTop: 2,
@@ -178,7 +182,7 @@ const ProposalVersionCard = ({ proposal, isDark, primaryColor, onDelete }) => (
           style={{
             borderRadius: 8,
             fontWeight: 700,
-            fontSize: 12,
+            fontSize: 14,
             padding: '3px 10px',
             border: 'none',
             background: isDark ? 'rgba(90,181,232,0.14)' : 'rgba(214,159,109,0.14)',
@@ -187,11 +191,11 @@ const ProposalVersionCard = ({ proposal, isDark, primaryColor, onDelete }) => (
         >
           #{proposal.id}
         </Tag>
-        <span style={{ fontWeight: 700, fontSize: 13, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{proposal.version}</span>
-        <span style={{ fontSize: 11, color: isDark ? '#6a7f95' : '#bbb' }}>{proposal.date}</span>
-        <span style={{ fontWeight: 700, fontSize: 13, color: '#52C41A' }}>{proposal.amount}</span>
+        <span style={{ fontWeight: 700, fontSize: 15, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{proposal.version}</span>
+        <span style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#bbb' }}>{proposal.date}</span>
+        <span style={{ fontWeight: 700, fontSize: 15, color: '#52C41A' }}>{proposal.amount}</span>
         {proposal.notes && (
-          <span style={{ fontSize: 11, color: isDark ? '#8a9ab0' : '#888', fontStyle: 'italic' }}>{proposal.notes}</span>
+          <span style={{ fontSize: 13, color: isDark ? '#8a9ab0' : '#888', fontStyle: 'italic' }}>{proposal.notes}</span>
         )}
       </div>
       <Space size={6} wrap>
@@ -220,7 +224,7 @@ const EnquiryDetailPage = () => {
   const primaryColor = isDark ? '#5ab5e8' : '#D69F6D';
   const panelBg = isDark ? '#0d3554' : '#ffffff';
   const panelBorder = isDark ? '#1a4d72' : '#f0f0f0';
-  const sectionTitleColor = isDark ? '#5ab5e8' : '#1677FF';
+  const sectionTitleColor = primaryColor;
 
   const [activeTab, setActiveTab] = useState('detail');
   const [proposalSubTab, setProposalSubTab] = useState('new');
@@ -238,8 +242,10 @@ const EnquiryDetailPage = () => {
   if (!enquiry) {
     return (
       <div style={{ textAlign: 'center', padding: 80 }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-        <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Enquiry Not Found</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <Search size={48} color={primaryColor} />
+        </div>
+        <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 8 }}>Enquiry Not Found</div>
         <Button type="primary" onClick={() => navigate('/enquiry')} style={{ background: primaryColor, border: 'none' }}>
           Back to Enquiries
         </Button>
@@ -250,11 +256,11 @@ const EnquiryDetailPage = () => {
   const avatarLetter = enquiry.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0);
 
   const TABS = [
-    { key: 'detail', label: 'Enquiry Detail', icon: '📋' },
-    { key: 'files', label: 'Files', icon: '📁' },
-    { key: 'followup', label: 'Follow Up', icon: '📞' },
-    { key: 'proposal', label: 'Proposal', icon: '📄' },
-    { key: 'confirm', label: 'Confirm Order', icon: '✅' },
+    { key: 'detail', label: 'Enquiry Detail', icon: <ClipboardList size={19} /> },
+    { key: 'files', label: 'Files', icon: <Folder size={19} /> },
+    { key: 'followup', label: 'Follow Up', icon: <Phone size={19} /> },
+    { key: 'proposal', label: 'Proposal', icon: <FileText size={19} /> },
+    { key: 'confirm', label: 'Confirm Order', icon: <CheckCircle size={19} /> },
   ];
 
   /* ── handlers ── */
@@ -381,7 +387,7 @@ const EnquiryDetailPage = () => {
     padding: '10px 14px',
     borderRadius: 10,
     cursor: 'pointer',
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: activeTab === key ? 600 : 500,
     color: activeTab === key ? primaryColor : (isDark ? '#8a9ab0' : '#666'),
     background: activeTab === key
@@ -396,7 +402,7 @@ const EnquiryDetailPage = () => {
     padding: '7px 18px',
     borderRadius: 8,
     cursor: 'pointer',
-    fontSize: 12.5,
+    fontSize: 15,
     fontWeight: proposalSubTab === key ? 600 : 500,
     color: proposalSubTab === key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
     background: proposalSubTab === key ? primaryColor : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
@@ -411,8 +417,8 @@ const EnquiryDetailPage = () => {
       {/* Primary Information */}
       <div style={sectionBox}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <span style={{ fontSize: 16 }}>👤</span>
-          <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Primary Information</span>
+          <User size={18} color={sectionTitleColor} />
+          <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Primary Information</span>
         </div>
         <InfoRow label="Enquiry Number" value={enquiry.id} isDark={isDark} />
         <InfoRow
@@ -432,8 +438,8 @@ const EnquiryDetailPage = () => {
       {/* Project Details */}
       <div style={sectionBox}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <span style={{ fontSize: 16 }}>🏗️</span>
-          <span style={{ fontWeight: 700, fontSize: 14, color: sectionTitleColor }}>Project Details</span>
+          <HardHat size={18} color={sectionTitleColor} />
+          <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Project Details</span>
         </div>
         <InfoRow label="Project Type" value={enquiry.projectType} isDark={isDark} />
         <InfoRow label="Site Status" value={enquiry.siteStatus} isDark={isDark} />
@@ -459,7 +465,7 @@ const EnquiryDetailPage = () => {
             borderBottom: `1px solid ${isDark ? '#1a4d72' : '#e8f0fb'}`,
           }}
         >
-          <span style={{ fontWeight: 700, fontSize: 13, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{title}</span>
+          <span style={{ fontWeight: 700, fontSize: 15, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{title}</span>
           <Upload
             showUploadList={false}
             beforeUpload={(file) => { handleFileUpload(fileType, { file }); return false; }}
@@ -479,7 +485,7 @@ const EnquiryDetailPage = () => {
           </Upload>
         </div>
         {files.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '24px 0', color: isDark ? '#5a7a95' : '#ccc', fontSize: 12 }}>
+          <div style={{ textAlign: 'center', padding: '24px 0', color: isDark ? '#5a7a95' : '#ccc', fontSize: 14 }}>
             <InboxOutlined style={{ fontSize: 28, display: 'block', marginBottom: 6 }} />
             No files yet
           </div>
@@ -520,8 +526,10 @@ const EnquiryDetailPage = () => {
       </div>
       {enquiry.followUps.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '48px 0', color: isDark ? '#5a7a95' : '#ccc' }}>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>📞</div>
-          <div style={{ fontSize: 14 }}>No follow-ups yet. Add your first follow-up!</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+            <Phone size={40} color={isDark ? '#5a7a95' : '#ccc'} />
+          </div>
+          <div style={{ fontSize: 16 }}>No follow-ups yet. Add your first follow-up!</div>
         </div>
       ) : (
         enquiry.followUps.map(fu => (
@@ -545,7 +553,7 @@ const EnquiryDetailPage = () => {
               color: primaryColor,
               borderRadius: 10,
               padding: '1px 6px',
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: 700,
             }}>
               {enquiry.proposals.length}
@@ -589,8 +597,10 @@ const EnquiryDetailPage = () => {
         <div>
           {enquiry.proposals.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '48px 0', color: isDark ? '#5a7a95' : '#ccc' }}>
-              <div style={{ fontSize: 40, marginBottom: 10 }}>📄</div>
-              <div style={{ fontSize: 14 }}>No proposals generated yet.</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                <FileText size={40} color={isDark ? '#5a7a95' : '#ccc'} />
+              </div>
+              <div style={{ fontSize: 16 }}>No proposals generated yet.</div>
             </div>
           ) : (
             enquiry.proposals.map(p => (
@@ -618,11 +628,13 @@ const EnquiryDetailPage = () => {
 
   const renderConfirmOrder = () => (
     <div style={{ textAlign: 'center', padding: '64px 0' }}>
-      <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-      <div style={{ fontSize: 18, fontWeight: 700, color: isDark ? '#d8e8f8' : '#1f1f1f', marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+        <CheckCircle size={56} color="#52C41A" />
+      </div>
+      <div style={{ fontSize: 20, fontWeight: 700, color: isDark ? '#d8e8f8' : '#1f1f1f', marginBottom: 8 }}>
         Confirm Order
       </div>
-      <div style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#aaa', marginBottom: 24 }}>
+      <div style={{ fontSize: 15, color: isDark ? '#6a7f95' : '#aaa', marginBottom: 24 }}>
         Once the proposal is accepted, confirm the order to proceed.
       </div>
       <Button
@@ -647,14 +659,25 @@ const EnquiryDetailPage = () => {
   return (
     <div>
       {/* Back button */}
-      <Button
-        type="text"
-        icon={<ArrowLeftOutlined />}
-        onClick={() => navigate('/enquiry')}
-        style={{ marginBottom: 14, color: isDark ? '#8a9ab0' : '#666', fontWeight: 500 }}
-      >
-        Back to Enquiries
-      </Button>
+      <div style={{ marginBottom: 14, position: 'relative', zIndex: 1000 }}>
+        <Button
+          type="text"
+          icon={<ArrowLeftOutlined />}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate('/enquiry');
+          }}
+          style={{ 
+            color: isDark ? '#8a9ab0' : '#666', 
+            fontWeight: 500,
+            cursor: 'pointer',
+            pointerEvents: 'auto'
+          }}
+        >
+          Back to Enquiries
+        </Button>
+      </div>
 
       {/* ── Header card ── */}
       <div
@@ -678,17 +701,17 @@ const EnquiryDetailPage = () => {
             style={{
               background: primaryColor,
               fontWeight: 800,
-              fontSize: 18,
+              fontSize: 20,
               flexShrink: 0,
             }}
           >
             {avatarLetter}
           </Avatar>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#f0f4f8' : '#1f1f1f' }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: isDark ? '#f0f4f8' : '#1f1f1f' }}>
               {enquiry.name}
             </div>
-            <div style={{ fontSize: 12, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600 }}>
+            <div style={{ fontSize: 15, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600 }}>
               {enquiry.id}
             </div>
           </div>
@@ -699,7 +722,7 @@ const EnquiryDetailPage = () => {
             icon={<EditOutlined />}
             onClick={openEditModal}
             style={{
-              background: isDark ? '#1677FF' : '#1677FF',
+              background: primaryColor,
               color: '#fff',
               border: 'none',
               borderRadius: 8,
@@ -752,7 +775,7 @@ const EnquiryDetailPage = () => {
                     border: 'none',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: activeTab === tab.key ? 600 : 500,
                     color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
                     background: activeTab === tab.key ? primaryColor : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
@@ -782,7 +805,7 @@ const EnquiryDetailPage = () => {
                   }
                 }}
               >
-                <span style={{ fontSize: 15 }}>{tab.icon}</span>
+                <span style={{ fontSize: 19 }}>{tab.icon}</span>
                 <span>{tab.label}</span>
               </div>
             ))
