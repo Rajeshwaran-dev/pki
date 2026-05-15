@@ -12,8 +12,9 @@ import {
 import { useAppSelector, useAppDispatch } from '@/store';
 import {
   updateEnquiry, deleteEnquiry, addFollowUp,
-  addProposal, deleteProposal, addFile, deleteFile,
+  addProposal, deleteProposal, addFile, deleteFile, assignEnquiry, convertToClient, STAFF_MEMBERS
 } from '@/store/slices/enquirySlice';
+import { addClient } from '@/store/slices/clientSlice';
 import { 
   ClipboardList, Folder, Phone, FileText, CheckCircle, 
   User, HardHat, Search, Mail
@@ -238,6 +239,11 @@ const EnquiryDetailPage = () => {
   const [editForm] = Form.useForm();
   const [followUpForm] = Form.useForm();
   const [proposalForm] = Form.useForm();
+  const [clientInfoForm] = Form.useForm();
+
+  // Convert Wizard State
+  const [convertStep, setConvertStep] = useState(0);
+  const [convertLoading, setConvertLoading] = useState(false);
 
   if (!enquiry) {
     return (
@@ -260,7 +266,7 @@ const EnquiryDetailPage = () => {
     { key: 'files', label: 'Files', icon: <Folder size={19} /> },
     { key: 'followup', label: 'Follow Up', icon: <Phone size={19} /> },
     { key: 'proposal', label: 'Proposal', icon: <FileText size={19} /> },
-    { key: 'confirm', label: 'Confirm Order', icon: <CheckCircle size={19} /> },
+    { key: 'convert', label: 'Convert to Client', icon: <CheckCircle size={19} /> },
   ];
 
   /* ── handlers ── */
@@ -280,6 +286,7 @@ const EnquiryDetailPage = () => {
       siteSize: enquiry.siteSize,
       siteAddress: enquiry.siteAddress,
       gstNo: enquiry.gstNo,
+      assignedTo: enquiry.assignedTo,
     });
     setEditModalOpen(true);
   };
@@ -380,23 +387,29 @@ const EnquiryDetailPage = () => {
     minWidth: 0,
   };
 
-  const tabStyle = (key) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    padding: '10px 14px',
-    borderRadius: 10,
-    cursor: 'pointer',
-    fontSize: 15,
-    fontWeight: activeTab === key ? 600 : 500,
-    color: activeTab === key ? primaryColor : (isDark ? '#8a9ab0' : '#666'),
-    background: activeTab === key
-      ? (isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)')
-      : 'transparent',
-    borderLeft: activeTab === key ? `3px solid ${primaryColor}` : '3px solid transparent',
-    marginBottom: 4,
-    transition: 'all 0.15s ease',
-  });
+  const tabStyle = (key) => {
+    const isConvert = key === 'convert';
+    const isActive = activeTab === key;
+    
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '10px 14px',
+      borderRadius: 10,
+      cursor: 'pointer',
+      fontSize: 15,
+      fontWeight: isActive ? 600 : 500,
+      color: isActive ? (isConvert ? '#fff' : primaryColor) : (isDark ? '#8a9ab0' : '#666'),
+      background: isActive
+        ? (isConvert ? '#52C41A' : (isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)'))
+        : (isConvert && !enquiry.convertedToClient ? (isDark ? 'rgba(82,196,26,0.08)' : 'rgba(82,196,26,0.05)') : 'transparent'),
+      borderLeft: isActive && !isConvert ? `3px solid ${primaryColor}` : '3px solid transparent',
+      border: isConvert && !isActive ? `1px dashed ${isDark ? 'rgba(82,196,26,0.3)' : 'rgba(82,196,26,0.4)'}` : '1px solid transparent',
+      marginBottom: 4,
+      transition: 'all 0.15s ease',
+    };
+  };
 
   const subTabStyle = (key) => ({
     padding: '7px 18px',
@@ -413,41 +426,87 @@ const EnquiryDetailPage = () => {
   /* ────────────── TAB CONTENTS ────────────── */
 
   const renderDetail = () => (
-    <div style={{ display: 'flex', gap: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-      {/* Primary Information */}
-      <div style={sectionBox}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <User size={18} color={sectionTitleColor} />
-          <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Primary Information</span>
+    <div>
+      {/* Convert CTA Banner (if not yet converted) */}
+      {!enquiry.convertedToClient && (
+        <div style={{
+          marginBottom: 16,
+          background: isDark ? 'rgba(82,196,26,0.1)' : '#f6ffed',
+          border: `1px solid ${isDark ? 'rgba(82,196,26,0.2)' : '#b7eb8f'}`,
+          borderRadius: 12,
+          padding: '16px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          flexWrap: 'wrap',
+          width: '100%'
+        }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>Lead ready for conversion?</div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#888' }}>Convert this enquiry into a client and create a project instantly.</div>
+          </div>
+          <Button 
+            type="primary" 
+            icon={<CheckCircle size={16} />}
+            onClick={() => setActiveTab('convert')}
+            style={{ background: '#52C41A', border: 'none', borderRadius: 8, fontWeight: 600 }}
+          >
+            Convert Now
+          </Button>
         </div>
-        <InfoRow label="Enquiry Number" value={enquiry.id} isDark={isDark} />
-        <InfoRow
-          label="Enquiry Date"
-          value={new Date(enquiry.enquiryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          isDark={isDark}
-        />
-        <InfoRow label="Name" value={enquiry.name} isDark={isDark} />
-        <InfoRow label="Phone" value={enquiry.phone} isDark={isDark} />
-        <InfoRow label="Email" value={enquiry.email} isDark={isDark} />
-        <InfoRow label="Occupation" value={enquiry.occupation} isDark={isDark} />
-        <InfoRow label="Address" value={enquiry.address} isDark={isDark} />
-        <InfoRow label="Source" value={enquiry.source} isDark={isDark} />
-        <InfoRow label="Remarks" value={enquiry.remarks} isDark={isDark} />
-      </div>
+      )}
 
-      {/* Project Details */}
-      <div style={sectionBox}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <HardHat size={18} color={sectionTitleColor} />
-          <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Project Details</span>
+      <div style={{ display: 'flex', gap: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+        {/* Primary Information */}
+        <div style={sectionBox}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <User size={18} color={sectionTitleColor} />
+            <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Primary Information</span>
+          </div>
+          <InfoRow label="Enquiry Number" value={enquiry.id} isDark={isDark} />
+          <InfoRow
+            label="Enquiry Date"
+            value={new Date(enquiry.enquiryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            isDark={isDark}
+          />
+          <InfoRow label="Name" value={enquiry.name} isDark={isDark} />
+          <InfoRow label="Phone" value={enquiry.phone} isDark={isDark} />
+          <InfoRow label="Email" value={enquiry.email} isDark={isDark} />
+          <InfoRow label="Occupation" value={enquiry.occupation} isDark={isDark} />
+          <InfoRow label="Address" value={enquiry.address} isDark={isDark} />
+          <InfoRow label="Source" value={enquiry.source} isDark={isDark} />
+          <InfoRow 
+            label="Assigned To" 
+            value={
+              enquiry.assignedTo ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Avatar size={20} style={{ background: primaryColor, fontSize: 10 }}>
+                    {enquiry.assignedTo.split(' ').map(n => n[0]).join('')}
+                  </Avatar>
+                  {enquiry.assignedTo}
+                </div>
+              ) : 'Not Assigned'
+            } 
+            isDark={isDark} 
+          />
+          <InfoRow label="Remarks" value={enquiry.remarks} isDark={isDark} />
         </div>
-        <InfoRow label="Project Type" value={enquiry.projectType} isDark={isDark} />
-        <InfoRow label="Site Status" value={enquiry.siteStatus} isDark={isDark} />
-        <InfoRow label="Project Subtype" value={enquiry.projectSubtype} isDark={isDark} />
-        <InfoRow label="Site Location" value={enquiry.siteLocation} isDark={isDark} />
-        <InfoRow label="Site Size" value={enquiry.siteSize} isDark={isDark} />
-        <InfoRow label="Site Address" value={enquiry.siteAddress} isDark={isDark} />
-        <InfoRow label="GST No" value={enquiry.gstNo} isDark={isDark} />
+
+        {/* Project Details */}
+        <div style={sectionBox}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <HardHat size={18} color={sectionTitleColor} />
+            <span style={{ fontWeight: 700, fontSize: 16, color: sectionTitleColor }}>Project Details</span>
+          </div>
+          <InfoRow label="Project Type" value={enquiry.projectType} isDark={isDark} />
+          <InfoRow label="Site Status" value={enquiry.siteStatus} isDark={isDark} />
+          <InfoRow label="Project Subtype" value={enquiry.projectSubtype} isDark={isDark} />
+          <InfoRow label="Site Location" value={enquiry.siteLocation} isDark={isDark} />
+          <InfoRow label="Site Size" value={enquiry.siteSize} isDark={isDark} />
+          <InfoRow label="Site Address" value={enquiry.siteAddress} isDark={isDark} />
+          <InfoRow label="GST No" value={enquiry.gstNo} isDark={isDark} />
+        </div>
       </div>
     </div>
   );
@@ -626,33 +685,172 @@ const EnquiryDetailPage = () => {
     </div>
   );
 
-  const renderConfirmOrder = () => (
-    <div style={{ textAlign: 'center', padding: '64px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-        <CheckCircle size={56} color="#52C41A" />
+  const renderConvertToClient = () => {
+    if (enquiry.convertedToClient && enquiry.clientData) {
+      const cd = enquiry.clientData;
+      return (
+        <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <div style={{ 
+              width: 80, height: 80, borderRadius: '50%', 
+              background: '#52C41A15', display: 'flex', 
+              alignItems: 'center', justifyContent: 'center',
+              border: '1px solid #52C41A30'
+            }}>
+              <CheckCircle size={44} color="#52C41A" />
+            </div>
+          </div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: isDark ? '#f0f4f8' : '#1f1f1f', marginBottom: 12 }}>
+            Converted to Client!
+          </div>
+          <div style={{ fontSize: 16, color: isDark ? '#8a9ab0' : '#666', marginBottom: 24 }}>
+            This enquiry was successfully converted to <strong>{cd.clientName}</strong> on {cd.convertedDate}.
+            You can now manage this client and create projects for them in the Clients module.
+          </div>
+          <Space size={16}>
+            <Button 
+              size="large" 
+              type="primary" 
+              style={{ 
+                background: primaryColor, 
+                border: 'none', 
+                borderRadius: 12, 
+                height: 48, 
+                paddingInline: 32,
+                fontWeight: 700
+              }} 
+              onClick={() => navigate('/clients')}
+            >
+              View Clients
+            </Button>
+          </Space>
+        </div>
+      );
+    }
+
+    const handleConvertConfirm = async () => {
+      setConvertLoading(true);
+      try {
+        const clientValues = await clientInfoForm.validateFields();
+
+        const clientId = `CLT-${dayjs().year()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+
+        const clientData = {
+          id: clientId,
+          ...clientValues,
+          legalName: clientValues.clientName, // Default legal name to client name
+          createdDate: dayjs().format('YYYY-MM-DD'),
+          convertedDate: dayjs().format('MMM D, YYYY'),
+          sourceEnquiryId: enquiry.id,
+        };
+
+        // Simulate API call
+        await new Promise(r => setTimeout(r, 1000));
+
+        dispatch(addClient(clientData));
+        dispatch(convertToClient({ enquiryId: enquiry.id, clientData }));
+
+        message.success('Lead converted successfully!');
+        setConvertLoading(false);
+      } catch (err) {
+        setConvertLoading(false);
+        message.error('Please complete all required fields');
+      }
+    };
+
+    return (
+      <div>
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: isDark ? '#d8e8f8' : '#1f1f1f', marginBottom: 4 }}>
+            Convert to Client
+          </div>
+          <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#888' }}>
+            Complete the details below to convert this lead into a formal client.
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 24, justifyContent: 'center' }}>
+          {/* Client Details Section */}
+          <div style={{ maxWidth: 600, flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <User size={18} color={primaryColor} />
+              <span style={{ fontWeight: 700, fontSize: 16, color: primaryColor }}>Client Details</span>
+            </div>
+            <Form 
+              form={clientInfoForm} 
+              layout="vertical" 
+              className="crm-form-shell"
+              initialValues={{
+                clientName: enquiry.name,
+                phone: enquiry.phone,
+                email: enquiry.email,
+                address1: enquiry.address,
+                occupation: enquiry.occupation,
+                gst: enquiry.gstNo,
+              }}
+            >
+              <Form.Item name="clientName" label="Client Name" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+              <Row gutter={12}>
+                <Col span={12}>
+                  <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="email" label="Email">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item name="occupation" label="Occupation">
+                <Select options={OCCUPATIONS.map(o => ({ value: o, label: o }))} />
+              </Form.Item>
+              <Form.Item name="address1" label="Address">
+                <Input.TextArea rows={2} />
+              </Form.Item>
+              <Form.Item name="gst" label="GST Number">
+                <Input />
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
+
+        <div style={{ 
+          marginTop: 32, 
+          paddingTop: 24, 
+          borderTop: `1px solid ${isDark ? '#1a4d72' : '#f0f0f0'}`,
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}>
+          <Button
+            type="primary"
+            size="large"
+            loading={convertLoading}
+            onClick={handleConvertConfirm}
+            style={{ 
+              background: '#52C41A', 
+              border: 'none', 
+              borderRadius: 10, 
+              fontWeight: 700, 
+              padding: '0 40px',
+              height: 48
+            }}
+          >
+            Confirm & Convert to Client
+          </Button>
+        </div>
       </div>
-      <div style={{ fontSize: 20, fontWeight: 700, color: isDark ? '#d8e8f8' : '#1f1f1f', marginBottom: 8 }}>
-        Confirm Order
-      </div>
-      <div style={{ fontSize: 15, color: isDark ? '#6a7f95' : '#aaa', marginBottom: 24 }}>
-        Once the proposal is accepted, confirm the order to proceed.
-      </div>
-      <Button
-        type="primary"
-        size="large"
-        style={{ background: '#52C41A', border: 'none', borderRadius: 10, fontWeight: 600, padding: '0 32px' }}
-      >
-        Confirm Order
-      </Button>
-    </div>
-  );
+    );
+  };
 
   const tabContent = {
     detail: renderDetail(),
     files: renderFiles(),
     followup: renderFollowUp(),
     proposal: renderProposal(),
-    confirm: renderConfirmOrder(),
+    convert: renderConvertToClient(),
   };
 
   /* ──────────────────── RENDER ──────────────────── */
@@ -714,6 +912,32 @@ const EnquiryDetailPage = () => {
             <div style={{ fontSize: 15, color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600 }}>
               {enquiry.id}
             </div>
+            {enquiry.assignedTo && (
+              <div style={{ fontSize: 14, color: isDark ? '#8a9ab0' : '#666', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <User size={14} />
+                <span>Assigned to: <strong>{enquiry.assignedTo}</strong></span>
+              </div>
+            )}
+            {enquiry.convertedToClient && (
+              <div
+                style={{
+                  marginTop: 8,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '4px 12px',
+                  borderRadius: 20,
+                  background: isDark ? 'rgba(82,196,26,0.12)' : 'rgba(82,196,26,0.08)',
+                  border: `1px solid ${isDark ? 'rgba(82,196,26,0.2)' : 'rgba(82,196,26,0.25)'}`,
+                  color: '#52C41A',
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                <CheckCircle size={14} />
+                <span>CONVERTED TO CLIENT</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -800,7 +1024,10 @@ const EnquiryDetailPage = () => {
                 }}
                 onMouseLeave={e => {
                   if (activeTab !== tab.key) {
-                    e.currentTarget.style.background = 'transparent';
+                    const isConvert = tab.key === 'convert';
+                    e.currentTarget.style.background = isConvert && !enquiry.convertedToClient 
+                      ? (isDark ? 'rgba(82,196,26,0.08)' : 'rgba(82,196,26,0.05)') 
+                      : 'transparent';
                     e.currentTarget.style.color = isDark ? '#8a9ab0' : '#666';
                   }
                 }}
@@ -880,6 +1107,13 @@ const EnquiryDetailPage = () => {
             </Row>
             <Form.Item name="address" label="Address">
               <Input.TextArea rows={2} />
+            </Form.Item>
+            <Form.Item name="assignedTo" label="Assign To">
+              <Select 
+                placeholder="Assign to person" 
+                options={STAFF_MEMBERS.map(s => ({ value: s.name, label: s.name }))} 
+                allowClear
+              />
             </Form.Item>
             <Form.Item name="remarks" label="Remarks">
               <Input.TextArea rows={2} />

@@ -6,11 +6,12 @@ import {
 import {
   PlusOutlined, SearchOutlined, FilterOutlined, UploadOutlined,
   UnorderedListOutlined, AppstoreOutlined, EyeOutlined, DeleteOutlined,
-  PhoneOutlined, MailOutlined, UserOutlined, MoreOutlined,
+  PhoneOutlined, MailOutlined, UserOutlined, MoreOutlined, CheckCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { addEnquiry, deleteEnquiry } from '@/store/slices/enquirySlice';
+import { addEnquiry, deleteEnquiry, assignEnquiry, convertToClient, STAFF_MEMBERS } from '@/store/slices/enquirySlice';
+import { addClient } from '@/store/slices/clientSlice';
 import PageHeader from '@/components/shared/PageHeader';
 import useIsMobile from '@/hooks/useIsMobile';
 import dayjs from 'dayjs';
@@ -34,6 +35,56 @@ const EnquiryPage = () => {
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'pipeline'
   const [newModalOpen, setNewModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [convertForm] = Form.useForm();
+  const [convertModalOpen, setConvertModalOpen] = useState(false);
+  const [convertingEnquiry, setConvertingEnquiry] = useState(null);
+  const [convertLoading, setConvertLoading] = useState(false);
+
+  const OCCUPATIONS = ['IT', 'Business', 'Engineer', 'Doctor', 'Lawyer', 'Architect', 'Businessman', 'Consultant', 'CA', 'Professional'];
+
+  const openConvertModal = (enquiry) => {
+    setConvertingEnquiry(enquiry);
+    convertForm.setFieldsValue({
+      clientName: enquiry.name,
+      phone: enquiry.phone,
+      email: enquiry.email || '',
+      address1: enquiry.address || '',
+      gst: enquiry.gstNo || '',
+    });
+    setConvertModalOpen(true);
+  };
+
+  const handleConvertConfirm = async () => {
+    setConvertLoading(true);
+    try {
+      const values = await convertForm.validateFields();
+      const clientId = `CLT-${dayjs().year()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+      const clientData = {
+        id: clientId,
+        ...values,
+        legalName: values.clientName,
+        createdDate: dayjs().format('YYYY-MM-DD'),
+        convertedDate: dayjs().format('MMM D, YYYY'),
+        sourceEnquiryId: convertingEnquiry.id,
+      };
+      await new Promise(r => setTimeout(r, 800));
+      dispatch(addClient(clientData));
+      dispatch(convertToClient({ enquiryId: convertingEnquiry.id, clientData }));
+      setConvertModalOpen(false);
+      convertForm.resetFields();
+      setConvertingEnquiry(null);
+      Modal.success({
+        title: 'Lead Converted!',
+        content: `${values.clientName} has been added as a client successfully.`,
+        okText: 'View Clients',
+        onOk: () => navigate('/clients'),
+      });
+    } catch {
+      // validation failed
+    } finally {
+      setConvertLoading(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     if (!search) return enquiries;
@@ -73,6 +124,7 @@ const EnquiryPage = () => {
         siteSize: values.siteSize || '',
         siteAddress: values.siteAddress || '',
         gstNo: values.gstNo || '',
+        assignedTo: values.assignedTo || null,
         files: { site: [], design: [], other: [] },
         followUps: [],
         proposals: [],
@@ -137,7 +189,7 @@ const EnquiryPage = () => {
       width: 190,
       ellipsis: true,
       render: (v) => (
-        <a href={`mailto:${v}`} style={{ color: isDark ? '#a8b0ba' : '#666', fontSize: 15 }}>{v || '—'}</a>
+        <a href={`mailto:${v}`} style={{ color: isDark ? '#a8b0ba' : '#666', fontSize: 15 }}>{v || 'â€”'}</a>
       ),
     },
     {
@@ -179,6 +231,33 @@ const EnquiryPage = () => {
       ),
     },
     {
+      title: 'Assigned To',
+      dataIndex: 'assignedTo',
+      width: 170,
+      render: (assignedTo) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {assignedTo ? (
+            <>
+              <Avatar
+                size={24}
+                style={{
+                  background: isDark ? 'rgba(90,181,232,0.2)' : 'rgba(214,159,109,0.2)',
+                  color: primaryColor,
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                {assignedTo.split(' ').map(n => n[0]).join('')}
+              </Avatar>
+              <span style={{ fontSize: 15, fontWeight: 500 }}>{assignedTo}</span>
+            </>
+          ) : (
+            <span style={{ color: '#999', fontStyle: 'italic', fontSize: 14 }}>Not Assigned</span>
+          )}
+        </div>
+      ),
+    },
+    {
       title: 'Actions',
       width: 80,
       fixed: 'right',
@@ -195,6 +274,29 @@ const EnquiryPage = () => {
                     e.domEvent.stopPropagation();
                     navigate(`/enquiry/${row.id}`);
                   },
+                },
+                {
+                  key: 'convert',
+                  icon: <CheckCircleOutlined style={{ color: '#52C41A' }} />,
+                  label: <span style={{ color: '#52C41A', fontWeight: 600 }}>Convert to Client</span>,
+                  disabled: row.convertedToClient,
+                  onClick: (e) => {
+                    e.domEvent.stopPropagation();
+                    if (!row.convertedToClient) openConvertModal(row);
+                  },
+                },
+                {
+                  key: 'assign',
+                  icon: <UserOutlined style={{ color: primaryColor }} />,
+                  label: 'Assign To',
+                  children: STAFF_MEMBERS.map(staff => ({
+                    key: `assign-${staff.id}`,
+                    label: staff.name,
+                    onClick: (e) => {
+                      e.domEvent.stopPropagation();
+                      dispatch(assignEnquiry({ enquiryId: row.id, personName: staff.name }));
+                    },
+                  })),
                 },
                 {
                   key: 'delete',
@@ -306,7 +408,7 @@ const EnquiryPage = () => {
             columns={columns}
             rowKey="id"
             pagination={{ pageSize: 10, showTotal: t => `${t} enquiries`, showSizeChanger: false }}
-            scroll={{ x: 900 }}
+            scroll={{ x: 1100 }}
             size="middle"
             onRow={(record) => ({
               onClick: () => handleRowClick(record),
@@ -364,15 +466,41 @@ const EnquiryPage = () => {
                         {e.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0)}
                       </Avatar>
                       <span style={{ fontWeight: 600, fontSize: 16 }}>{e.name}</span>
+                      {e.convertedToClient && (
+                        <Tag 
+                          color="success" 
+                          style={{ margin: 0, borderRadius: 4, fontSize: 11, fontWeight: 700, padding: '0 4px', height: 18, lineHeight: '16px' }}
+                        >
+                          CONVERTED
+                        </Tag>
+                      )}
                     </div>
                     <div style={{ fontSize: 15, color: isDark ? '#8a98a8' : '#999', marginBottom: 4 }}>{e.id}</div>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)', color: primaryColor }}>
-                        {e.source}
-                      </Tag>
-                      <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', color: isDark ? '#aaa' : '#666' }}>
-                        {e.phone}
-                      </Tag>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(90,181,232,0.12)' : 'rgba(214,159,109,0.12)', color: primaryColor }}>
+                          {e.source}
+                        </Tag>
+                        <Tag style={{ fontSize: 14, borderRadius: 4, margin: 0, border: 'none', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', color: isDark ? '#aaa' : '#666' }}>
+                          {e.phone}
+                        </Tag>
+                      </div>
+                      {e.assignedTo && (
+                        <Tooltip title={`Assigned to: ${e.assignedTo}`}>
+                          <Avatar 
+                            size={22} 
+                            style={{ 
+                              background: isDark ? 'rgba(90,181,232,0.2)' : 'rgba(214,159,109,0.2)', 
+                              color: primaryColor, 
+                              fontSize: 10, 
+                              fontWeight: 700,
+                              border: `1px solid ${primaryColor}40`
+                            }}
+                          >
+                            {e.assignedTo.split(' ').map(n => n[0]).join('')}
+                          </Avatar>
+                        </Tooltip>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -440,6 +568,13 @@ const EnquiryPage = () => {
             <Form.Item name="address" label="Address">
               <Input.TextArea rows={2} placeholder="Full address" />
             </Form.Item>
+            <Form.Item name="assignedTo" label="Assign To">
+              <Select 
+                placeholder="Assign to person" 
+                options={STAFF_MEMBERS.map(s => ({ value: s.name, label: s.name }))} 
+                allowClear
+              />
+            </Form.Item>
           </div>
 
           <div className="crm-section">
@@ -498,6 +633,89 @@ const EnquiryPage = () => {
             </Form.Item>
           </div>
         </Form>
+      </Modal>
+
+      {/* Convert to Client Modal */}
+      <Modal
+        className="crm-modal"
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: 'rgba(82,196,26,0.12)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <CheckCircleOutlined style={{ color: '#52C41A', fontSize: 18 }} />
+            </div>
+            <span>Convert to Client</span>
+          </div>
+        }
+        open={convertModalOpen}
+        onCancel={() => {
+          setConvertModalOpen(false);
+          convertForm.resetFields();
+          setConvertingEnquiry(null);
+        }}
+        onOk={handleConvertConfirm}
+        okText="Confirm & Convert"
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{
+          style: { background: '#52C41A', border: 'none', borderRadius: 8, fontWeight: 700 },
+          loading: convertLoading,
+        }}
+        width={isMobile ? '96%' : 560}
+        centered
+      >
+        {convertingEnquiry && (
+          <div>
+            <div style={{
+              background: isDark ? 'rgba(82,196,26,0.08)' : 'rgba(82,196,26,0.05)',
+              border: isDark ? '1px solid rgba(82,196,26,0.18)' : '1px solid rgba(82,196,26,0.14)',
+              borderRadius: 10,
+              padding: '10px 14px',
+              marginBottom: 20,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <Avatar
+                size={38}
+                style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 16, flexShrink: 0 }}
+              >
+                {convertingEnquiry.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0)}
+              </Avatar>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 15, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{convertingEnquiry.name}</div>
+                <div style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#888' }}>
+                  {convertingEnquiry.id} · {convertingEnquiry.projectType} · {convertingEnquiry.source}
+                </div>
+              </div>
+            </div>
+            <Form form={convertForm} layout="vertical" className="crm-form-shell">
+              <Form.Item name="clientName" label="Client Name" rules={[{ required: true, message: 'Client name is required' }]}>
+                <Input />
+              </Form.Item>
+              <Row gutter={12}>
+                <Col span={12}>
+                  <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Phone is required' }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="email" label="Email">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item name="address1" label="Address">
+                <Input.TextArea rows={2} />
+              </Form.Item>
+              <Form.Item name="gst" label="GST Number">
+                <Input />
+              </Form.Item>
+            </Form>
+          </div>
+        )}
       </Modal>
     </div>
   );

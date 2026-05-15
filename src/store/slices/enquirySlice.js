@@ -21,6 +21,14 @@ const generateFollowUps = (count) => {
   return result;
 };
 
+export const STAFF_MEMBERS = [
+  { id: 1, name: 'Arjun M.', avatar: 'AM' },
+  { id: 2, name: 'Kavya S.', avatar: 'KS' },
+  { id: 3, name: 'Rohan K.', avatar: 'RK' },
+  { id: 4, name: 'Deepak R.', avatar: 'DR' },
+  { id: 5, name: 'Sales Person 1', avatar: 'S1' },
+];
+
 const mockEnquiries = [
   {
     id: 'ENQ-2026-030',
@@ -30,6 +38,7 @@ const mockEnquiries = [
     email: 'suresh@gmail.com',
     projectType: 'Residential',
     source: 'Instagram',
+    assignedTo: 'Arjun M.',
     occupation: 'IT',
     address: 'BAFANA NIWAS, AUND HINEWADI WAKAD CHOWK, PERUNGUDI, Chennai, Tamil Nadu, India, 560016',
     remarks: '',
@@ -109,6 +118,8 @@ const mockEnquiries = [
         notes: 'Discount of 5% added',
       },
     ],
+    convertedToClient: false,
+    clientData: null,
   },
   {
     id: 'ENQ-2026-029',
@@ -118,6 +129,7 @@ const mockEnquiries = [
     email: 'ramesh@gmail.com',
     projectType: 'Residential',
     source: 'Google',
+    assignedTo: 'Kavya S.',
     occupation: 'Business',
     address: 'No. 12, Anna Nagar, Chennai, Tamil Nadu, India, 600040',
     remarks: '',
@@ -306,6 +318,8 @@ for (let i = 21; i >= 1; i--) {
     files: { site: [], design: [], other: [] },
     followUps: [],
     proposals: [],
+    convertedToClient: false,
+    clientData: null,
   });
 }
 
@@ -352,13 +366,26 @@ const enquirySlice = createSlice({
         enq.files[fileType] = enq.files[fileType].filter(f => f.id !== fileId);
       }
     },
+    assignEnquiry: (state, action) => {
+      const { enquiryId, personName } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq) enq.assignedTo = personName;
+    },
+    convertToClient: (state, action) => {
+      const { enquiryId, clientData } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq) {
+        enq.convertedToClient = true;
+        enq.clientData = clientData;
+      }
+    },
   },
 });
 
 export const {
   addEnquiry, updateEnquiry, deleteEnquiry,
   addFollowUp, addProposal, deleteProposal,
-  addFile, deleteFile,
+  addFile, deleteFile, assignEnquiry, convertToClient,
 } = enquirySlice.actions;
 
 export default enquirySlice.reducer;

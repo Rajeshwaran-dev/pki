@@ -35,7 +35,7 @@ const ClientCard = ({ client, index, onEdit, onView, isDark, primaryColor }) => 
           fontWeight: 700, fontSize: 15, flexShrink: 0,
         }}
       >
-        {client.clientName.charAt(0)}
+        {client.clientName ? client.clientName.charAt(0) : '?'}
       </Avatar>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 700, fontSize: 16 }}>{client.clientName}</div>
@@ -98,7 +98,7 @@ const ClientsPage = () => {
       render: (name, row) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: primaryColor, fontWeight: 700, fontSize: 15 }}>
-            {name.charAt(0)}
+            {name ? name.charAt(0) : '?'}
           </Avatar>
           <div>
             <div style={{ fontWeight: 600, fontSize: 16 }}>{name}</div>

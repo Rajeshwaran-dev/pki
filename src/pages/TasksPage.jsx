@@ -889,7 +889,7 @@ const TasksPage = () => {
         width={isMobile ? '95%' : 620}
         centered
       >
-        <Form form={form} layout="vertical" className="crm-form-shell" style={{ marginTop: 16 }}>
+        <Form form={form} layout="vertical" className="crm-form-shell">
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 
@@ -968,7 +968,7 @@ const TasksPage = () => {
         width={isMobile ? '95%' : 620}
         centered
       >
-        <Form form={form} layout="vertical" className="crm-form-shell" style={{ marginTop: 16 }}>
+        <Form form={form} layout="vertical" className="crm-form-shell">
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Type is required' }]}> 

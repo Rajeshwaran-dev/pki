@@ -489,7 +489,7 @@
 .crm-modal .ant-modal-header,
 .crm-sheet-modal .ant-modal-header {
   margin: 0 !important;
-  padding: 10px 20px !important;
+  padding: 12px 20px !important;
   background: #fafafa !important;
   border-bottom: 1px solid #ededed !important;
 }
@@ -503,7 +503,7 @@
 
 .crm-modal .ant-modal-body,
 .crm-sheet-modal .ant-modal-body {
-  padding: 18px 20px 0 !important;
+  padding: 16px 20px 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   max-height: calc(100vh - 170px);
@@ -512,19 +512,19 @@
 .crm-modal .ant-modal-footer,
 .crm-sheet-modal .ant-modal-footer {
   margin: 0 !important;
-  padding: 12px 20px 16px !important;
+  padding: 10px 20px 14px !important;
   border-top: 1px solid #ededed !important;
 }
 
 .crm-modal .ant-modal-close,
 .crm-sheet-modal .ant-modal-close {
-  top: 10px !important;
-  inset-inline-end: 12px !important;
+  top: 12px !important;
+  inset-inline-end: 14px !important;
   color: #111827 !important;
 }
 
 .crm-form-shell .ant-form-item {
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .crm-form-shell .ant-form-item-label > label {
@@ -611,15 +611,15 @@
 }
 
 .crm-section {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .crm-section-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 18px;
-  font-size: 18px;
+  margin-bottom: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #2b2b2b;
 }
