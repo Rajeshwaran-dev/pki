@@ -841,9 +841,6 @@ const ProjectDetailPage = () => {
 
   const handleRequirementAnswer = (key, value) => {
     setRequirementAnswers(prev => ({ ...prev, [key]: value }));
-    if (value !== 'Other') {
-      setCurrentQuestionIndex(prev => prev + 1);
-    }
   };
 
   const handleOtherSubmit = (key) => {
@@ -1437,8 +1434,14 @@ const renderFiles = () => (
               </Button>
               <Button
                 type="primary"
-                disabled={!requirementAnswers[currentQuestion.key] || requirementAnswers[currentQuestion.key] === 'Other'}
-                onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                disabled={!requirementAnswers[currentQuestion.key] || (requirementAnswers[currentQuestion.key] === 'Other' && !otherInput.trim())}
+                onClick={() => {
+                  if (requirementAnswers[currentQuestion.key] === 'Other') {
+                    handleRequirementAnswer(currentQuestion.key, otherInput.trim());
+                    setOtherInput('');
+                  }
+                  setCurrentQuestionIndex(prev => prev + 1);
+                }}
                 style={primaryButtonStyle}
                 size="large"
               >

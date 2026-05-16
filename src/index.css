@@ -188,7 +188,7 @@
   border-radius: 10px !important;
 }
 .light-sidebar-menu .ant-menu-item.ant-menu-item-selected {
-  background: linear-gradient(135deg, #4F312A 0%, #D69F6D 100%) !important;
+  background: #D69F6D !important;
   border-radius: 10px !important;
   box-shadow: 0 4px 14px rgba(79, 49, 42, 0.22) !important;
 }
@@ -198,7 +198,7 @@
   font-weight: 600;
 }
 .light-sidebar-menu .ant-menu-sub .ant-menu-item.ant-menu-item-selected {
-  background: linear-gradient(135deg, #4F312A 0%, #D69F6D 100%) !important;
+  background: #D69F6D !important;
   border-radius: 8px !important;
   box-shadow: 0 3px 10px rgba(79, 49, 42, 0.18) !important;
 }
