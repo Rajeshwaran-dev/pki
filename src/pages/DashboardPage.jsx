@@ -57,7 +57,7 @@ const StatCard = ({ title, value, icon, color, trend, prefix, suffix, formatter,
           </div>
         </div>
       </div>
-      <div style={{ fontSize: 13, color: isDark ? '#a8b0ba' : '#888', fontWeight: 500, marginTop: 4 }}>
+      <div style={{ fontSize: 16, color: isDark ? '#a8b0ba' : '#888', fontWeight: 500, marginTop: 4 }}>
         {title}
       </div>
     </Card>
