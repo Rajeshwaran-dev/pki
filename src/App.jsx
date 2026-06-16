@@ -10,6 +10,7 @@ import TasksPage from './pages/TasksPage';
 import OrganisationSettings from './pages/settingsPages/OrganisationSettings';
 import UserManagementSettings from './pages/settingsPages/UserManagementSettings';
 import PermissionsSettings from './pages/settingsPages/PermissionsSettings';
+import NotificationSettings from './pages/settingsPages/NotificationSettings';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
@@ -18,6 +19,7 @@ import EnquiryPage from './pages/EnquiryPage';
 import EnquiryDetailPage from './pages/EnquiryDetailPage';
 import ClientDetailPage from './pages/ClientDetailPage';
 import LoginPage from './pages/LoginPage';
+import PublicEnquiryForm from './pages/PublicEnquiryForm';
 import NotFound from './pages/NotFound';
 import AttendanceSettings from './pages/attendancepages/AttendanceSettings';
 import AdminAttendance from './pages/attendancepages/AdminAttendance';
@@ -74,6 +76,7 @@ const ThemedApp = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/public-enquiry" element={<PublicEnquiryForm />} />
             <Route
               element={
                 <ProtectedRoute>
@@ -96,6 +99,7 @@ const ThemedApp = () => {
               <Route path="/settings/organisation" element={<OrganisationSettings />} />
               <Route path="/settings/users" element={<UserManagementSettings />} />
               <Route path="/settings/permissions" element={<PermissionsSettings />} />
+              <Route path="/settings/notifications" element={<NotificationSettings />} />
 
               {/* Attendance */}
               <Route path="/attendance" element={<AdminAttendance />} />

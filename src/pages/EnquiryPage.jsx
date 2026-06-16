@@ -1,12 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import {
   Table, Button, Input, Space, Tag, Avatar, Tooltip, Modal, Form,
-  Row, Col, Select, DatePicker, Dropdown,
+  Row, Col, Select, DatePicker, Dropdown, AutoComplete, Spin, message
 } from 'antd';
 import {
   PlusOutlined, SearchOutlined, FilterOutlined, UploadOutlined,
   UnorderedListOutlined, AppstoreOutlined, EyeOutlined, DeleteOutlined,
-  PhoneOutlined, MailOutlined, UserOutlined, MoreOutlined, CheckCircleOutlined,
+  PhoneOutlined, MailOutlined, UserOutlined, MoreOutlined, CheckCircleOutlined, LinkOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -41,6 +41,34 @@ const EnquiryPage = () => {
   const [convertLoading, setConvertLoading] = useState(false);
 
   const OCCUPATIONS = ['IT', 'Business', 'Engineer', 'Doctor', 'Lawyer', 'Architect', 'Businessman', 'Consultant', 'CA', 'Professional'];
+
+  const searchTimeoutRef = useRef(null);
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+
+  const handleLocationSearch = (value) => {
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    if (!value) {
+      setLocationOptions([]);
+      return;
+    }
+    setFetchingLocation(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=10&countrycodes=in`);
+        const data = await res.json();
+        const options = data.map(item => ({
+          value: item.display_name,
+          label: item.display_name,
+        }));
+        setLocationOptions(options);
+      } catch (error) {
+        console.error("Location search error:", error);
+      } finally {
+        setFetchingLocation(false);
+      }
+    }, 600);
+  };
 
   const openConvertModal = (enquiry) => {
     setConvertingEnquiry(enquiry);
@@ -86,6 +114,15 @@ const EnquiryPage = () => {
     }
   };
 
+  const handleCopyPublicLink = () => {
+    const link = `${window.location.origin}/public-enquiry`;
+    navigator.clipboard.writeText(link).then(() => {
+      message.success('Public enquiry link copied to clipboard!');
+    }).catch(() => {
+      message.error('Failed to copy link');
+    });
+  };
+
   const filtered = useMemo(() => {
     if (!search) return enquiries;
     const q = search.toLowerCase();
@@ -117,6 +154,7 @@ const EnquiryPage = () => {
         source: values.source || 'Instagram',
         occupation: values.occupation || '',
         address: values.address || '',
+        location: values.location || '',
         remarks: values.remarks || '',
         siteStatus: values.siteStatus || 'Planning Stage',
         projectSubtype: values.projectSubtype || 'Apartment',
@@ -381,6 +419,14 @@ const EnquiryPage = () => {
               </Tooltip>
             </Space.Compact>
             <Button
+              icon={<LinkOutlined />}
+              onClick={handleCopyPublicLink}
+              style={{ borderRadius: 8, fontWeight: 500 }}
+              className="crm-outline-btn"
+            >
+              {!isMobile && 'Copy Public Link'}
+            </Button>
+            <Button
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setNewModalOpen(true)}
@@ -567,6 +613,16 @@ const EnquiryPage = () => {
             </Row>
             <Form.Item name="address" label="Address">
               <Input.TextArea rows={2} placeholder="Full address" />
+            </Form.Item>
+            <Form.Item name="location" label="Location (Area / Street)">
+              <AutoComplete
+                options={locationOptions}
+                onSearch={handleLocationSearch}
+                placeholder="Type to search location..."
+                notFoundContent={fetchingLocation ? <Spin size="small" /> : null}
+              >
+                <Input />
+              </AutoComplete>
             </Form.Item>
             <Form.Item name="assignedTo" label="Assign To">
               <Select 

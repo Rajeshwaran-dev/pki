@@ -95,29 +95,7 @@ const mockEnquiries = [
         number: 6,
       },
     ],
-    proposals: [
-      {
-        id: 'PRO-19679-005',
-        version: 'Ver5',
-        date: 'Feb 18, 2026',
-        amount: '₹7,62,750',
-        notes: 'changed disc to 10%',
-      },
-      {
-        id: 'PRO-19679-004',
-        version: 'Ver4',
-        date: 'Feb 18, 2026',
-        amount: '₹5,14,843',
-        notes: 'with prof service added',
-      },
-      {
-        id: 'PRO-19679-003',
-        version: 'Ver3',
-        date: 'Feb 18, 2026',
-        amount: '₹5,23,843',
-        notes: 'Discount of 5% added',
-      },
-    ],
+    proposals: [],
     convertedToClient: false,
     clientData: null,
   },
@@ -349,6 +327,14 @@ const enquirySlice = createSlice({
       const enq = state.enquiries.find(e => e.id === enquiryId);
       if (enq) enq.proposals.unshift(proposal);
     },
+    updateProposal: (state, action) => {
+      const { enquiryId, proposal } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq) {
+        const idx = enq.proposals.findIndex(p => p.id === proposal.id);
+        if (idx !== -1) enq.proposals[idx] = proposal;
+      }
+    },
     deleteProposal: (state, action) => {
       const { enquiryId, proposalId } = action.payload;
       const enq = state.enquiries.find(e => e.id === enquiryId);
@@ -384,7 +370,7 @@ const enquirySlice = createSlice({
 
 export const {
   addEnquiry, updateEnquiry, deleteEnquiry,
-  addFollowUp, addProposal, deleteProposal,
+  addFollowUp, addProposal, updateProposal, deleteProposal,
   addFile, deleteFile, assignEnquiry, convertToClient,
 } = enquirySlice.actions;
 

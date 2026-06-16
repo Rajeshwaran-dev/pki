@@ -1,26 +1,29 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button, Avatar, Modal, Form, Input, Select, DatePicker,
   TimePicker, Tag, Space, Row, Col, Tooltip, message, Upload,
+  AutoComplete, Spin
 } from 'antd';
 import {
   ArrowLeftOutlined, EditOutlined, DeleteOutlined,
   DownloadOutlined, PlusOutlined, FileImageOutlined,
-  FilePdfOutlined, InboxOutlined,
+  FilePdfOutlined, InboxOutlined, CheckOutlined, WhatsAppOutlined
 } from '@ant-design/icons';
 import { useAppSelector, useAppDispatch } from '@/store';
 import {
   updateEnquiry, deleteEnquiry, addFollowUp,
-  addProposal, deleteProposal, addFile, deleteFile, assignEnquiry, convertToClient, STAFF_MEMBERS
+  addProposal, updateProposal, deleteProposal, addFile, deleteFile, assignEnquiry, convertToClient, STAFF_MEMBERS
 } from '@/store/slices/enquirySlice';
 import { addClient } from '@/store/slices/clientSlice';
+import { addProject } from '@/store/slices/projectSlice';
 import { 
   ClipboardList, Folder, Phone, FileText, CheckCircle, 
   User, HardHat, Search, Mail
 } from 'lucide-react';
 import useIsMobile from '@/hooks/useIsMobile';
 import dayjs from 'dayjs';
+import QuoteBuilder from '@/components/quotes/QuoteBuilder';
 
 const { Dragger } = Upload;
 
@@ -167,46 +170,68 @@ const FollowUpCard = ({ fu, isDark, primaryColor }) => {
   );
 };
 
-const ProposalVersionCard = ({ proposal, isDark, primaryColor, onDelete }) => (
+const ProposalVersionCard = ({ proposal, isDark, primaryColor, enquiryPhone, onView, onEdit, onEditBOQ, onDownload, onDelete, onApprove }) => (
   <div
     style={{
       background: isDark ? '#0b2338' : '#fff',
-      border: `2px solid ${isDark ? '#1a4d72' : '#e8f0fb'}`,
-      borderRadius: 12,
-      padding: '14px 16px',
+      border: `1px solid ${isDark ? '#1a4d72' : '#e0e0e0'}`,
+      borderRadius: 8,
+      padding: '12px 16px',
       marginBottom: 12,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      flexWrap: 'wrap',
+      justifyContent: 'space-between'
     }}
   >
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'space-between' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Tag
-          style={{
-            borderRadius: 8,
-            fontWeight: 700,
-            fontSize: 14,
-            padding: '3px 10px',
-            border: 'none',
-            background: isDark ? 'rgba(90,181,232,0.14)' : 'rgba(214,159,109,0.14)',
-            color: primaryColor,
-          }}
-        >
-          #{proposal.id}
-        </Tag>
-        <span style={{ fontWeight: 700, fontSize: 15, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{proposal.version}</span>
-        <span style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#bbb' }}>{proposal.date}</span>
-        <span style={{ fontWeight: 700, fontSize: 15, color: '#52C41A' }}>{proposal.amount}</span>
-        {proposal.notes && (
-          <span style={{ fontSize: 13, color: isDark ? '#8a9ab0' : '#888', fontStyle: 'italic' }}>{proposal.notes}</span>
-        )}
-      </div>
-      <Space size={6} wrap>
-        <Button size="small" style={{ borderRadius: 6 }}>View</Button>
-        <Button size="small" style={{ borderRadius: 6 }}>Edit</Button>
-        <Button size="small" style={{ borderRadius: 6 }}>Edit BOQ</Button>
-        <Button size="small" icon={<DownloadOutlined />} style={{ borderRadius: 6 }} />
-        <Button size="small" danger icon={<DeleteOutlined />} style={{ borderRadius: 6 }} onClick={onDelete} />
-      </Space>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <Tag
+        style={{
+          borderRadius: 6,
+          fontWeight: 600,
+          fontSize: 13,
+          padding: '4px 10px',
+          border: 'none',
+          background: isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.15)',
+          color: primaryColor,
+          margin: 0
+        }}
+      >
+        #{proposal.id}
+      </Tag>
+      <span style={{ fontWeight: 700, fontSize: 14, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>{proposal.version}</span>
+      <span style={{ fontSize: 13, color: isDark ? '#6a7f95' : '#bbb' }}>{proposal.date}</span>
+      <span style={{ fontWeight: 700, fontSize: 14, color: '#52C41A' }}>{proposal.amount}</span>
+      {proposal.notes && (
+        <span style={{ fontSize: 13, color: isDark ? '#8a9ab0' : '#888', fontStyle: 'italic', marginLeft: 8 }}>{proposal.notes}</span>
+      )}
     </div>
+    <Space size={8} wrap>
+      <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onView}>View</Button>
+      <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onEdit}>Edit</Button>
+      <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onEditBOQ}>Edit BOQ</Button>
+      <Button size="small" icon={<DownloadOutlined />} style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onDownload} disabled={!proposal.approved} />
+      
+      {!proposal.approved ? (
+        <>
+          <Button size="small" icon={<CheckOutlined style={{ color: '#52c41a' }} />} style={{ borderRadius: 6, borderColor: '#52c41a' }} onClick={onApprove} />
+          <Button size="small" icon={<DeleteOutlined />} style={{ borderRadius: 6, borderColor: '#ff4d4f', color: '#ff4d4f' }} onClick={onDelete} />
+        </>
+      ) : (
+        <>
+          <Button size="small" icon={<DeleteOutlined />} style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#d9d9d9' }} disabled />
+          <Button size="small" icon={<WhatsAppOutlined style={{ color: '#25D366' }} />} style={{ borderRadius: 6, borderColor: '#25D366' }} onClick={() => {
+            if (enquiryPhone) {
+              const formattedPhone = enquiryPhone.replace(/[^0-9]/g, '');
+              window.open(`https://wa.me/${formattedPhone}?text=Hello, please find the approved quotation ${proposal.id} attached.`);
+            } else {
+              message.error('No phone number found for this enquiry');
+            }
+          }} />
+        </>
+      )}
+    </Space>
   </div>
 );
 
@@ -245,6 +270,37 @@ const EnquiryDetailPage = () => {
   const [convertStep, setConvertStep] = useState(0);
   const [convertLoading, setConvertLoading] = useState(false);
 
+  const [editingProposal, setEditingProposal] = useState(null);
+  const [viewingProposal, setViewingProposal] = useState(null);
+
+  const searchTimeoutRef = useRef(null);
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+
+  const handleLocationSearch = (value) => {
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    if (!value) {
+      setLocationOptions([]);
+      return;
+    }
+    setFetchingLocation(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=10&countrycodes=in`);
+        const data = await res.json();
+        const options = data.map(item => ({
+          value: item.display_name,
+          label: item.display_name,
+        }));
+        setLocationOptions(options);
+      } catch (error) {
+        console.error("Location search error:", error);
+      } finally {
+        setFetchingLocation(false);
+      }
+    }, 600);
+  };
+
   if (!enquiry) {
     return (
       <div style={{ textAlign: 'center', padding: 80 }}>
@@ -261,13 +317,18 @@ const EnquiryDetailPage = () => {
 
   const avatarLetter = enquiry.name.replace('Mr. ', '').replace('Ms. ', '').charAt(0);
 
+  const hasApprovedQuote = enquiry.proposals?.some(p => p.approved);
+
   const TABS = [
     { key: 'detail', label: 'Enquiry Detail', icon: <ClipboardList size={19} /> },
     { key: 'files', label: 'Files', icon: <Folder size={19} /> },
     { key: 'followup', label: 'Follow Up', icon: <Phone size={19} /> },
-    { key: 'proposal', label: 'Proposal', icon: <FileText size={19} /> },
-    { key: 'convert', label: 'Convert to Client', icon: <CheckCircle size={19} /> },
+    { key: 'proposal', label: 'Quotes', icon: <FileText size={19} /> },
   ];
+
+  if (hasApprovedQuote) {
+    TABS.push({ key: 'convert', label: 'Convert to Client', icon: <CheckCircle size={19} /> });
+  }
 
   /* ── handlers ── */
   const openEditModal = () => {
@@ -277,6 +338,7 @@ const EnquiryDetailPage = () => {
       email: enquiry.email,
       occupation: enquiry.occupation,
       address: enquiry.address,
+      location: enquiry.location,
       source: enquiry.source,
       remarks: enquiry.remarks,
       projectType: enquiry.projectType,
@@ -429,32 +491,50 @@ const EnquiryDetailPage = () => {
     <div>
       {/* Convert CTA Banner (if not yet converted) */}
       {!enquiry.convertedToClient && (
-        <div style={{
-          marginBottom: 16,
-          background: isDark ? 'rgba(82,196,26,0.1)' : '#f6ffed',
-          border: `1px solid ${isDark ? 'rgba(82,196,26,0.2)' : '#b7eb8f'}`,
-          borderRadius: 12,
-          padding: '16px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-          flexWrap: 'wrap',
-          width: '100%'
-        }}>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>Lead ready for conversion?</div>
-            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#888' }}>Convert this enquiry into a client and create a project instantly.</div>
+        hasApprovedQuote ? (
+          <div style={{
+            marginBottom: 16,
+            background: isDark ? 'rgba(82,196,26,0.1)' : '#f6ffed',
+            border: `1px solid ${isDark ? 'rgba(82,196,26,0.2)' : '#b7eb8f'}`,
+            borderRadius: 12,
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            flexWrap: 'wrap',
+            width: '100%'
+          }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#d8e8f8' : '#1f1f1f' }}>Lead ready for conversion?</div>
+              <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#888' }}>Convert this enquiry into a client and create a project instantly.</div>
+            </div>
+            <Button 
+              type="primary" 
+              icon={<CheckCircle size={16} />}
+              onClick={() => setActiveTab('convert')}
+              style={{ background: '#52C41A', border: 'none', borderRadius: 8, fontWeight: 600 }}
+            >
+              Convert Now
+            </Button>
           </div>
-          <Button 
-            type="primary" 
-            icon={<CheckCircle size={16} />}
-            onClick={() => setActiveTab('convert')}
-            style={{ background: '#52C41A', border: 'none', borderRadius: 8, fontWeight: 600 }}
-          >
-            Convert Now
-          </Button>
-        </div>
+        ) : (
+          <div style={{
+            marginBottom: 16,
+            background: isDark ? 'rgba(250, 173, 20, 0.1)' : '#fffbe6',
+            border: `1px solid ${isDark ? 'rgba(250, 173, 20, 0.2)' : '#ffe58f'}`,
+            borderRadius: 12,
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%'
+          }}>
+            <span style={{ fontWeight: 600, color: isDark ? '#ffc53d' : '#d48806', fontSize: 15 }}>
+              Please add and approve a quotation before converting this enquiry to a client.
+            </span>
+          </div>
+        )
       )}
 
       <div style={{ display: 'flex', gap: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
@@ -475,6 +555,7 @@ const EnquiryDetailPage = () => {
           <InfoRow label="Email" value={enquiry.email} isDark={isDark} />
           <InfoRow label="Occupation" value={enquiry.occupation} isDark={isDark} />
           <InfoRow label="Address" value={enquiry.address} isDark={isDark} />
+          <InfoRow label="Location" value={enquiry.location} isDark={isDark} />
           <InfoRow label="Source" value={enquiry.source} isDark={isDark} />
           <InfoRow 
             label="Assigned To" 
@@ -602,9 +683,14 @@ const EnquiryDetailPage = () => {
     <div>
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        <button style={subTabStyle('new')} onClick={() => setProposalSubTab('new')}>New Proposal</button>
+        <button style={subTabStyle('new')} onClick={() => {
+          setEditingProposal(null);
+          setProposalSubTab('new');
+        }}>
+          {editingProposal ? 'Edit Quote' : 'New Quotes'}
+        </button>
         <button style={subTabStyle('versions')} onClick={() => setProposalSubTab('versions')}>
-          Proposal Versions
+          Quotes Versions
           {enquiry.proposals.length > 0 && (
             <span style={{
               marginLeft: 6,
@@ -622,36 +708,33 @@ const EnquiryDetailPage = () => {
       </div>
 
       {proposalSubTab === 'new' ? (
-        <div style={{ maxWidth: 560 }}>
-          <Form form={proposalForm} layout="vertical" className="crm-form-shell">
-            <Row gutter={12}>
-              <Col span={12}>
-                <Form.Item name="template" label="Template" rules={[{ required: true, message: 'Select template' }]}>
-                  <Select placeholder="Select template" options={TEMPLATES.map(t => ({ value: t, label: t }))} />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="displayNo" label="Display No">
-                  <Input placeholder={`PRO-${Date.now().toString().slice(-6)}`} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item name="expiryDate" label="Expiry Date">
-              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
-            </Form.Item>
-            <Form.Item name="subject" label="Subject">
-              <Input.TextArea rows={4} placeholder={`Dear ${enquiry.name}...`} />
-            </Form.Item>
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleGenerateProposal}
-              style={{ background: primaryColor, border: 'none', borderRadius: 10, fontWeight: 600 }}
-            >
-              Generate Proposal
-            </Button>
-          </Form>
-        </div>
+        <QuoteBuilder 
+          initialData={editingProposal ? { title: editingProposal.title || '', items: editingProposal.items || [] } : null}
+          onGenerate={({ title, items }) => {
+            const versionNum = editingProposal ? parseInt(editingProposal.version.replace('Ver', '')) : enquiry.proposals.length + 1;
+            const totalAmount = items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) * 1.18;
+            
+            const proposalData = {
+              id: editingProposal ? editingProposal.id : `PRO-${Date.now().toString().slice(-6)}`,
+              version: `Ver${versionNum}`,
+              date: dayjs().format('MMM D, YYYY'),
+              amount: `₹${totalAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`,
+              notes: title || (editingProposal ? 'Updated from Quote Builder' : 'Generated from Quote Builder'),
+              title: title,
+              items: items
+            };
+
+            if (editingProposal) {
+              dispatch(updateProposal({ enquiryId: enquiry.id, proposal: proposalData }));
+              message.success('Quote updated');
+            } else {
+              dispatch(addProposal({ enquiryId: enquiry.id, proposal: proposalData }));
+              message.success('Quote generated');
+            }
+            
+            setEditingProposal(null);
+            setProposalSubTab('versions');
+        }} />
       ) : (
         <div>
           {enquiry.proposals.length === 0 ? (
@@ -668,10 +751,32 @@ const EnquiryDetailPage = () => {
                 proposal={p}
                 isDark={isDark}
                 primaryColor={primaryColor}
+                enquiryPhone={enquiry.phone}
+                onView={() => setViewingProposal(p)}
+                onEdit={() => {
+                  setEditingProposal(p);
+                  setProposalSubTab('new');
+                }}
+                onEditBOQ={() => {
+                  setEditingProposal(p);
+                  setProposalSubTab('new');
+                }}
+                onDownload={() => message.success(`Downloading ${p.version}`)}
+                onApprove={() => {
+                  Modal.confirm({
+                    title: 'Approve Quote',
+                    content: `Are you sure you want to approve ${p.version}? This will disable deletion and enable downloading.`,
+                    okText: 'Approve',
+                    onOk: () => {
+                      dispatch(updateProposal({ enquiryId: enquiry.id, proposal: { ...p, approved: true } }));
+                      message.success(`${p.version} approved`);
+                    }
+                  });
+                }}
                 onDelete={() =>
                   Modal.confirm({
-                    title: 'Delete Proposal',
-                    content: `Delete ${p.id} ${p.version}?`,
+                    title: 'Delete Quote',
+                    content: `Are you sure you want to delete ${p.id} ${p.version}?`,
                     okText: 'Delete',
                     okButtonProps: { danger: true },
                     onOk: () => dispatch(deleteProposal({ enquiryId: enquiry.id, proposalId: p.id })),
@@ -682,6 +787,25 @@ const EnquiryDetailPage = () => {
           )}
         </div>
       )}
+
+      {/* View Quote Modal */}
+      <Modal
+        title={`Viewing ${viewingProposal?.version} (${viewingProposal?.id})`}
+        open={!!viewingProposal}
+        onCancel={() => setViewingProposal(null)}
+        width={1000}
+        footer={null}
+        className="crm-modal"
+        destroyOnClose
+        centered
+      >
+        {viewingProposal && (
+          <QuoteBuilder 
+            initialData={{ title: viewingProposal.title, items: viewingProposal.items || [] }} 
+            isReadOnly={true} 
+          />
+        )}
+      </Modal>
     </div>
   );
 
@@ -701,11 +825,11 @@ const EnquiryDetailPage = () => {
             </div>
           </div>
           <div style={{ fontSize: 26, fontWeight: 800, color: isDark ? '#f0f4f8' : '#1f1f1f', marginBottom: 12 }}>
-            Converted to Client!
+            Converted to Client & Project Created!
           </div>
           <div style={{ fontSize: 16, color: isDark ? '#8a9ab0' : '#666', marginBottom: 24 }}>
             This enquiry was successfully converted to <strong>{cd.clientName}</strong> on {cd.convertedDate}.
-            You can now manage this client and create projects for them in the Clients module.
+            A new project based on the approved quote has also been created.
           </div>
           <Space size={16}>
             <Button 
@@ -723,6 +847,18 @@ const EnquiryDetailPage = () => {
             >
               View Clients
             </Button>
+            <Button 
+              size="large" 
+              style={{ 
+                borderRadius: 12, 
+                height: 48, 
+                paddingInline: 32,
+                fontWeight: 600
+              }} 
+              onClick={() => navigate('/projects')}
+            >
+              View Projects
+            </Button>
           </Space>
         </div>
       );
@@ -734,6 +870,7 @@ const EnquiryDetailPage = () => {
         const clientValues = await clientInfoForm.validateFields();
 
         const clientId = `CLT-${dayjs().year()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+        const projectId = `PRJ-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
         const clientData = {
           id: clientId,
@@ -744,13 +881,35 @@ const EnquiryDetailPage = () => {
           sourceEnquiryId: enquiry.id,
         };
 
+        const approvedQuote = enquiry.proposals?.find(p => p.approved);
+        let numericBudget = 0;
+        if (approvedQuote && approvedQuote.amount) {
+          numericBudget = Number(approvedQuote.amount.replace(/[^0-9.-]+/g, ""));
+        }
+
+        const projectData = {
+          id: projectId,
+          createdDate: dayjs().format('YYYY-MM-DD'),
+          projectCode: projectId,
+          projectName: approvedQuote?.title || `${clientData.clientName}'s Project`,
+          clientName: clientData.clientName,
+          budget: numericBudget || 0,
+          city: enquiry.location || '',
+          state: 'Unknown',
+          stage: 'Designing',
+          phone: clientData.phone,
+          email: clientData.email,
+          approvedQuote: approvedQuote
+        };
+
         // Simulate API call
         await new Promise(r => setTimeout(r, 1000));
 
         dispatch(addClient(clientData));
+        dispatch(addProject(projectData));
         dispatch(convertToClient({ enquiryId: enquiry.id, clientData }));
 
-        message.success('Lead converted successfully!');
+        message.success('Lead converted and project created!');
         setConvertLoading(false);
       } catch (err) {
         setConvertLoading(false);
@@ -1107,6 +1266,16 @@ const EnquiryDetailPage = () => {
             </Row>
             <Form.Item name="address" label="Address">
               <Input.TextArea rows={2} />
+            </Form.Item>
+            <Form.Item name="location" label="Location (Area / Street)">
+              <AutoComplete
+                options={locationOptions}
+                onSearch={handleLocationSearch}
+                placeholder="Type to search location..."
+                notFoundContent={fetchingLocation ? <Spin size="small" /> : null}
+              >
+                <Input />
+              </AutoComplete>
             </Form.Item>
             <Form.Item name="assignedTo" label="Assign To">
               <Select 

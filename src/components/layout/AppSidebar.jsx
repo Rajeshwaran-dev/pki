@@ -36,8 +36,9 @@ const menuItems = [
       { key: '/settings/organisation', icon: <BankOutlined />, label: 'Organisation Settings' },
       { key: '/settings/users', icon: <UserOutlined />, label: 'User Management' },
       { key: '/settings/permissions', icon: <LockOutlined />, label: 'Permissions' },
-{ key: '/settings/attendance', icon: <SafetyCertificateOutlined />, label: 'Attendance Settings' },
+      { key: '/settings/attendance', icon: <SafetyCertificateOutlined />, label: 'Attendance Settings' },
       { key: '/settings/payroll', icon: <CreditCardOutlined />, label: 'Payroll Settings' },
+      { key: '/settings/notifications', icon: <MessageOutlined />, label: 'Notifications' },
     ],
   },
 ];

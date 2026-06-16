@@ -95,17 +95,36 @@ const AppHeader = () => {
         <Space size={4}>
           <ThemeToggle />
 
-          <Badge
-            count={3}
-            size="small"
-            style={{ background: isDark ? '#1e6fa8' : buffColor }}
+          <Dropdown
+            menu={{
+              items: [
+                { key: 'header', type: 'group', label: <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#fff' : '#000', padding: '4px 0' }}>Notifications</div> },
+                { type: 'divider' },
+                { key: '1', label: <div style={{ width: 260, whiteSpace: 'normal', lineHeight: 1.4 }}><div style={{ fontWeight: 600 }}>New Quotation Created</div><div style={{ fontSize: 13, color: isDark ? '#a8b0ba' : '#666' }}>Quotation PRO-711538 was created for Project Mr. Suresh.</div><div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>20 mins ago</div></div> },
+                { type: 'divider' },
+                { key: '2', label: <div style={{ width: 260, whiteSpace: 'normal', lineHeight: 1.4 }}><div style={{ fontWeight: 600 }}>System Update</div><div style={{ fontSize: 13, color: isDark ? '#a8b0ba' : '#666' }}>Scheduled maintenance tonight at 2:00 AM.</div><div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>1 day ago</div></div> },
+                { type: 'divider' },
+                { key: 'view_all', label: <div style={{ textAlign: 'center', color: isDark ? '#5ab5e8' : '#D69F6D', fontWeight: 600, padding: '4px 0' }}>View All Notifications</div> },
+              ],
+              onClick: ({ key }) => {
+                if (key === 'view_all') navigate('/settings/notifications');
+              },
+            }}
+            placement="bottomRight"
+            trigger={['click']}
           >
-            <Button
-              type="text"
-              shape="circle"
-              icon={<BellOutlined style={{ fontSize: 19 }} />}
-            />
-          </Badge>
+            <Badge
+              count={2}
+              size="small"
+              style={{ background: isDark ? '#1e6fa8' : buffColor }}
+            >
+              <Button
+                type="text"
+                shape="circle"
+                icon={<BellOutlined style={{ fontSize: 19 }} />}
+              />
+            </Badge>
+          </Dropdown>
 
           <Dropdown
             menu={{
