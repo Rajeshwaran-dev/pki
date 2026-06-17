@@ -96,6 +96,7 @@ const mockEnquiries = [
       },
     ],
     proposals: [],
+    siteVisits: [],
     convertedToClient: false,
     clientData: null,
   },
@@ -120,6 +121,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(3),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-028',
@@ -141,6 +143,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(2),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-027',
@@ -162,6 +165,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(4),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-026',
@@ -183,6 +187,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(2),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-025',
@@ -204,6 +209,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(3),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-024',
@@ -225,6 +231,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(2),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-023',
@@ -246,6 +253,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(1),
     proposals: [],
+    siteVisits: [],
   },
   {
     id: 'ENQ-2026-022',
@@ -267,6 +275,7 @@ const mockEnquiries = [
     files: { site: [], design: [], other: [] },
     followUps: generateFollowUps(5),
     proposals: [],
+    siteVisits: [],
   },
 ];
 
@@ -296,6 +305,7 @@ for (let i = 21; i >= 1; i--) {
     files: { site: [], design: [], other: [] },
     followUps: [],
     proposals: [],
+    siteVisits: [],
     convertedToClient: false,
     clientData: null,
   });
@@ -340,6 +350,29 @@ const enquirySlice = createSlice({
       const enq = state.enquiries.find(e => e.id === enquiryId);
       if (enq) enq.proposals = enq.proposals.filter(p => p.id !== proposalId);
     },
+    addSiteVisit: (state, action) => {
+      const { enquiryId, siteVisit } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq) {
+        if (!enq.siteVisits) enq.siteVisits = [];
+        enq.siteVisits.unshift(siteVisit);
+      }
+    },
+    updateSiteVisit: (state, action) => {
+      const { enquiryId, siteVisit } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq && enq.siteVisits) {
+        const idx = enq.siteVisits.findIndex(s => s.id === siteVisit.id);
+        if (idx !== -1) enq.siteVisits[idx] = siteVisit;
+      }
+    },
+    deleteSiteVisit: (state, action) => {
+      const { enquiryId, siteVisitId } = action.payload;
+      const enq = state.enquiries.find(e => e.id === enquiryId);
+      if (enq && enq.siteVisits) {
+        enq.siteVisits = enq.siteVisits.filter(s => s.id !== siteVisitId);
+      }
+    },
     addFile: (state, action) => {
       const { enquiryId, fileType, file } = action.payload;
       const enq = state.enquiries.find(e => e.id === enquiryId);
@@ -371,6 +404,7 @@ const enquirySlice = createSlice({
 export const {
   addEnquiry, updateEnquiry, deleteEnquiry,
   addFollowUp, addProposal, updateProposal, deleteProposal,
+  addSiteVisit, updateSiteVisit, deleteSiteVisit,
   addFile, deleteFile, assignEnquiry, convertToClient,
 } = enquirySlice.actions;
 

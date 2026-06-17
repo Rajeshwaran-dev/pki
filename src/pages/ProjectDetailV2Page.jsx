@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '@/store';
 import { updateProject } from '@/store/slices/projectSlice';
 import useIsMobile from '@/hooks/useIsMobile';
 import QuoteBuilder from '@/components/quotes/QuoteBuilder';
-import { Button, Avatar, Select, Space, Modal, Form, Input, Row, Col, Progress, Checkbox, message } from 'antd';
+import { Button, Avatar, Select, Space, Modal, Form, Input, Row, Col, Progress, Checkbox, message, Card, Upload, Image, Tag, Divider, Steps, Typography } from 'antd';
 import {
   ArrowLeftOutlined,
   EditOutlined,
@@ -28,6 +28,7 @@ import {
   ToolOutlined,
   DollarCircleOutlined,
   FileAddOutlined,
+  ClockCircleOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
   InfoCircleOutlined,
@@ -52,19 +53,43 @@ const MOCK_FILES = {
   ],
 };
 
+const MOCK_REFERENCE_DESIGNS = [
+  { id: 1, name: 'Modern Kitchen Inspiration', url: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&q=80&w=400' },
+  { id: 2, name: 'Minimalist Wardrobe', url: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=400' }
+];
+
+const MOCK_SITE_MEASUREMENTS = [
+  { id: 1, name: 'Living Room Specs.pdf', date: 'May 10, 2026', size: '2.4 MB' },
+  { id: 2, name: 'Kitchen Blueprint.pdf', date: 'May 12, 2026', size: '4.1 MB' }
+];
+
+const MOCK_CREATED_DESIGNS = [
+  { id: 1, name: 'Kitchen_Concept_V1.pdf', status: 'Approved', date: 'May 15, 2026' },
+  { id: 2, name: 'Wardrobe_Layout_V2.pdf', status: 'In Review', date: 'May 16, 2026' }
+];
+
+const MOCK_COLOR_THEMES = [
+  { id: 1, name: 'Sunset Orange Theme', color: '#f97316', url: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1200' },
+  { id: 2, name: 'Ocean Blue Theme', color: '#0ea5e9', url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200' },
+  { id: 3, name: 'Rose Pink Theme', color: '#ec4899', url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200' },
+  { id: 4, name: 'Forest Green Theme', color: '#22c55e', url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80&w=1200' },
+];
+
 const SIDEBAR_TABS = [
   { key: 'Project Detail', label: 'Project Detail', icon: <ClipboardList size={19} /> },
   { key: 'Files', label: 'Files', icon: <Folder size={19} /> },
   { key: 'User Requirement', label: 'User Requirement', icon: <QuestionCircleOutlined /> },
-  { key: 'Notes', label: 'Notes', icon: <CommentOutlined /> },
+  { key: 'Design', label: 'Design', icon: <ToolOutlined /> },
+  { key: 'Color Selection', label: 'Color Selection', icon: <AppstoreOutlined /> },
   { key: 'Quotes', label: 'Quotes', icon: <SnippetsOutlined /> },
-  { key: 'Orders', label: 'Purchase Orders', icon: <FileText size={19} /> },
-  { key: 'Tasks', label: 'Tasks', icon: <FlagOutlined /> },
-  { key: 'Purchase Request', label: 'Purchase Request', icon: <ShoppingCartOutlined /> },
-  { key: 'Inventory', label: 'Inventory', icon: <AppstoreOutlined /> },
-  { key: 'Activities', label: 'Activities', icon: <ToolOutlined /> },
-  { key: 'Financial', label: 'Financial', icon: <DollarCircleOutlined /> },
-  { key: 'Raise Invoice', label: 'Raise Invoice', icon: <FileAddOutlined /> },
+  { key: 'Final Measurement', label: 'Final Measurement', icon: <CheckCircleOutlined /> },
+  { key: 'Cut List', label: 'Cut List', icon: <FileText size={19} /> },
+  { key: 'Bill of Material', label: 'Bill of Material', icon: <ShoppingCartOutlined /> },
+  { key: 'Production', label: 'Production', icon: <TeamOutlined /> },
+  { key: 'Installation', label: 'Installation', icon: <HardHat size={19} /> },
+  { key: 'Snag', label: 'Snag', icon: <FlagOutlined /> },
+  { key: 'Cleaning', label: 'Cleaning', icon: <CheckOutlined /> },
+  { key: 'Handover', label: 'Handover', icon: <ClipboardList size={19} /> },
 ];
 
 const REQUIREMENT_QUESTIONS = [
@@ -600,6 +625,975 @@ const FileColumn = ({ title, files }) => (
   </div>
 );
 
+const ColorSelectionTab = ({ isDark }) => {
+  const [selectedTheme, setSelectedTheme] = useState(MOCK_COLOR_THEMES[0]);
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Color Selection</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Preview and finalize color combinations and theme variations.
+          </div>
+        </div>
+        <Button type="primary" icon={<CheckOutlined />} style={{ borderRadius: 8, fontWeight: 600 }}>
+          Finalize Theme
+        </Button>
+      </div>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={16}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)' }}>
+            <Image
+              src={selectedTheme.url}
+              alt={selectedTheme.name}
+              style={{ width: '100%', height: 450, objectFit: 'cover', display: 'block' }}
+              preview={{ src: selectedTheme.url }}
+            />
+            <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-soft)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>{selectedTheme.name}</div>
+                <div style={{ color: 'var(--text-soft)', fontSize: 14 }}>Currently viewing preview</div>
+              </div>
+              <Tag color={selectedTheme.color} style={{ padding: '6px 12px', fontSize: 14, borderRadius: 6, fontWeight: 600, border: 'none', color: '#fff' }}>
+                {selectedTheme.color.toUpperCase()}
+              </Tag>
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={8}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>Available Themes</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {MOCK_COLOR_THEMES.map(theme => {
+                const isSelected = selectedTheme.id === theme.id;
+                return (
+                  <div
+                    key={theme.id}
+                    onClick={() => setSelectedTheme(theme)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      padding: 12,
+                      borderRadius: 10,
+                      cursor: 'pointer',
+                      background: isSelected ? (isDark ? 'rgba(255,255,255,0.05)' : '#f9fafb') : 'transparent',
+                      border: isSelected ? `2px solid ${theme.color}` : '2px solid transparent',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isSelected) e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.02)' : '#f3f4f6';
+                    }}
+                    onMouseLeave={e => {
+                      if (!isSelected) e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <div style={{ width: 44, height: 44, borderRadius: 8, background: theme.color, flexShrink: 0, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 14 }}>{theme.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>{theme.color.toUpperCase()}</div>
+                    </div>
+                    {isSelected && <CheckCircleOutlined style={{ color: theme.color, fontSize: 18 }} />}
+                  </div>
+                );
+              })}
+            </div>
+            
+            <Divider style={{ margin: '24px 0' }} />
+            
+            <div style={{ background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb', padding: 16, borderRadius: 10, border: '1px dashed var(--border)' }}>
+              <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 14 }}>Request Custom Color</div>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>Need a variation that is not listed here? Upload a reference color code or image.</p>
+              <Button size="small" icon={<FileAddOutlined />} block>Upload Reference</Button>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const MOCK_MEASUREMENT_CHECKLIST = [
+  { id: 1, area: 'Kitchen', type: 'Countertop Length', value: '3200 mm', verified: true, notes: 'Standard depth 600mm' },
+  { id: 2, area: 'Kitchen', type: 'Overhead Cabinet Height', value: '720 mm', verified: true, notes: 'Clearance 600mm from counter' },
+  { id: 3, area: 'Master Bedroom', type: 'Wardrobe Width', value: '2400 mm', verified: false, notes: 'Awaiting skirting removal' },
+  { id: 4, area: 'Living Room', type: 'TV Unit Width', value: '1800 mm', verified: false, notes: '' },
+];
+
+const MOCK_CUT_LISTS = [
+  { id: 1, name: 'Kitchen_Carcass.csv', material: '18mm MR Plywood', sheets: 12, status: 'Sent to Factory', date: 'May 18, 2026' },
+  { id: 2, name: 'Kitchen_Shutters.csv', material: '18mm MDF Acrylic', sheets: 6, status: 'Draft', date: 'May 19, 2026' },
+  { id: 3, name: 'Wardrobe_Base.csv', material: '18mm BWP Plywood', sheets: 18, status: 'Sent to Factory', date: 'May 18, 2026' },
+];
+
+const MOCK_DELIVERY_ITEMS = [
+  { id: 1, name: 'Kitchen Carcass Units', status: 'Delivered', date: 'May 20, 2026' },
+  { id: 2, name: 'Shutters & Panels', status: 'In Transit', date: 'Expected May 22' },
+  { id: 3, name: 'Hardware & Accessories Box', status: 'Pending', date: '-' },
+];
+
+const MOCK_INSTALLATION_TASKS = [
+  { id: 1, task: 'Base Framework & Carcass Assembly', progress: 100 },
+  { id: 2, task: 'Wall Unit Fixing', progress: 60 },
+  { id: 3, task: 'Countertop Installation', progress: 0 },
+  { id: 4, task: 'Shutter Alignment & Hinges', progress: 0 },
+];
+
+const MOCK_SNAG_PHOTOS = [
+  { id: 1, url: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400', title: 'Kitchen Overview' },
+  { id: 2, url: 'https://images.unsplash.com/photo-1588854337115-1c67d9247e4d?auto=format&fit=crop&q=80&w=400', title: 'Wardrobe Details' },
+  { id: 3, url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=400', title: 'Hardware Close-up' },
+];
+
+const MOCK_SNAG_CHECKLIST = [
+  { id: 1, task: 'All shutters aligned and functioning smoothly', verified: false },
+  { id: 2, task: 'Hardware and accessories installed securely', verified: false },
+  { id: 3, task: 'Surface finishes clean, no scratches', verified: false },
+  { id: 4, task: 'Appliances (if applicable) fitted correctly', verified: false },
+];
+
+const MOCK_CLEANING_CHECKLIST = [
+  { id: 1, task: 'Remove all packaging materials, boxes, and debris', verified: false },
+  { id: 2, task: 'Wipe down all interior and exterior surfaces', verified: false },
+  { id: 3, task: 'Clean floor area surrounding installation', verified: false },
+  { id: 4, task: 'Final dust removal from hardware and channels', verified: false },
+];
+
+const MOCK_CLEANING_PHOTOS = [
+  { id: 1, type: 'before', url: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=400', title: 'Site Before Cleaning' },
+  { id: 2, type: 'after', url: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400', title: 'Site After Cleaning' },
+];
+
+const MOCK_STAGE_VERIFICATION = [
+  { id: 1, stage: 'User Requirements & Design Phase', status: 'Completed', details: 'Design and Color Themes approved by client.' },
+  { id: 2, stage: 'Quotes & Final Measurement', status: 'Completed', details: 'Final measurements signed-off. 50% advance received.' },
+  { id: 3, stage: 'Manufacturing & Production', status: 'Completed', details: 'Cut List and BOM generated. Carcass and shutters manufactured.' },
+  { id: 4, stage: 'Site Installation & Snag', status: 'Completed', details: 'Installation executed. Snags resolved and completion evidence approved.' },
+  { id: 5, stage: 'Cleaning & Final Payments', status: 'Completed', details: 'Site cleaning verified. 100% payments cleared.' },
+];
+
+const InstallationTab = ({ isDark }) => {
+  const [deliveryItems, setDeliveryItems] = useState(MOCK_DELIVERY_ITEMS);
+  const [tasks, setTasks] = useState(MOCK_INSTALLATION_TASKS);
+
+  const handleMarkDelivered = (id) => {
+    setDeliveryItems(prev => prev.map(item => item.id === id ? { ...item, status: 'Delivered', date: 'Just now' } : item));
+    message.success('Item marked as delivered to site.');
+  };
+
+  const handleUpdateProgress = (id, newProgress) => {
+    setTasks(prev => prev.map(task => task.id === id ? { ...task, progress: newProgress } : task));
+  };
+
+  const overallProgress = Math.round(tasks.reduce((acc, curr) => acc + curr.progress, 0) / tasks.length);
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Installation Phase</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Manage on-site material delivery and track installation progress.
+          </div>
+        </div>
+        <Button type="primary" icon={<PlusOutlined />} style={{ borderRadius: 8, fontWeight: 600 }}>
+          Add Site Update
+        </Button>
+      </div>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={12}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Material Delivery Tracker</span>
+              <Tag color="processing" style={{ borderRadius: 6 }}>{deliveryItems.filter(i => i.status === 'Delivered').length} / {deliveryItems.length} Delivered</Tag>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {deliveryItems.map(item => (
+                <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb', borderRadius: 10, border: '1px solid var(--border-soft)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: item.status === 'Delivered' ? 'var(--success-bg)' : 'var(--primary-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <ShoppingCartOutlined style={{ color: item.status === 'Delivered' ? 'var(--success)' : 'var(--primary)', fontSize: 18 }} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 14 }}>{item.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-soft)', marginTop: 2 }}>
+                        {item.status === 'Delivered' ? `Delivered on ${item.date}` : item.date}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    {item.status === 'Delivered' ? (
+                      <Tag color="success" style={{ margin: 0, borderRadius: 6 }}><CheckOutlined /> Delivered</Tag>
+                    ) : (
+                      <Button size="small" type="primary" ghost style={{ borderRadius: 6, fontSize: 12 }} onClick={() => handleMarkDelivered(item.id)}>
+                        Mark Delivered
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={12}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>On-site Installation</span>
+              <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: 16 }}>{overallProgress}% Overall</span>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {tasks.map(task => (
+                <div key={task.id}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 14 }}>
+                    <span style={{ fontWeight: 600, color: 'var(--text)' }}>{task.task}</span>
+                    <span style={{ fontWeight: 600, color: task.progress === 100 ? 'var(--success)' : 'var(--primary)' }}>{task.progress}%</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ flex: 1 }}>
+                      <Progress 
+                        percent={task.progress} 
+                        showInfo={false} 
+                        status={task.progress === 100 ? 'success' : 'active'} 
+                        strokeColor={task.progress === 100 ? 'var(--success)' : 'var(--primary)'}
+                        size="small"
+                      />
+                    </div>
+                    {task.progress < 100 && (
+                      <Button 
+                        size="small" 
+                        onClick={() => handleUpdateProgress(task.id, Math.min(100, task.progress + 20))}
+                        style={{ fontSize: 12, borderRadius: 6 }}
+                      >
+                        +20%
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <Divider style={{ margin: '24px 0' }} />
+            
+            <div style={{ background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', borderRadius: 10, padding: 16, border: '1px dashed var(--border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                <FileAddOutlined style={{ color: 'var(--primary)', fontSize: 20 }} />
+                <div style={{ fontWeight: 600, fontSize: 14 }}>Site Updates & Photos</div>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16, margin: 0 }}>Upload latest photos from the site to keep the client informed.</p>
+              <Button size="small" block icon={<ArrowUpOutlined />}>Upload Photos</Button>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const SnagTab = ({ isDark }) => {
+  const [photos, setPhotos] = useState(MOCK_SNAG_PHOTOS);
+  const [checklist, setChecklist] = useState(MOCK_SNAG_CHECKLIST);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const toggleChecklist = (id) => {
+    setChecklist(prev => prev.map(item => item.id === id ? { ...item, verified: !item.verified } : item));
+  };
+
+  const handleSubmit = () => {
+    const allVerified = checklist.every(item => item.verified);
+    if (!allVerified) {
+      message.error('Please verify all completion checklist items before submitting.');
+      return;
+    }
+    if (photos.length === 0) {
+      message.error('Please upload at least one completion photograph.');
+      return;
+    }
+    message.success('Completion evidence submitted for client review successfully!');
+    setIsSubmitted(true);
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Completion Verification & Snags</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Document completion evidence and verify final quality checks.
+          </div>
+        </div>
+        
+        {isSubmitted ? (
+          <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            Submitted for Client Review
+          </Tag>
+        ) : (
+          <Button type="primary" onClick={handleSubmit} style={{ borderRadius: 8, fontWeight: 600 }}>
+            Submit for Client Review
+          </Button>
+        )}
+      </div>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={14}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Site Completion Photographs</span>
+              <Button icon={<FileAddOutlined />} size="small" style={{ borderRadius: 6 }}>Upload Photos</Button>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
+              {photos.map(photo => (
+                <div key={photo.id} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', position: 'relative', background: isDark ? '#1a1a1a' : '#f5f5f5' }}>
+                  <Image src={photo.url} alt={photo.title} style={{ width: '100%', height: 140, objectFit: 'cover' }} />
+                  <div style={{ padding: '8px 12px', fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {photo.title}
+                  </div>
+                </div>
+              ))}
+              <div style={{ borderRadius: 10, border: '2px dashed var(--border)', height: '100%', minHeight: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-soft)', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa' }}>
+                <PlusOutlined style={{ fontSize: 24, marginBottom: 8, color: 'var(--primary)' }} />
+                <span style={{ fontSize: 13, fontWeight: 500 }}>Add New Photo</span>
+              </div>
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={10}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Final Snag Checklist</div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {checklist.map(item => (
+                <div 
+                  key={item.id} 
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: 16, background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb', borderRadius: 10, border: `1px solid ${item.verified ? 'var(--success-border, #b7eb8f)' : 'var(--border-soft)'}`, cursor: 'pointer', transition: 'all 0.2s' }}
+                  onClick={() => toggleChecklist(item.id)}
+                >
+                  <Checkbox checked={item.verified} style={{ marginTop: 2 }} />
+                  <span style={{ fontSize: 14, color: 'var(--text)', fontWeight: item.verified ? 600 : 500, textDecoration: item.verified ? 'line-through' : 'none', opacity: item.verified ? 0.6 : 1 }}>
+                    {item.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div style={{ marginTop: 24, padding: 16, background: 'var(--warning-bg, #fffbe6)', border: '1px solid var(--warning-border, #ffe58f)', borderRadius: 10, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <InfoCircleOutlined style={{ color: 'var(--warning, #faad14)', fontSize: 18, marginTop: 2 }} />
+              <div style={{ fontSize: 13, color: 'var(--warning-text, #d48806)' }}>
+                All checklist items must be verified before submitting the completion evidence for client review.
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const HandoverTab = ({ isDark }) => {
+  const [isHandedOver, setIsHandedOver] = useState(false);
+  const [documentUploaded, setDocumentUploaded] = useState(false);
+
+  const handleCompleteProject = () => {
+    if (!documentUploaded) {
+      message.error('Please upload the signed handover document first.');
+      return;
+    }
+    message.success('Project Handover Successful! Project is now marked as Completed.');
+    setIsHandedOver(true);
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Project Handover</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Final verification of all previous stages and official project closure.
+          </div>
+        </div>
+        
+        {isHandedOver ? (
+          <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600 }}>
+            Project Completed
+          </Tag>
+        ) : (
+          <Tag color="processing" icon={<ClockCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600 }}>
+            Handover Pending
+          </Tag>
+        )}
+      </div>
+
+      {isHandedOver && (
+        <div style={{ background: 'var(--success-bg, #f6ffed)', border: '1px solid var(--success-border, #b7eb8f)', borderRadius: 14, padding: 32, marginBottom: 24, textAlign: 'center', animation: 'fadeIn 0.5s ease-out' }}>
+          <div style={{ width: 64, height: 64, background: '#52c41a', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#fff', fontSize: 32, boxShadow: '0 4px 12px rgba(82, 196, 26, 0.3)' }}>
+            <CheckOutlined />
+          </div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--success-text, #389e0d)', marginBottom: 8 }}>Project Successfully Completed!</div>
+          <div style={{ fontSize: 15, color: 'var(--text-soft)', maxWidth: 600, margin: '0 auto' }}>
+            All stages have been verified, final payments are cleared, and the handover document is signed. The lifecycle for this project is now officially closed.
+          </div>
+        </div>
+      )}
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={14}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%', opacity: isHandedOver ? 0.6 : 1, transition: 'opacity 0.3s' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Comprehensive Stage Verification</div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {MOCK_STAGE_VERIFICATION.map(item => (
+                <div key={item.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: 16, background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb', borderRadius: 10, border: '1px solid var(--success-border, #b7eb8f)' }}>
+                  <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#52c41a', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                    <CheckOutlined style={{ fontSize: 12 }} />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 15 }}>{item.stage}</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-soft)', marginTop: 4 }}>{item.details}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={10}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', flex: 1, opacity: isHandedOver ? 0.6 : 1, transition: 'opacity 0.3s' }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Handover Documentation</div>
+              
+              <div style={{ border: '2px dashed var(--border-strong)', borderRadius: 10, padding: 32, textAlign: 'center', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', marginBottom: 24 }}>
+                {documentUploaded ? (
+                  <div>
+                    <FilePdfOutlined style={{ fontSize: 48, color: 'var(--error, #ff4d4f)', marginBottom: 16 }} />
+                    <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Signed_Handover_Document.pdf</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>Uploaded just now</div>
+                  </div>
+                ) : (
+                  <div>
+                    <FilePdfOutlined style={{ fontSize: 48, color: 'var(--text-muted)', marginBottom: 16 }} />
+                    <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>Upload Signed Handover Form</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-soft)', marginBottom: 16 }}>Please upload the final document signed by the client confirming project acceptance.</div>
+                    <Button onClick={() => setDocumentUploaded(true)} style={{ borderRadius: 6 }}>Simulate Upload</Button>
+                  </div>
+                )}
+              </div>
+              
+              <Button 
+                type="primary" 
+                block 
+                size="large" 
+                disabled={isHandedOver}
+                onClick={handleCompleteProject}
+                style={{ borderRadius: 8, fontWeight: 700, height: 48 }}
+              >
+                {isHandedOver ? 'Project Completed' : 'Mark Project as Completed'}
+              </Button>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const CleaningTab = ({ isDark, balancePaymentPaid, onPayBalance }) => {
+  const [checklist, setChecklist] = useState(MOCK_CLEANING_CHECKLIST);
+  const [photos, setPhotos] = useState(MOCK_CLEANING_PHOTOS);
+
+  const toggleChecklist = (id) => {
+    setChecklist(prev => prev.map(item => item.id === id ? { ...item, verified: !item.verified } : item));
+  };
+
+  const handlePayBalance = () => {
+    message.success('5% Final Balance Payment marked as received!');
+    if (onPayBalance) onPayBalance();
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Cleaning Phase</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Manage site cleaning activities and store before/after images.
+          </div>
+        </div>
+        
+        {balancePaymentPaid ? (
+          <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            5% Balance Verified
+          </Tag>
+        ) : (
+          <Tag color="warning" icon={<ClockCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            5% Balance Pending
+          </Tag>
+        )}
+      </div>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={14}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Before & After Photos</span>
+              <Button icon={<FileAddOutlined />} size="small" style={{ borderRadius: 6 }}>Upload Image</Button>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+              {photos.map(photo => (
+                <div key={photo.id} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', position: 'relative', background: isDark ? '#1a1a1a' : '#f5f5f5' }}>
+                  <Image src={photo.url} alt={photo.title} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
+                  <div style={{ padding: '8px 12px', fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>{photo.title}</span>
+                    <Tag color={photo.type === 'before' ? 'warning' : 'success'} style={{ margin: 0, borderRadius: 4 }}>
+                      {photo.type.toUpperCase()}
+                    </Tag>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={10}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', flex: 1 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Cleaning Checklist</div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {checklist.map(item => (
+                  <div 
+                    key={item.id} 
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: 16, background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb', borderRadius: 10, border: `1px solid ${item.verified ? 'var(--success-border, #b7eb8f)' : 'var(--border-soft)'}`, cursor: 'pointer', transition: 'all 0.2s' }}
+                    onClick={() => toggleChecklist(item.id)}
+                  >
+                    <Checkbox checked={item.verified} style={{ marginTop: 2 }} />
+                    <span style={{ fontSize: 14, color: 'var(--text)', fontWeight: item.verified ? 600 : 500, textDecoration: item.verified ? 'line-through' : 'none', opacity: item.verified ? 0.6 : 1 }}>
+                      {item.task}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div style={{ background: isDark ? 'rgba(255,255,255,0.02)' : '#fffbeb', border: '1px solid #fde68a', borderRadius: 14, padding: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                <DollarCircleOutlined style={{ fontSize: 24, color: '#d97706', marginTop: 4 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Final Stage Requirement: Balance Payment</div>
+                  <p style={{ fontSize: 14, color: '#b45309', margin: 0, marginBottom: 16 }}>
+                    The project cannot proceed to Handover until the 5% Final Balance payment is received.
+                  </p>
+                  <Button 
+                    type="primary" 
+                    disabled={balancePaymentPaid} 
+                    onClick={handlePayBalance}
+                    style={{ background: balancePaymentPaid ? undefined : '#d97706', borderColor: balancePaymentPaid ? undefined : '#d97706' }}
+                  >
+                    {balancePaymentPaid ? 'Payment Verified' : 'Mark Payment as Received'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const ProductionTab = ({ isDark, installationAdvancePaid, onPayAdvance }) => {
+  const [productionStarted, setProductionStarted] = useState(false);
+
+  const handleStartProduction = () => {
+    message.success('Production initiated successfully!');
+    setProductionStarted(true);
+  };
+
+  const handlePayAdvance = () => {
+    message.success('35% Installation Advance Payment marked as received!');
+    if (onPayAdvance) onPayAdvance();
+  };
+
+  const readinessSteps = [
+    { title: 'Design Finalized', description: 'Approved by client', status: 'finish' },
+    { title: 'Color Selection', description: 'Theme locked', status: 'finish' },
+    { title: 'Final Measurement', description: 'On-site dimensions verified', status: 'finish' },
+    { title: 'Cut List Generated', description: 'Sent to factory', status: 'finish' },
+    { title: 'Bill of Material', description: 'Materials procured', status: 'finish' },
+  ];
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Production Phase</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Verify completion of previous stages and track manufacturing progress.
+          </div>
+        </div>
+        
+        {installationAdvancePaid ? (
+          <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            35% Installation Advance Verified
+          </Tag>
+        ) : (
+          <Tag color="warning" icon={<ClockCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            35% Installation Advance Pending
+          </Tag>
+        )}
+      </div>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={10}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', height: '100%' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Pre-production Readiness</div>
+            <Steps
+              direction="vertical"
+              size="small"
+              current={5}
+              items={readinessSteps.map(step => ({
+                title: <span style={{ fontWeight: 600, color: 'var(--text)' }}>{step.title}</span>,
+                description: <span style={{ color: 'var(--text-soft)' }}>{step.description}</span>,
+              }))}
+            />
+            
+            <Divider style={{ margin: '24px 0' }} />
+            
+            <Button 
+              type="primary" 
+              block 
+              size="large" 
+              disabled={productionStarted}
+              onClick={handleStartProduction}
+              style={{ borderRadius: 8, fontWeight: 600 }}
+            >
+              {productionStarted ? 'Production Initiated' : 'Initiate Production'}
+            </Button>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={14}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)', flex: 1 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: 'var(--text)' }}>Manufacturing Status</div>
+              
+              {!productionStarted ? (
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
+                  <ToolOutlined style={{ fontSize: 48, opacity: 0.2, marginBottom: 16 }} />
+                  <div>Production has not been initiated yet.</div>
+                  <div style={{ fontSize: 13, marginTop: 4 }}>Verify readiness checklist and click "Initiate Production".</div>
+                </div>
+              ) : (
+                <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span style={{ fontWeight: 600, color: 'var(--text)' }}>Overall Progress</span>
+                    <span style={{ fontWeight: 700, color: 'var(--primary)' }}>40%</span>
+                  </div>
+                  <Progress percent={40} status="active" strokeColor="var(--primary)" />
+                  
+                  <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'var(--success)', flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text)' }}>Carcass Assembly</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-soft)' }}>Completed on May 19, 2026</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'var(--primary)', flexShrink: 0, boxShadow: '0 0 0 4px var(--primary-soft)' }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text)' }}>Shutters & Panels</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-soft)' }}>In Progress (Expected May 22, 2026)</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{ width: 12, height: 12, borderRadius: '50%', border: '2px solid var(--border-strong)', flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-muted)' }}>Hardware & Accessories</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Pending</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div style={{ background: isDark ? 'rgba(255,255,255,0.02)' : '#fffbeb', border: '1px solid #fde68a', borderRadius: 14, padding: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                <DollarCircleOutlined style={{ fontSize: 24, color: '#d97706', marginTop: 4 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Next Stage Requirement: Installation Advance</div>
+                  <p style={{ fontSize: 14, color: '#b45309', margin: 0, marginBottom: 16 }}>
+                    The project cannot proceed to the Installation stage until the 35% Installation Advance payment is received.
+                  </p>
+                  <Button 
+                    type="primary" 
+                    disabled={installationAdvancePaid} 
+                    onClick={handlePayAdvance}
+                    style={{ background: installationAdvancePaid ? undefined : '#d97706', borderColor: installationAdvancePaid ? undefined : '#d97706' }}
+                  >
+                    {installationAdvancePaid ? 'Payment Verified' : 'Mark Payment as Received'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const CutListTab = ({ isDark }) => {
+  const [cutLists, setCutLists] = useState(MOCK_CUT_LISTS);
+
+  const handleSendToFactory = (id) => {
+    setCutLists(prev => prev.map(list => list.id === id ? { ...list, status: 'Sent to Factory' } : list));
+    message.success('Cut list sent to factory for production!');
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Cut List Management</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Generate and manage cut lists based on approved designs to share with the factory.
+          </div>
+        </div>
+        <Space>
+          <Button icon={<AppstoreOutlined />} style={{ borderRadius: 8 }}>Generate from Design</Button>
+          <Button type="primary" icon={<FileAddOutlined />} style={{ borderRadius: 8, fontWeight: 600 }}>
+            Upload Cut List
+          </Button>
+        </Space>
+      </div>
+
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 800 }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>File Name</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Material / Details</th>
+                <th style={{ textAlign: 'center', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Sheets Required</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Date Added</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Status</th>
+                <th style={{ textAlign: 'right', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cutLists.map((item, index) => (
+                <tr key={item.id} style={{ borderBottom: index < cutLists.length - 1 ? '1px solid var(--border-soft)' : 'none', transition: 'background 0.2s', ':hover': { background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb' } }}>
+                  <td style={{ padding: '16px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 36, height: 36, background: 'var(--primary-soft)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <FileText style={{ color: 'var(--primary)', width: 18 }} />
+                      </div>
+                      <span style={{ fontWeight: 600, color: 'var(--text)' }}>{item.name}</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: '16px 20px', color: 'var(--text)' }}>{item.material}</td>
+                  <td style={{ padding: '16px 20px', textAlign: 'center', color: 'var(--text)' }}>
+                    <div style={{ display: 'inline-flex', padding: '4px 10px', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', borderRadius: 20, fontWeight: 600, fontSize: 13 }}>
+                      {item.sheets}
+                    </div>
+                  </td>
+                  <td style={{ padding: '16px 20px', color: 'var(--text-soft)', fontSize: 13 }}>{item.date}</td>
+                  <td style={{ padding: '16px 20px' }}>
+                    <Tag color={item.status === 'Sent to Factory' ? 'success' : 'processing'} style={{ borderRadius: 6, fontWeight: 500 }}>
+                      {item.status}
+                    </Tag>
+                  </td>
+                  <td style={{ padding: '16px 20px', textAlign: 'right' }}>
+                    <Space size={8}>
+                      {item.status !== 'Sent to Factory' && (
+                        <Button size="small" type="primary" onClick={() => handleSendToFactory(item.id)} style={{ fontSize: 12 }}>
+                          Send to Factory
+                        </Button>
+                      )}
+                      <Button size="small" icon={<DownloadOutlined />} title="Download CSV" />
+                      <Button size="small" danger icon={<DeleteOutlined />} title="Delete" />
+                    </Space>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FinalMeasurementTab = ({ isDark }) => {
+  const [checklist, setChecklist] = useState(MOCK_MEASUREMENT_CHECKLIST);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [addForm] = Form.useForm();
+  const [isDocModalOpen, setIsDocModalOpen] = useState(false);
+
+  const handleAddItem = (values) => {
+    const newItem = {
+      id: Date.now(),
+      area: values.area,
+      type: values.type,
+      value: values.value,
+      notes: values.notes,
+      verified: false,
+    };
+    setChecklist([...checklist, newItem]);
+    setIsAddModalOpen(false);
+    addForm.resetFields();
+    message.success('Item added to checklist');
+  };
+
+  const handleSignOff = () => {
+    message.success('Measurements successfully signed off for production!');
+  };
+
+  const toggleVerification = (id) => {
+    setChecklist(prev => prev.map(item => item.id === id ? { ...item, verified: !item.verified } : item));
+  };
+
+  const allVerified = checklist.every(item => item.verified);
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Final Measurement</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Verify all dimensions on-site before proceeding to production.
+          </div>
+        </div>
+        <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+          50% Advance Payment Verified
+        </Tag>
+      </div>
+
+      <Row gutter={[20, 20]}>
+        <Col xs={24} xl={16}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-soft)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontWeight: 700, fontSize: 16 }}>Measurement Checklist</div>
+              <Button size="small" icon={<PlusOutlined />} style={{ borderRadius: 6 }} onClick={() => setIsAddModalOpen(true)}>Add Item</Button>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Area</th>
+                    <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Dimension Type</th>
+                    <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Value</th>
+                    <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Notes</th>
+                    <th style={{ textAlign: 'center', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Verified</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {checklist.map((item, index) => (
+                    <tr key={item.id} style={{ borderBottom: index < checklist.length - 1 ? '1px solid var(--border-soft)' : 'none', transition: 'background 0.2s', ':hover': { background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb' } }}>
+                      <td style={{ padding: '14px 20px', fontWeight: 600, color: 'var(--text)' }}>{item.area}</td>
+                      <td style={{ padding: '14px 20px', color: 'var(--text)' }}>{item.type}</td>
+                      <td style={{ padding: '14px 20px', color: 'var(--primary)', fontWeight: 600 }}>{item.value}</td>
+                      <td style={{ padding: '14px 20px', color: 'var(--text-soft)', fontSize: 13 }}>{item.notes || '-'}</td>
+                      <td style={{ padding: '14px 20px', textAlign: 'center' }}>
+                        <Checkbox checked={item.verified} onChange={() => toggleVerification(item.id)} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ padding: '16px 20px', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', borderTop: '1px solid var(--border-soft)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+                {checklist.filter(i => i.verified).length} of {checklist.length} dimensions verified
+              </div>
+              <Button type="primary" disabled={!allVerified} icon={<CheckOutlined />} style={{ borderRadius: 8 }} onClick={handleSignOff}>
+                Sign-off Measurements
+              </Button>
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} xl={8}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)' }}>
+              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>Signed Document</div>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
+                Upload the finalized and signed measurement document from the client. This is required for production.
+              </p>
+              
+              <div style={{ border: '2px dashed var(--border)', borderRadius: 10, padding: '24px 20px', textAlign: 'center', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', cursor: 'pointer', transition: 'all 0.2s', marginBottom: 16 }}>
+                <FileAddOutlined style={{ fontSize: 28, color: 'var(--primary)', marginBottom: 12 }} />
+                <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Click to Upload</div>
+                <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>PDF or Image files</div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)', borderRadius: 8, border: '1px solid var(--primary-soft)' }}>
+                <FilePdfOutlined style={{ color: 'var(--primary)', fontSize: 24 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Final_Signed_Measurement_v1.pdf</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>May 17, 2026 • 1.2 MB</div>
+                </div>
+                <Button type="text" icon={<EyeOutlined />} size="small" onClick={() => setIsDocModalOpen(true)} />
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Modal
+        title="Add Checklist Item"
+        open={isAddModalOpen}
+        onCancel={() => { setIsAddModalOpen(false); addForm.resetFields(); }}
+        onOk={() => addForm.submit()}
+        okText="Add Item"
+      >
+        <Form form={addForm} layout="vertical" onFinish={handleAddItem}>
+          <Form.Item name="area" label="Area" rules={[{ required: true, message: 'Please enter the area' }]}>
+            <Input placeholder="e.g., Kitchen, Master Bedroom" />
+          </Form.Item>
+          <Form.Item name="type" label="Dimension Type" rules={[{ required: true, message: 'Please enter the dimension type' }]}>
+            <Input placeholder="e.g., Countertop Length, Window Height" />
+          </Form.Item>
+          <Form.Item name="value" label="Value" rules={[{ required: true, message: 'Please enter the value' }]}>
+            <Input placeholder="e.g., 3200 mm" />
+          </Form.Item>
+          <Form.Item name="notes" label="Notes">
+            <Input.TextArea placeholder="Any specific notes or conditions..." rows={3} />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Final Signed Measurement Document"
+        open={isDocModalOpen}
+        onCancel={() => setIsDocModalOpen(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsDocModalOpen(false)}>Close</Button>,
+          <Button key="download" type="primary" icon={<DownloadOutlined />}>Download</Button>
+        ]}
+        width={800}
+        centered
+      >
+        <div style={{ padding: 40, textAlign: 'center', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', borderRadius: 8, border: '1px dashed var(--border)' }}>
+          <FilePdfOutlined style={{ fontSize: 64, color: '#ef4444', marginBottom: 16 }} />
+          <div style={{ fontSize: 18, fontWeight: 600 }}>Final_Signed_Measurement_v1.pdf</div>
+          <p style={{ color: 'var(--text-muted)' }}>Preview not available for this mock document. Click download to save the file.</p>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -688,8 +1682,29 @@ const ProjectDetailPage = () => {
   });
   const [purchaseRequests, setPurchaseRequests] = useState(INITIAL_PURCHASE_REQUESTS);
   const [projectActivities, setProjectActivities] = useState(INITIAL_PROJECT_ACTIVITIES);
+  const [hasDesignAdvance, setHasDesignAdvance] = useState(false); // Mock state for Design Advance
+  const [has50PercentAdvance, setHas50PercentAdvance] = useState(false); // Mock state for 50% Advance
+  const [hasInstallationAdvance, setHasInstallationAdvance] = useState(false); // Mock state lifted from ProductionTab
+  const [hasBalancePayment, setHasBalancePayment] = useState(false); // Mock state lifted from CleaningTab
 
   if (!project) return <div style={{ padding: 40 }}>Project not found</div>;
+
+  const tabAccess = {
+    'Project Detail': true,
+    'Files': true,
+    'User Requirement': true,
+    'Design': true,
+    'Color Selection': true,
+    'Quotes': true,
+    'Final Measurement': true,
+    'Cut List': true,
+    'Bill of Material': true,
+    'Production': true,
+    'Installation': hasInstallationAdvance,
+    'Snag': true,
+    'Cleaning': true,
+    'Handover': hasBalancePayment,
+  };
 
   const css = {
     '--bg': isDark ? '#031726' : '#f4f5f7',
@@ -3068,34 +4083,199 @@ Generated by Perspective Kitchens & Interiors
     );
   };
 
+  const renderDesign = () => {
+    if (!hasDesignAdvance) {
+      return (
+        <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '60px 40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)' }}>
+          <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Design Stage Locked</div>
+          <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
+            The Design stage workflow can proceed only after the client has paid the 10% Design Advance. Please verify the payment status to unlock this section.
+          </p>
+          <Button type="primary" size="large" onClick={() => { message.success('10% Design Advance marked as received!'); setHasDesignAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
+            Mark 10% Design Advance as Received
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Design Stage</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+              Review reference designs, verify site measurements, and track final created designs.
+            </div>
+          </div>
+          <Tag color="success" icon={<CheckCircleOutlined />} style={{ padding: '8px 14px', fontSize: 14, borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+            10% Design Advance Verified
+          </Tag>
+        </div>
+
+      <Row gutter={[20, 20]}>
+        <Col xs={24} lg={12}>
+          <div style={card}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-soft)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontWeight: 700, fontSize: 16 }}>Reference Designs</div>
+              <Button type="primary" size="small" icon={<PlusOutlined />} style={primaryButtonStyle}>Upload Reference</Button>
+            </div>
+            <div style={{ padding: 20 }}>
+              <div style={{ display: 'flex', gap: 14, overflowX: 'auto', paddingBottom: 8 }}>
+                {MOCK_REFERENCE_DESIGNS.map(ref => (
+                  <div key={ref.id} style={{ width: 140, flexShrink: 0 }}>
+                    <Image
+                      src={ref.url}
+                      alt={ref.name}
+                      style={{ height: 110, width: 140, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }}
+                      preview={{ src: ref.url }}
+                    />
+                    <div style={{ fontSize: 13, fontWeight: 500, marginTop: 8, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={ref.name}>
+                      {ref.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={24} lg={12}>
+          <div style={card}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-soft)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontWeight: 700, fontSize: 16 }}>Site Measurements</div>
+              <Button size="small" icon={<FileAddOutlined />} style={secondaryButtonStyle}>Upload Measurement</Button>
+            </div>
+            <div style={{ padding: 20 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {MOCK_SITE_MEASUREMENTS.map(file => (
+                  <div key={file.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
+                    <div style={{ width: 40, height: 40, background: '#fee2e2', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <FilePdfOutlined style={{ color: '#ef4444', fontSize: 20 }} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{file.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-soft)', marginTop: 2 }}>{file.date} • {file.size}</div>
+                    </div>
+                    <Button type="text" icon={<DownloadOutlined />} size="small" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <div style={{ ...card, marginTop: 20 }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-soft)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>Created Designs</div>
+          <Button type="primary" icon={<FileAddOutlined />} style={primaryButtonStyle}>Upload Final Design</Button>
+        </div>
+        <div style={{ padding: 0 }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Design Name</th>
+                  <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Upload Date</th>
+                  <th style={{ textAlign: 'left', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Status</th>
+                  <th style={{ textAlign: 'right', padding: '14px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MOCK_CREATED_DESIGNS.map((design, index) => (
+                  <tr key={design.id} style={{ borderBottom: index < MOCK_CREATED_DESIGNS.length - 1 ? '1px solid var(--border-soft)' : 'none', transition: 'background 0.2s', ':hover': { background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb' } }}>
+                    <td style={{ padding: '14px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <FilePdfOutlined style={{ color: '#ef4444', fontSize: 20 }} />
+                        <span style={{ fontWeight: 600, color: 'var(--text)' }}>{design.name}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '14px 20px', color: 'var(--text-soft)', fontSize: 14 }}>{design.date}</td>
+                    <td style={{ padding: '14px 20px' }}>
+                      <BadgePill label={design.status} tone={design.status === 'Approved' ? 'success' : 'info'} />
+                    </td>
+                    <td style={{ padding: '14px 20px', textAlign: 'right' }}>
+                      <Space size={8}>
+                        <Button size="small" icon={<EyeOutlined />} title="View" style={{ color: 'var(--text-soft)', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
+                        <Button size="small" icon={<DownloadOutlined />} title="Download" style={{ color: 'var(--text-soft)', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
+                        <Button size="small" danger icon={<DeleteOutlined />} title="Delete" style={{ color: '#ef4444', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
+                      </Space>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+  const renderColorSelection = () => <ColorSelectionTab isDark={isDark} />;
+
+  const renderFinalMeasurement = () => {
+    if (!has50PercentAdvance) {
+      return (
+        <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '60px 40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)' }}>
+          <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Final Measurement Locked</div>
+          <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
+            The Final Measurement workflow can proceed only after the client has paid the 50% Advance Payment. Please verify the payment status to unlock this section.
+          </p>
+          <Button type="primary" size="large" onClick={() => { message.success('50% Advance Payment marked as received!'); setHas50PercentAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
+            Mark 50% Advance as Received
+          </Button>
+        </div>
+      );
+    }
+    return <FinalMeasurementTab isDark={isDark} />;
+  };
+
+  const renderCutList = () => <CutListTab isDark={isDark} />;
+
+  const renderBillOfMaterial = () => renderOrders();
+
+  const renderProduction = () => (
+    <ProductionTab 
+      isDark={isDark} 
+      installationAdvancePaid={hasInstallationAdvance}
+      onPayAdvance={() => setHasInstallationAdvance(true)}
+    />
+  );
+
+  const renderInstallation = () => <InstallationTab isDark={isDark} />;
+
+  const renderSnag = () => <SnagTab isDark={isDark} />;
+
+  const renderCleaning = () => (
+    <CleaningTab 
+      isDark={isDark} 
+      balancePaymentPaid={hasBalancePayment}
+      onPayBalance={() => setHasBalancePayment(true)}
+    />
+  );
+
+  const renderHandover = () => <HandoverTab isDark={isDark} />;
+
   const renderContent = () => {
     switch (activeTab) {
-      case 'Project Detail':
-        return renderProjectDetail();
-      case 'Files':
-        return renderFiles();
-      case 'User Requirement':
-        return renderUserRequirement();
-      case 'Notes':
-        return renderNotes();
-      case 'Quotes':
-        return renderQuotes();
-      case 'Orders':
-        return renderOrders();
-      case 'Tasks':
-        return renderTasks();
-      case 'Purchase Request':
-        return renderPurchaseRequest();
-      case 'Inventory':
-        return renderInventory();
-      case 'Activities':
-        return renderActivities();
-      case 'Financial':
-        return renderFinancial();
-      case 'Raise Invoice':
-        return renderRaiseInvoice();
-      default:
-        return null;
+      case 'Project Detail': return renderProjectDetail();
+      case 'Files': return renderFiles();
+      case 'User Requirement': return renderUserRequirement();
+      case 'Design': return renderDesign();
+      case 'Color Selection': return renderColorSelection();
+      case 'Quotes': return renderQuotes();
+      case 'Final Measurement': return renderFinalMeasurement();
+      case 'Cut List': return renderCutList();
+      case 'Bill of Material': return renderBillOfMaterial();
+      case 'Production': return renderProduction();
+      case 'Installation': return renderInstallation();
+      case 'Snag': return renderSnag();
+      case 'Cleaning': return renderCleaning();
+      case 'Handover': return renderHandover();
+      default: return null;
     }
   };
 
@@ -3201,41 +4381,47 @@ Generated by Perspective Kitchens & Interiors
         >
           {isLayoutCompact ? (
             <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
-              {SIDEBAR_TABS.map(tab => (
+              {SIDEBAR_TABS.map(tab => {
+                const disabled = !tabAccess[tab.label] && !tabAccess[tab.key];
+                return (
                 <button
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => { if(!disabled) setActiveTab(tab.key) }}
+                  disabled={disabled}
                   style={{
                     padding: '7px 14px',
                     borderRadius: 8,
                     border: 'none',
-                    cursor: 'pointer',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
                     whiteSpace: 'nowrap',
                     fontSize: 14,
+                    opacity: disabled ? 0.5 : 1,
                     fontWeight: activeTab === tab.key ? 600 : 500,
                     color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
                     background: activeTab === tab.key ? 'var(--primary)' : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
                     transition: 'all 0.15s ease',
                   }}
                 >
-                  {tab.label}
+                  {tab.label} {disabled && <i className="bx bx-lock-alt" style={{marginLeft: 4, fontSize: 12}}></i>}
                 </button>
-              ))}
+              )})}
             </div>
           ) : (
             SIDEBAR_TABS.map(tab => {
               const isActive = activeTab === tab.key;
+              const disabled = !tabAccess[tab.label] && !tabAccess[tab.key];
               return (
                 <div
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => { if(!disabled) setActiveTab(tab.key) }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
                     padding: '10px 14px',
                     borderRadius: 10,
-                    cursor: 'pointer',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
+                    opacity: disabled ? 0.5 : 1,
                     fontSize: 15,
                     fontWeight: isActive ? 600 : 500,
                     color: isActive ? 'var(--primary)' : (isDark ? '#8a9ab0' : '#666'),
@@ -3247,13 +4433,13 @@ Generated by Perspective Kitchens & Interiors
                     transition: 'all 0.15s ease',
                   }}
                   onMouseEnter={e => {
-                    if (activeTab !== tab.key) {
+                    if (activeTab !== tab.key && !disabled) {
                       e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
                       e.currentTarget.style.color = isDark ? '#d8e8f8' : '#333';
                     }
                   }}
                   onMouseLeave={e => {
-                    if (activeTab !== tab.key) {
+                    if (activeTab !== tab.key && !disabled) {
                       e.currentTarget.style.background = 'transparent';
                       e.currentTarget.style.color = isDark ? '#8a9ab0' : '#666';
                     }

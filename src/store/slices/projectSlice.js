@@ -19,8 +19,15 @@ const projectSlice = createSlice({
     setActiveTab(state, action) {
       state.activeTab = action.payload;
     },
+    assignProject(state, action) {
+      const { projectId, personName } = action.payload;
+      const project = state.projects.find(p => p.id === projectId);
+      if (project) {
+        project.assignedTo = personName;
+      }
+    },
   },
 });
 
-export const { addProject, updateProject, setActiveTab } = projectSlice.actions;
+export const { addProject, updateProject, setActiveTab, assignProject } = projectSlice.actions;
 export default projectSlice.reducer;

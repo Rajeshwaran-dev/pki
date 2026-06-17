@@ -12,6 +12,7 @@ import UserManagementSettings from './pages/settingsPages/UserManagementSettings
 import PermissionsSettings from './pages/settingsPages/PermissionsSettings';
 import NotificationSettings from './pages/settingsPages/NotificationSettings';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import ProjectDetailV2Page from './pages/ProjectDetailV2Page';
 import ReportsPage from './pages/ReportsPage';
 import MessagesPage from './pages/MessagesPage';
 import InventoryPage from './pages/InventoryPage';
@@ -87,6 +88,7 @@ const ThemedApp = () => {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/projects/:id" element={<ProjectDetailPage />} />
+              <Route path="/projects/:id/v2" element={<ProjectDetailV2Page />} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/clients/:id" element={<ClientDetailPage />} />
               <Route path="/tasks" element={<TasksPage />} />

@@ -13,7 +13,8 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { addProject, updateProject, setActiveTab } from '@/store/slices/projectSlice';
+import { addProject, updateProject, setActiveTab, assignProject } from '@/store/slices/projectSlice';
+import { STAFF_MEMBERS } from '@/store/slices/enquirySlice';
 import { addClient } from '@/store/slices/clientSlice';
 import { stages, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
@@ -478,7 +479,7 @@ const ProjectsPage = () => {
       render: (name, row) => (
         <div
           style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
-          onClick={() => navigate(`/projects/${row.id}`)}
+          onClick={() => navigate(`/projects/${row.id}/v2`)}
         >
           <Avatar size={36} style={{ background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)', color: isDark ? '#5ab5e8' : primaryColor, fontWeight: 700, fontSize: 15, flexShrink: 0 }}>
             {name.charAt(0)}
@@ -496,6 +497,33 @@ const ProjectsPage = () => {
     { title: 'State', dataIndex: 'state', width: 130 },
     { title: 'Stage', dataIndex: 'stage', width: 120, render: v => <StatusTag value={v} />, filters: stages.filter(s => s !== 'All').map(s => ({ text: s, value: s })), onFilter: (v, r) => r.stage === v },
     { title: 'Phone', dataIndex: 'phone', width: 145, responsive: ['lg'] },
+    {
+      title: 'Assigned To',
+      dataIndex: 'assignedTo',
+      width: 170,
+      render: (assignedTo) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {assignedTo ? (
+            <>
+              <Avatar
+                size={24}
+                style={{
+                  background: isDark ? 'rgba(90,181,232,0.2)' : 'rgba(214,159,109,0.2)',
+                  color: primaryColor,
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                {assignedTo.split(' ').map(n => n[0]).join('')}
+              </Avatar>
+              <span style={{ fontSize: 15, fontWeight: 500 }}>{assignedTo}</span>
+            </>
+          ) : (
+            <span style={{ color: '#999', fontStyle: 'italic', fontSize: 14 }}>Not Assigned</span>
+          )}
+        </div>
+      ),
+    },
     { title: 'Date', dataIndex: 'createdDate', width: 100, sorter: (a, b) => a.createdDate.localeCompare(b.createdDate) },
     {
       title: 'Actions', width: 80, fixed: 'right',
@@ -521,6 +549,19 @@ const ProjectsPage = () => {
                     e.domEvent.stopPropagation();
                     openEditProjectModal(row);
                   },
+                },
+                {
+                  key: 'assign',
+                  icon: <UserOutlined style={{ color: primaryColor }} />,
+                  label: 'Assign To',
+                  children: STAFF_MEMBERS.map(staff => ({
+                    key: `assign-${staff.id}`,
+                    label: staff.name,
+                    onClick: (e) => {
+                      e.domEvent.stopPropagation();
+                      dispatch(assignProject({ projectId: row.id, personName: staff.name }));
+                    },
+                  })),
                 },
               ],
             }}
@@ -712,7 +753,7 @@ const ProjectsPage = () => {
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: t => `${t} projects`, style: { marginTop: 16 } }}
             scroll={{ x: 1100 }}
             size="middle"
-            onRow={row => ({ style: { cursor: 'pointer' }, onClick: () => navigate(`/projects/${row.id}`) })}
+            onRow={row => ({ style: { cursor: 'pointer' }, onClick: () => navigate(`/projects/${row.id}/v2`) })}
           />
         </div>
       )}
@@ -722,7 +763,7 @@ const ProjectsPage = () => {
         project={overviewProject}
         open={!!overviewProject}
         onClose={() => setOverviewProject(null)}
-        onNavigate={(id) => { setOverviewProject(null); navigate(`/projects/${id}`); }}
+        onNavigate={(id) => { setOverviewProject(null); navigate(`/projects/${id}/v2`); }}
       />
 
       {/* Filter Drawer */}

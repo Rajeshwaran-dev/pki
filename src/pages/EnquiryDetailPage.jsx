@@ -13,13 +13,13 @@ import {
 import { useAppSelector, useAppDispatch } from '@/store';
 import {
   updateEnquiry, deleteEnquiry, addFollowUp,
-  addProposal, updateProposal, deleteProposal, addFile, deleteFile, assignEnquiry, convertToClient, STAFF_MEMBERS
+  addProposal, updateProposal, deleteProposal, addSiteVisit, updateSiteVisit, deleteSiteVisit, addFile, deleteFile, assignEnquiry, convertToClient, STAFF_MEMBERS
 } from '@/store/slices/enquirySlice';
 import { addClient } from '@/store/slices/clientSlice';
 import { addProject } from '@/store/slices/projectSlice';
 import { 
   ClipboardList, Folder, Phone, FileText, CheckCircle, 
-  User, HardHat, Search, Mail
+  User, HardHat, Search, Mail, MapPin
 } from 'lucide-react';
 import useIsMobile from '@/hooks/useIsMobile';
 import dayjs from 'dayjs';
@@ -170,7 +170,67 @@ const FollowUpCard = ({ fu, isDark, primaryColor }) => {
   );
 };
 
-const ProposalVersionCard = ({ proposal, isDark, primaryColor, enquiryPhone, onView, onEdit, onEditBOQ, onDownload, onDelete, onApprove }) => (
+const SiteVisitCard = ({ visit, isDark, primaryColor }) => {
+  return (
+    <div
+      style={{
+        background: isDark ? '#0b2338' : '#fff',
+        border: `1px solid ${isDark ? '#1a4d72' : '#eef1f6'}`,
+        borderRadius: 12,
+        padding: '14px 16px',
+        marginBottom: 12,
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 12,
+      }}
+    >
+      <div
+        style={{
+          width: 36, height: 36, borderRadius: '50%', background: isDark ? 'rgba(90,181,232,0.15)' : 'rgba(214,159,109,0.15)',
+          color: primaryColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}
+      >
+        <MapPin size={18} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', marginBottom: 8 }}>
+          <div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Visit Date</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{visit.date}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Visited By</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{visit.visitedBy}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Carpet Area</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{visit.carpetArea || '—'}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500 }}>Condition</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{visit.condition || '—'}</div>
+          </div>
+        </div>
+        {(visit.mep && visit.mep.length > 0) && (
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>MEP Provisions</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {visit.mep.map(m => <Tag key={m} style={{ borderRadius: 6, border: 'none', background: `${primaryColor}20`, color: primaryColor }}>{m}</Tag>)}
+            </div>
+          </div>
+        )}
+        {visit.observations && (
+          <div>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>Observations</div>
+            <div style={{ fontSize: 15, color: isDark ? '#a8b8c8' : '#444' }}>{visit.observations}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ProposalVersionCard = ({ proposal, isDark, primaryColor, enquiryPhone, onView, onEdit, onDownload, onDelete, onApprove }) => (
   <div
     style={{
       background: isDark ? '#0b2338' : '#fff',
@@ -210,7 +270,6 @@ const ProposalVersionCard = ({ proposal, isDark, primaryColor, enquiryPhone, onV
     <Space size={8} wrap>
       <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onView}>View</Button>
       <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onEdit}>Edit</Button>
-      <Button size="small" style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onEditBOQ}>Edit BOQ</Button>
       <Button size="small" icon={<DownloadOutlined />} style={{ borderRadius: 6, borderColor: '#d9d9d9', color: '#666' }} onClick={onDownload} disabled={!proposal.approved} />
       
       {!proposal.approved ? (
@@ -265,6 +324,9 @@ const EnquiryDetailPage = () => {
   const [followUpForm] = Form.useForm();
   const [proposalForm] = Form.useForm();
   const [clientInfoForm] = Form.useForm();
+  const [siteVisitForm] = Form.useForm();
+
+  const [siteVisitModalOpen, setSiteVisitModalOpen] = useState(false);
 
   // Convert Wizard State
   const [convertStep, setConvertStep] = useState(0);
@@ -321,6 +383,7 @@ const EnquiryDetailPage = () => {
 
   const TABS = [
     { key: 'detail', label: 'Enquiry Detail', icon: <ClipboardList size={19} /> },
+    { key: 'site_visit', label: 'Site Visit', icon: <MapPin size={19} /> },
     { key: 'files', label: 'Files', icon: <Folder size={19} /> },
     { key: 'followup', label: 'Follow Up', icon: <Phone size={19} /> },
     { key: 'proposal', label: 'Quotes', icon: <FileText size={19} /> },
@@ -399,6 +462,27 @@ const EnquiryDetailPage = () => {
       setFollowUpModalOpen(false);
       followUpForm.resetFields();
       message.success('Follow-up added');
+    });
+  };
+
+  const handleAddSiteVisit = () => {
+    siteVisitForm.validateFields().then(values => {
+      dispatch(addSiteVisit({
+        enquiryId: enquiry.id,
+        siteVisit: {
+          id: Date.now(),
+          date: values.date ? values.date.format('MMM D, YYYY') : dayjs().format('MMM D, YYYY'),
+          visitedBy: values.visitedBy,
+          carpetArea: values.carpetArea,
+          ceilingHeight: values.ceilingHeight,
+          condition: values.condition,
+          mep: values.mep || [],
+          observations: values.observations || '',
+        },
+      }));
+      setSiteVisitModalOpen(false);
+      siteVisitForm.resetFields();
+      message.success('Site Visit logged successfully');
     });
   };
 
@@ -757,10 +841,6 @@ const EnquiryDetailPage = () => {
                   setEditingProposal(p);
                   setProposalSubTab('new');
                 }}
-                onEditBOQ={() => {
-                  setEditingProposal(p);
-                  setProposalSubTab('new');
-                }}
                 onDownload={() => message.success(`Downloading ${p.version}`)}
                 onApprove={() => {
                   Modal.confirm({
@@ -1004,8 +1084,36 @@ const EnquiryDetailPage = () => {
     );
   };
 
+  const renderSiteVisit = () => (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setSiteVisitModalOpen(true)}
+          style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
+        >
+          Add Site Visit
+        </Button>
+      </div>
+      {(!enquiry.siteVisits || enquiry.siteVisits.length === 0) ? (
+        <div style={{ textAlign: 'center', padding: '48px 0', color: isDark ? '#5a7a95' : '#ccc' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+            <MapPin size={40} color={isDark ? '#5a7a95' : '#ccc'} />
+          </div>
+          <div style={{ fontSize: 16 }}>No site visits logged yet.</div>
+        </div>
+      ) : (
+        enquiry.siteVisits.map(visit => (
+          <SiteVisitCard key={visit.id} visit={visit} isDark={isDark} primaryColor={primaryColor} />
+        ))
+      )}
+    </div>
+  );
+
   const tabContent = {
     detail: renderDetail(),
+    site_visit: renderSiteVisit(),
     files: renderFiles(),
     followup: renderFollowUp(),
     proposal: renderProposal(),
@@ -1379,6 +1487,72 @@ const EnquiryDetailPage = () => {
           </Form.Item>
           <Form.Item name="remarks" label="Remarks">
             <Input.TextArea rows={3} placeholder="Notes about this follow-up..." />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* ── Add Site Visit Modal ── */}
+      <Modal
+        className="crm-modal"
+        title="Add Site Visit"
+        open={siteVisitModalOpen}
+        onCancel={() => { setSiteVisitModalOpen(false); siteVisitForm.resetFields(); }}
+        onOk={handleAddSiteVisit}
+        okText="Save Visit"
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{ className: 'crm-primary-btn' }}
+        width={isMobile ? '96%' : 600}
+        centered
+      >
+        <Form form={siteVisitForm} layout="vertical" className="crm-form-shell">
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="date" label="Visit Date" rules={[{ required: true, message: 'Date required' }]}>
+                <DatePicker style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="visitedBy" label="Visited By" rules={[{ required: true }]}>
+                <Select placeholder="Select staff" options={STAFF_MEMBERS.map(s => ({ value: s.name, label: s.name }))} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="carpetArea" label="Carpet Area (sq ft)">
+                <Input placeholder="e.g. 1200" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="ceilingHeight" label="Ceiling Height (ft)">
+                <Input placeholder="e.g. 10.5" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item name="condition" label="Site Condition">
+            <Select placeholder="Select condition" options={[
+              { value: 'Raw', label: 'Raw' },
+              { value: 'Plastered', label: 'Plastered' },
+              { value: 'Semi-finished', label: 'Semi-finished' },
+              { value: 'Fully Finished', label: 'Fully Finished' },
+            ]} />
+          </Form.Item>
+          <Form.Item name="mep" label="MEP Provisions (Check all that apply)">
+            <Select mode="multiple" placeholder="Select provisions" options={[
+              { value: 'Electrical Points', label: 'Electrical Points' },
+              { value: 'Plumbing', label: 'Plumbing' },
+              { value: 'Gas Pipeline', label: 'Gas Pipeline' },
+              { value: 'HVAC/AC Ducts', label: 'HVAC/AC Ducts' },
+            ]} />
+          </Form.Item>
+          <Form.Item name="observations" label="Observations / Notes">
+            <Input.TextArea rows={3} placeholder="Any specific issues or requests..." />
+          </Form.Item>
+          <Form.Item label="Site Media (Optional)">
+            <Dragger multiple beforeUpload={() => false}>
+              <p className="ant-upload-drag-icon"><InboxOutlined style={{ color: primaryColor }} /></p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            </Dragger>
           </Form.Item>
         </Form>
       </Modal>
