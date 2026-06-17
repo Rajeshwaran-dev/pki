@@ -33,6 +33,7 @@ import {
   ArrowDownOutlined,
   InfoCircleOutlined,
   WalletOutlined,
+  WhatsAppOutlined,
 } from '@ant-design/icons';
 import { ClipboardList, Folder, FileText, User, HardHat } from 'lucide-react';
 
@@ -80,11 +81,12 @@ const SIDEBAR_TABS = [
   { key: 'Files', label: 'Files', icon: <Folder size={19} /> },
   { key: 'User Requirement', label: 'User Requirement', icon: <QuestionCircleOutlined /> },
   { key: 'Design', label: 'Design', icon: <ToolOutlined /> },
-  { key: 'Color Selection', label: 'Color Selection', icon: <AppstoreOutlined /> },
-  { key: 'Quotes', label: 'Quotes', icon: <SnippetsOutlined /> },
+  { key: 'Quotes', label: 'Project Quotation', icon: <SnippetsOutlined /> },
   { key: 'Final Measurement', label: 'Final Measurement', icon: <CheckCircleOutlined /> },
   { key: 'Cut List', label: 'Cut List', icon: <FileText size={19} /> },
   { key: 'Bill of Material', label: 'Bill of Material', icon: <ShoppingCartOutlined /> },
+  { key: 'Purchase Orders', label: 'Purchase Orders', icon: <FileText size={19} /> },
+  { key: 'Purchase Request', label: 'Purchase Request', icon: <ShoppingCartOutlined /> },
   { key: 'Production', label: 'Production', icon: <TeamOutlined /> },
   { key: 'Installation', label: 'Installation', icon: <HardHat size={19} /> },
   { key: 'Snag', label: 'Snag', icon: <FlagOutlined /> },
@@ -729,6 +731,15 @@ const MOCK_CUT_LISTS = [
   { id: 3, name: 'Wardrobe_Base.csv', material: '18mm BWP Plywood', sheets: 18, status: 'Sent to Factory', date: 'May 18, 2026' },
 ];
 
+const MOCK_BILL_OF_MATERIAL = [
+  { id: 'BOM-001', item: '18mm MR Plywood', category: 'Boards', qty: 45, unit: 'sheets', estimatedCost: 'Rs. 54,000', status: 'In Stock' },
+  { id: 'BOM-002', item: 'Soft Close Hinges', category: 'Hardware', qty: 120, unit: 'pcs', estimatedCost: 'Rs. 18,000', status: 'Pending Procurement' },
+  { id: 'BOM-003', item: 'Profile LED Strip 3000K', category: 'Lighting', qty: 15, unit: 'rolls', estimatedCost: 'Rs. 7,500', status: 'Ordered' },
+  { id: 'BOM-004', item: 'Walnut Veneer Sheet', category: 'Finish', qty: 20, unit: 'sheets', estimatedCost: 'Rs. 42,000', status: 'In Stock' },
+  { id: 'BOM-005', item: 'Aluminium Profile Handle', category: 'Hardware', qty: 30, unit: 'pcs', estimatedCost: 'Rs. 12,000', status: 'In Stock' },
+  { id: 'BOM-006', item: '18mm MDF Acrylic', category: 'Boards', qty: 12, unit: 'sheets', estimatedCost: 'Rs. 36,000', status: 'Pending Procurement' },
+];
+
 const MOCK_DELIVERY_ITEMS = [
   { id: 1, name: 'Kitchen Carcass Units', status: 'Delivered', date: 'May 20, 2026' },
   { id: 2, name: 'Shutters & Panels', status: 'In Transit', date: 'Expected May 22' },
@@ -896,7 +907,7 @@ const InstallationTab = ({ isDark }) => {
   );
 };
 
-const SnagTab = ({ isDark }) => {
+const SnagTab = ({ isDark, onWhatsAppShare }) => {
   const [photos, setPhotos] = useState(MOCK_SNAG_PHOTOS);
   const [checklist, setChecklist] = useState(MOCK_SNAG_CHECKLIST);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -952,8 +963,11 @@ const SnagTab = ({ isDark }) => {
               {photos.map(photo => (
                 <div key={photo.id} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', position: 'relative', background: isDark ? '#1a1a1a' : '#f5f5f5' }}>
                   <Image src={photo.url} alt={photo.title} style={{ width: '100%', height: 140, objectFit: 'cover' }} />
-                  <div style={{ padding: '8px 12px', fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {photo.title}
+                  <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {photo.title}
+                    </div>
+                    <WhatsAppOutlined style={{ color: '#25D366', cursor: 'pointer', fontSize: 16, flexShrink: 0 }} onClick={() => onWhatsAppShare?.(`Check out this site snag photo: ${photo.title}`)} title="Share via WhatsApp" />
                   </div>
                 </div>
               ))}
@@ -1104,7 +1118,7 @@ const HandoverTab = ({ isDark }) => {
   );
 };
 
-const CleaningTab = ({ isDark, balancePaymentPaid, onPayBalance }) => {
+const CleaningTab = ({ isDark, balancePaymentPaid, onPayBalance, onWhatsAppShare }) => {
   const [checklist, setChecklist] = useState(MOCK_CLEANING_CHECKLIST);
   const [photos, setPhotos] = useState(MOCK_CLEANING_PHOTOS);
 
@@ -1150,9 +1164,12 @@ const CleaningTab = ({ isDark, balancePaymentPaid, onPayBalance }) => {
               {photos.map(photo => (
                 <div key={photo.id} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', position: 'relative', background: isDark ? '#1a1a1a' : '#f5f5f5' }}>
                   <Image src={photo.url} alt={photo.title} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
-                  <div style={{ padding: '8px 12px', fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', justifyContent: 'space-between' }}>
-                    <span>{photo.title}</span>
-                    <Tag color={photo.type === 'before' ? 'warning' : 'success'} style={{ margin: 0, borderRadius: 4 }}>
+                  <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</span>
+                      <WhatsAppOutlined style={{ color: '#25D366', cursor: 'pointer', fontSize: 16, flexShrink: 0 }} onClick={() => onWhatsAppShare?.(`Check out this site cleaning photo: ${photo.title}`)} title="Share via WhatsApp" />
+                    </div>
+                    <Tag color={photo.type === 'before' ? 'warning' : 'success'} style={{ margin: 0, borderRadius: 4, flexShrink: 0 }}>
                       {photo.type.toUpperCase()}
                     </Tag>
                   </div>
@@ -1348,6 +1365,123 @@ const ProductionTab = ({ isDark, installationAdvancePaid, onPayAdvance }) => {
           </div>
         </Col>
       </Row>
+    </div>
+  );
+};
+
+const BillOfMaterialTab = ({ isDark }) => {
+  const [bomItems, setBomItems] = useState(MOCK_BILL_OF_MATERIAL);
+
+  const handleProcure = (id) => {
+    setBomItems(prev => prev.map(item => item.id === id ? { ...item, status: 'Ordered' } : item));
+    message.success('Procurement request raised for the item.');
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Bill of Material (BOM)</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>
+            Review required materials and manage procurement.
+          </div>
+        </div>
+        <Space>
+          <Button icon={<FileAddOutlined />} style={{ borderRadius: 8 }}>Upload BOM</Button>
+          <Button type="primary" icon={<AppstoreOutlined />} style={{ borderRadius: 8, fontWeight: 600 }}>
+            Generate from Design
+          </Button>
+        </Space>
+      </div>
+
+      <Row gutter={[20, 20]} style={{ marginBottom: 24 }}>
+        <Col xs={24} sm={8}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--primary-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
+              <AppstoreOutlined style={{ fontSize: 24 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, color: 'var(--text-soft)', fontWeight: 500 }}>Total Items</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>{bomItems.length}</div>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={8}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--success-bg, #f6ffed)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--success, #52c41a)' }}>
+              <CheckCircleOutlined style={{ fontSize: 24 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, color: 'var(--text-soft)', fontWeight: 500 }}>In Stock</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>{bomItems.filter(i => i.status === 'In Stock').length}</div>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={8}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--warning-bg, #fffbe6)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--warning, #faad14)' }}>
+              <ShoppingCartOutlined style={{ fontSize: 24 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, color: 'var(--text-soft)', fontWeight: 500 }}>Pending Procurement</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>{bomItems.filter(i => i.status === 'Pending Procurement').length}</div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 800 }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Item ID</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Item / Details</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Category</th>
+                <th style={{ textAlign: 'center', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Quantity</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Est. Cost</th>
+                <th style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Status</th>
+                <th style={{ textAlign: 'right', padding: '16px 20px', background: 'var(--primary-soft)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 700, borderBottom: '1px solid var(--border-soft)' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bomItems.map((item, index) => (
+                <tr key={item.id} style={{ borderBottom: index < bomItems.length - 1 ? '1px solid var(--border-soft)' : 'none', transition: 'background 0.2s', ':hover': { background: isDark ? 'rgba(255,255,255,0.02)' : '#f9fafb' } }}>
+                  <td style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--primary)' }}>{item.id}</td>
+                  <td style={{ padding: '16px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontWeight: 600, color: 'var(--text)' }}>{item.item}</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: '16px 20px', color: 'var(--text-soft)' }}>{item.category}</td>
+                  <td style={{ padding: '16px 20px', textAlign: 'center', color: 'var(--text)' }}>
+                    <div style={{ display: 'inline-flex', padding: '4px 10px', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', borderRadius: 20, fontWeight: 600, fontSize: 13 }}>
+                      {item.qty} {item.unit}
+                    </div>
+                  </td>
+                  <td style={{ padding: '16px 20px', color: 'var(--text-soft)', fontSize: 14 }}>{item.estimatedCost}</td>
+                  <td style={{ padding: '16px 20px' }}>
+                    <Tag color={item.status === 'In Stock' ? 'success' : item.status === 'Ordered' ? 'processing' : 'warning'} style={{ borderRadius: 6, fontWeight: 500 }}>
+                      {item.status}
+                    </Tag>
+                  </td>
+                  <td style={{ padding: '16px 20px', textAlign: 'right' }}>
+                    <Space size={8}>
+                      {item.status === 'Pending Procurement' && (
+                        <Button size="small" type="primary" onClick={() => handleProcure(item.id)} style={{ fontSize: 12 }}>
+                          Procure
+                        </Button>
+                      )}
+                      <Button size="small" icon={<EditOutlined />} title="Edit" />
+                      <Button size="small" danger icon={<DeleteOutlined />} title="Delete" />
+                    </Space>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
@@ -1694,11 +1828,12 @@ const ProjectDetailPage = () => {
     'Files': true,
     'User Requirement': true,
     'Design': true,
-    'Color Selection': true,
     'Quotes': true,
     'Final Measurement': true,
     'Cut List': true,
     'Bill of Material': true,
+    'Purchase Orders': true,
+    'Purchase Request': true,
     'Production': true,
     'Installation': hasInstallationAdvance,
     'Snag': true,
@@ -2031,9 +2166,23 @@ const ProjectDetailPage = () => {
       };
 
       if (quoteModal.mode === 'edit' && quoteModal.record) {
-        setQuotes(prev => prev.map(item => (
-          item.id === quoteModal.record.id ? { ...item, ...payload } : item
-        )));
+        const currentVersionStr = quoteModal.record.version || 'Rev 01';
+        const match = currentVersionStr.match(/\d+/);
+        const currentRevNum = match ? parseInt(match[0], 10) : 1;
+        const nextRevNum = currentRevNum + 1;
+        const newVersion = `Rev ${String(nextRevNum).padStart(2, '0')}`;
+        const newRecordId = `${quoteModal.record.quoteNo}-v${nextRevNum}-${Date.now()}`;
+
+        const newRecord = {
+          ...quoteModal.record,
+          ...payload,
+          id: newRecordId,
+          version: newVersion,
+          updated: 'Just now',
+        };
+
+        setQuotes(prev => [newRecord, ...prev]);
+        setExpandedQuoteId(newRecordId);
       } else {
         const nextRecord = { id: values.quoteNo || `quote-${Date.now()}`, ...payload };
         setQuotes(prev => [nextRecord, ...prev]);
@@ -2262,6 +2411,16 @@ const ProjectDetailPage = () => {
       setInvoiceModal({ open: false, mode: 'create', record: null });
       invoiceForm.resetFields();
     });
+  };
+
+  const handleWhatsAppShare = (messageText) => {
+    if (!project || !project.phone) {
+      message.error('Client phone number not available for this project.');
+      return;
+    }
+    const cleanPhone = project.phone.replace(/[^0-9+]/g, '');
+    const url = `https://wa.me/${cleanPhone.startsWith('+') ? cleanPhone.slice(1) : cleanPhone}?text=${encodeURIComponent(messageText)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const renderProjectDetail = () => {
@@ -2679,6 +2838,14 @@ const renderFiles = () => (
                   <div style={{ display: 'grid', justifyItems: 'end', gap: 10 }}>
                     <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)' }}>{formatMoney(record.amount)}</div>
                     <Space wrap size={[6, 6]}>
+                      <Button
+                        size="small"
+                        icon={<WhatsAppOutlined />}
+                        onClick={() => handleWhatsAppShare(`Please review the quotation ${record.quoteNo} for amount ${formatMoney(record.amount)}`)}
+                        title="Share via WhatsApp"
+                        aria-label="Share via WhatsApp"
+                        style={{ ...actionIconButtonStyle, color: '#25D366' }}
+                      />
                       <Button
                         size="small"
                         icon={isExpanded ? <EyeInvisibleOutlined /> : <EyeOutlined />}
@@ -4130,8 +4297,11 @@ Generated by Perspective Kitchens & Interiors
                       style={{ height: 110, width: 140, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }}
                       preview={{ src: ref.url }}
                     />
-                    <div style={{ fontSize: 13, fontWeight: 500, marginTop: 8, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={ref.name}>
-                      {ref.name}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={ref.name}>
+                        {ref.name}
+                      </div>
+                      <WhatsAppOutlined style={{ color: '#25D366', cursor: 'pointer', fontSize: 16, flexShrink: 0 }} onClick={() => handleWhatsAppShare(`Check out this reference design: ${ref.name}`)} title="Share via WhatsApp" />
                     </div>
                   </div>
                 ))}
@@ -4197,6 +4367,7 @@ Generated by Perspective Kitchens & Interiors
                     </td>
                     <td style={{ padding: '14px 20px', textAlign: 'right' }}>
                       <Space size={8}>
+                        <Button size="small" icon={<WhatsAppOutlined />} title="Share via WhatsApp" style={{ color: '#25D366', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} onClick={() => handleWhatsAppShare(`Please review the finalized design: ${design.name}`)} />
                         <Button size="small" icon={<EyeOutlined />} title="View" style={{ color: 'var(--text-soft)', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
                         <Button size="small" icon={<DownloadOutlined />} title="Download" style={{ color: 'var(--text-soft)', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
                         <Button size="small" danger icon={<DeleteOutlined />} title="Delete" style={{ color: '#ef4444', background: isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6', border: 'none' }} />
@@ -4209,11 +4380,13 @@ Generated by Perspective Kitchens & Interiors
           </div>
         </div>
       </div>
+      
+      <div style={{ marginTop: 40, paddingTop: 40, borderTop: '1px dashed var(--border)' }}>
+        <ColorSelectionTab isDark={isDark} />
+      </div>
     </div>
   );
 };
-
-  const renderColorSelection = () => <ColorSelectionTab isDark={isDark} />;
 
   const renderFinalMeasurement = () => {
     if (!has50PercentAdvance) {
@@ -4235,7 +4408,7 @@ Generated by Perspective Kitchens & Interiors
 
   const renderCutList = () => <CutListTab isDark={isDark} />;
 
-  const renderBillOfMaterial = () => renderOrders();
+  const renderBillOfMaterial = () => <BillOfMaterialTab isDark={isDark} />;
 
   const renderProduction = () => (
     <ProductionTab 
@@ -4247,13 +4420,14 @@ Generated by Perspective Kitchens & Interiors
 
   const renderInstallation = () => <InstallationTab isDark={isDark} />;
 
-  const renderSnag = () => <SnagTab isDark={isDark} />;
+  const renderSnag = () => <SnagTab isDark={isDark} onWhatsAppShare={handleWhatsAppShare} />;
 
   const renderCleaning = () => (
     <CleaningTab 
       isDark={isDark} 
       balancePaymentPaid={hasBalancePayment}
       onPayBalance={() => setHasBalancePayment(true)}
+      onWhatsAppShare={handleWhatsAppShare}
     />
   );
 
@@ -4265,11 +4439,12 @@ Generated by Perspective Kitchens & Interiors
       case 'Files': return renderFiles();
       case 'User Requirement': return renderUserRequirement();
       case 'Design': return renderDesign();
-      case 'Color Selection': return renderColorSelection();
       case 'Quotes': return renderQuotes();
       case 'Final Measurement': return renderFinalMeasurement();
       case 'Cut List': return renderCutList();
       case 'Bill of Material': return renderBillOfMaterial();
+      case 'Purchase Orders': return renderOrders();
+      case 'Purchase Request': return renderPurchaseRequest();
       case 'Production': return renderProduction();
       case 'Installation': return renderInstallation();
       case 'Snag': return renderSnag();
