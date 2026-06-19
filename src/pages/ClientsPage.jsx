@@ -1,14 +1,15 @@
 import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Space, Dropdown,
-  DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions, Tooltip,
+  DatePicker, Select, Avatar, Tag, Row, Col, Card, Descriptions, Tooltip, Spin,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, EyeOutlined,
   SearchOutlined, MinusCircleOutlined, MoreOutlined,
   MailOutlined, PhoneOutlined, EnvironmentOutlined, FilterOutlined,
-  UnorderedListOutlined, AppstoreOutlined,
+  UnorderedListOutlined, AppstoreOutlined, AimOutlined,
 } from '@ant-design/icons';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { addClient, updateClient } from '@/store/slices/clientSlice';
@@ -80,6 +81,7 @@ const ClientsPage = () => {
   const [form] = Form.useForm();
   const [contactForm] = Form.useForm();
   const [contacts, setContacts] = useState([]);
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const filtered = useMemo(() => {
     if (!search) return clients;
@@ -464,7 +466,7 @@ const ClientsPage = () => {
               </Col>
               <Col span={6}>
                 <Form.Item name="location" label="Location">
-                  <Input />
+                  <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: 'var(--primary)' }} onClick={() => fetchLiveLocation(form, 'location')} />}</Tooltip>} />
                 </Form.Item>
               </Col>
               <Col span={6}>

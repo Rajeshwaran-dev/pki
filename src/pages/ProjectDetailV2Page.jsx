@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '@/store';
 import { updateProject } from '@/store/slices/projectSlice';
 import useIsMobile from '@/hooks/useIsMobile';
 import QuoteBuilder from '@/components/quotes/QuoteBuilder';
-import { Button, Avatar, Select, Space, Modal, Form, Input, Row, Col, Progress, Checkbox, message, Card, Upload, Image, Tag, Divider, Steps, Typography } from 'antd';
+import { Button, Avatar, Select, Space, Modal, Form, Input, Row, Col, Progress, Checkbox, message, Card, Upload, Image, Tag, Divider, Steps, Typography, Tooltip, Spin } from 'antd';
 import {
   ArrowLeftOutlined,
   EditOutlined,
@@ -34,7 +34,9 @@ import {
   InfoCircleOutlined,
   WalletOutlined,
   WhatsAppOutlined,
+  AimOutlined,
 } from '@ant-design/icons';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import { ClipboardList, Folder, FileText, User, HardHat } from 'lucide-react';
 
 const MOCK_FILES = {
@@ -87,6 +89,7 @@ const SIDEBAR_TABS = [
   { key: 'Bill of Material', label: 'Bill of Material', icon: <ShoppingCartOutlined /> },
   { key: 'Purchase Orders', label: 'Purchase Orders', icon: <FileText size={19} /> },
   { key: 'Purchase Request', label: 'Purchase Request', icon: <ShoppingCartOutlined /> },
+  { key: 'Financial', label: 'Financial', icon: <DollarCircleOutlined /> },
   { key: 'Production', label: 'Production', icon: <TeamOutlined /> },
   { key: 'Installation', label: 'Installation', icon: <HardHat size={19} /> },
   { key: 'Snag', label: 'Snag', icon: <FlagOutlined /> },
@@ -1820,6 +1823,7 @@ const ProjectDetailPage = () => {
   const [has50PercentAdvance, setHas50PercentAdvance] = useState(false); // Mock state for 50% Advance
   const [hasInstallationAdvance, setHasInstallationAdvance] = useState(false); // Mock state lifted from ProductionTab
   const [hasBalancePayment, setHasBalancePayment] = useState(false); // Mock state lifted from CleaningTab
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   if (!project) return <div style={{ padding: 40 }}>Project not found</div>;
 
@@ -1827,18 +1831,19 @@ const ProjectDetailPage = () => {
     'Project Detail': true,
     'Files': true,
     'User Requirement': true,
-    'Design': true,
-    'Quotes': true,
-    'Final Measurement': true,
-    'Cut List': true,
-    'Bill of Material': true,
-    'Purchase Orders': true,
-    'Purchase Request': true,
-    'Production': true,
-    'Installation': hasInstallationAdvance,
-    'Snag': true,
-    'Cleaning': true,
-    'Handover': hasBalancePayment,
+    'Design': hasDesignAdvance,
+    'Quotes': hasDesignAdvance,
+    'Final Measurement': hasDesignAdvance && has50PercentAdvance,
+    'Cut List': hasDesignAdvance && has50PercentAdvance,
+    'Bill of Material': hasDesignAdvance && has50PercentAdvance,
+    'Purchase Orders': hasDesignAdvance && has50PercentAdvance,
+    'Purchase Request': hasDesignAdvance && has50PercentAdvance,
+    'Financial': hasDesignAdvance && has50PercentAdvance,
+    'Production': hasDesignAdvance && has50PercentAdvance,
+    'Installation': hasDesignAdvance && has50PercentAdvance && hasInstallationAdvance,
+    'Snag': hasDesignAdvance && has50PercentAdvance && hasInstallationAdvance,
+    'Cleaning': hasDesignAdvance && has50PercentAdvance && hasInstallationAdvance,
+    'Handover': hasDesignAdvance && has50PercentAdvance && hasInstallationAdvance && hasBalancePayment,
   };
 
   const css = {
@@ -2539,6 +2544,18 @@ const renderFiles = () => (
               </div>
             </div>
           </div>
+          {!hasDesignAdvance && (
+            <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)', marginTop: 24, width: '100%' }}>
+              <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+              <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Design Stage Locked</div>
+              <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
+                The Design stage workflow can proceed only after the client has paid the 10% Design Advance. Please verify the payment status to unlock this section.
+              </p>
+              <Button type="primary" size="large" onClick={() => { message.success('10% Design Advance marked as received!'); setHasDesignAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
+                Mark 10% Design Advance as Received
+              </Button>
+            </div>
+          )}
         </div>
       );
     }
@@ -2651,6 +2668,18 @@ const renderFiles = () => (
             </Space>
           </div>
         </div>
+        {!hasDesignAdvance && (
+          <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)', marginTop: 24, width: '100%' }}>
+            <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+            <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Design Stage Locked</div>
+            <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
+              The Design stage workflow can proceed only after the client has paid the 10% Design Advance. Please verify the payment status to unlock this section.
+            </p>
+            <Button type="primary" size="large" onClick={() => { message.success('10% Design Advance marked as received!'); setHasDesignAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
+              Mark 10% Design Advance as Received
+            </Button>
+          </div>
+        )}
       </div>
     );
   };
@@ -3062,6 +3091,80 @@ Generated by Perspective Kitchens & Interiors
             />
           )}
         </Modal>
+      </div>
+
+      {/* 50% Advance Payment Verification Section */}
+      <div>
+        {!has50PercentAdvance ? (
+          <div style={{
+            animation: 'fadeIn 0.3s ease-out',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+            textAlign: 'center',
+            background: isDark ? 'rgba(217, 119, 6, 0.1)' : '#fffbeb',
+            borderRadius: 14,
+            border: '1px solid ' + (isDark ? 'rgba(217, 119, 6, 0.3)' : '#fef3c7'),
+          }}>
+            <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+            <div style={{ fontSize: 24, fontWeight: 800, color: isDark ? '#f59e0b' : '#92400e', marginBottom: 12 }}>
+              Final Measurement Locked
+            </div>
+            <p style={{ fontSize: 16, color: isDark ? '#d1d5db' : '#b45309', maxWidth: 600, marginBottom: 32 }}>
+              The Final Measurement workflow can proceed only after the client has paid the 50% Advance Payment. Please verify the payment status to unlock this section.
+            </p>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => {
+                message.success('50% Advance Payment marked as received!');
+                setHas50PercentAdvance(true);
+              }}
+              style={{
+                borderRadius: 8,
+                fontWeight: 700,
+                background: '#d97706',
+                borderColor: '#d97706',
+                height: 48,
+                padding: '0 32px',
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}
+            >
+              Mark 50% Advance as Received
+            </Button>
+          </div>
+        ) : (
+          <div style={{
+            animation: 'fadeIn 0.3s ease-out',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px 20px',
+            background: isDark ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4',
+            borderRadius: 14,
+            border: '1px solid ' + (isDark ? 'rgba(16, 185, 129, 0.3)' : '#dcfce7'),
+            gap: 12,
+            flexWrap: 'wrap',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <CheckCircleOutlined style={{ fontSize: 24, color: '#10b981' }} />
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#10b981' : '#15803d' }}>
+                  50% Advance Payment Verified
+                </div>
+                <div style={{ fontSize: 13, color: isDark ? '#9ca3af' : '#4b5563', marginTop: 2 }}>
+                  The Final Measurement stage is unlocked and ready for checklist verification.
+                </div>
+              </div>
+            </div>
+            <Tag color="success" style={{ borderRadius: 6, fontWeight: 600, padding: '4px 10px' }}>
+              Payment Verified
+            </Tag>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -3681,14 +3784,21 @@ Generated by Perspective Kitchens & Interiors
                   <Input type="number" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={8}>
-                <Form.Item name="completionDate" label="Completion Date" rules={[{ required: true, message: 'Completion date is required' }]}>
-                  <Input type="date" />
-                </Form.Item>
-              </Col>
             </Row>
           </Form>
         </Modal>
+        {!has50PercentAdvance && (
+          <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)', marginTop: 24, width: '100%' }}>
+            <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
+            <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Final Measurement Locked</div>
+            <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
+              The Final Measurement workflow can proceed only after the client has paid the 50% Advance Payment. Please verify the payment status to unlock this section.
+            </p>
+            <Button type="primary" size="large" onClick={() => { message.success('50% Advance Payment marked as received!'); setHas50PercentAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
+              Mark 50% Advance as Received
+            </Button>
+          </div>
+        )}
       </div>
     );
   };
@@ -4251,21 +4361,6 @@ Generated by Perspective Kitchens & Interiors
   };
 
   const renderDesign = () => {
-    if (!hasDesignAdvance) {
-      return (
-        <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '60px 40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)' }}>
-          <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Design Stage Locked</div>
-          <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
-            The Design stage workflow can proceed only after the client has paid the 10% Design Advance. Please verify the payment status to unlock this section.
-          </p>
-          <Button type="primary" size="large" onClick={() => { message.success('10% Design Advance marked as received!'); setHasDesignAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
-            Mark 10% Design Advance as Received
-          </Button>
-        </div>
-      );
-    }
-
     return (
       <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
@@ -4388,21 +4483,8 @@ Generated by Perspective Kitchens & Interiors
   );
 };
 
+
   const renderFinalMeasurement = () => {
-    if (!has50PercentAdvance) {
-      return (
-        <div style={{ animation: 'fadeIn 0.3s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '60px 40px', textAlign: 'center', background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border-soft)' }}>
-          <DollarCircleOutlined style={{ fontSize: 64, color: '#d97706', marginBottom: 24 }} />
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#92400e', marginBottom: 12 }}>Final Measurement Locked</div>
-          <p style={{ fontSize: 16, color: '#b45309', maxWidth: 500, marginBottom: 32 }}>
-            The Final Measurement workflow can proceed only after the client has paid the 50% Advance Payment. Please verify the payment status to unlock this section.
-          </p>
-          <Button type="primary" size="large" onClick={() => { message.success('50% Advance Payment marked as received!'); setHas50PercentAdvance(true); }} style={{ borderRadius: 8, fontWeight: 700, background: '#d97706', borderColor: '#d97706', height: 48, padding: '0 32px' }}>
-            Mark 50% Advance as Received
-          </Button>
-        </div>
-      );
-    }
     return <FinalMeasurementTab isDark={isDark} />;
   };
 
@@ -4445,6 +4527,7 @@ Generated by Perspective Kitchens & Interiors
       case 'Bill of Material': return renderBillOfMaterial();
       case 'Purchase Orders': return renderOrders();
       case 'Purchase Request': return renderPurchaseRequest();
+      case 'Financial': return renderFinancial();
       case 'Production': return renderProduction();
       case 'Installation': return renderInstallation();
       case 'Snag': return renderSnag();
@@ -4712,7 +4795,11 @@ Generated by Perspective Kitchens & Interiors
                 <Col xs={24} sm={8}><Form.Item name="state" label="State"><Select options={['Karnataka', 'Tamil Nadu', 'Maharashtra', 'Delhi'].map(value => ({ value, label: value }))} /></Form.Item></Col>
                 <Col xs={24} sm={8}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
                 <Col xs={24} sm={8}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
-                <Col xs={24} sm={8}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+                <Col xs={24} sm={8}>
+                  <Form.Item name="location" label="Location">
+                    <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: 'var(--primary)' }} onClick={() => fetchLiveLocation(editForm, 'location')} />}</Tooltip>} />
+                  </Form.Item>
+                </Col>
               </Row>
             </div>
           </div>

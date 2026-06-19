@@ -1,12 +1,14 @@
 export const mockProjects = [
-  { id: '1', createdDate: '2024-01-15', projectCode: 'PRJ-001', projectName: 'Luxury Villa Interior', clientName: 'Rahul Sharma', budget: 2500000, city: 'Mumbai', state: 'Maharashtra', stage: 'Designing', phone: '+91 98765 43210', email: 'rahul@example.com' },
-  { id: '2', createdDate: '2024-01-20', projectCode: 'PRJ-002', projectName: 'Office Renovation', clientName: 'Priya Patel', budget: 1800000, city: 'Pune', state: 'Maharashtra', stage: 'Execution', phone: '+91 87654 32109', email: 'priya@example.com' },
-  { id: '3', createdDate: '2024-02-01', projectCode: 'PRJ-003', projectName: 'Penthouse Design', clientName: 'Amit Gupta', budget: 4500000, city: 'Delhi', state: 'Delhi', stage: 'Sales', phone: '+91 76543 21098', email: 'amit@example.com' },
-  { id: '4', createdDate: '2024-02-10', projectCode: 'PRJ-004', projectName: 'Restaurant Makeover', clientName: 'Sneha Reddy', budget: 3200000, city: 'Hyderabad', state: 'Telangana', stage: 'Snags', phone: '+91 65432 10987', email: 'sneha@example.com' },
-  { id: '5', createdDate: '2024-02-15', projectCode: 'PRJ-005', projectName: 'Farmhouse Interior', clientName: 'Vikram Singh', budget: 5000000, city: 'Jaipur', state: 'Rajasthan', stage: 'Completed', phone: '+91 54321 09876', email: 'vikram@example.com' },
-  { id: '6', createdDate: '2024-03-01', projectCode: 'PRJ-006', projectName: 'Studio Apartment', clientName: 'Neha Kapoor', budget: 800000, city: 'Bangalore', state: 'Karnataka', stage: 'Handover', phone: '+91 43210 98765', email: 'neha@example.com' },
-  { id: '7', createdDate: '2024-03-10', projectCode: 'PRJ-007', projectName: 'Corporate HQ', clientName: 'Rajesh Iyer', budget: 8000000, city: 'Chennai', state: 'Tamil Nadu', stage: 'Designing', phone: '+91 32109 87654', email: 'rajesh@example.com' },
-  { id: '8', createdDate: '2024-03-15', projectCode: 'PRJ-008', projectName: 'Boutique Hotel Lobby', clientName: 'Ananya Das', budget: 6500000, city: 'Kolkata', state: 'West Bengal', stage: 'Execution', phone: '+91 21098 76543', email: 'ananya@example.com' },
+  { id: '1', createdDate: '2024-01-15', projectCode: 'PRJ-001', projectName: 'Luxury Villa Interior', clientId: '1', clientName: 'Rahul Sharma', budget: 2500000, amountReceived: 1000000, city: 'Mumbai', state: 'Maharashtra', stage: 'Designing', phone: '+91 98765 43210', email: 'rahul@example.com' },
+  { id: '2', createdDate: '2024-01-20', projectCode: 'PRJ-002', projectName: 'Office Renovation', clientId: '2', clientName: 'Priya Patel', budget: 1800000, amountReceived: 720000, city: 'Pune', state: 'Maharashtra', stage: 'Execution', phone: '+91 87654 32109', email: 'priya@example.com' },
+  { id: '3', createdDate: '2024-02-01', projectCode: 'PRJ-003', projectName: 'Penthouse Design', clientId: '3', clientName: 'Amit Gupta', budget: 4500000, amountReceived: 1800000, city: 'Delhi', state: 'Delhi', stage: 'Sales', phone: '+91 76543 21098', email: 'amit@example.com' },
+  { id: '4', createdDate: '2024-02-10', projectCode: 'PRJ-004', projectName: 'Restaurant Makeover', clientId: '4', clientName: 'Sneha Reddy', budget: 3200000, amountReceived: 1280000, city: 'Hyderabad', state: 'Telangana', stage: 'Snags', phone: '+91 65432 10987', email: 'sneha@example.com' },
+  { id: '5', createdDate: '2024-02-15', projectCode: 'PRJ-005', projectName: 'Farmhouse Interior', clientId: '5', clientName: 'Vikram Singh', budget: 5000000, amountReceived: 2000000, city: 'Jaipur', state: 'Rajasthan', stage: 'Completed', phone: '+91 54321 09876', email: 'vikram@example.com' },
+  { id: '6', createdDate: '2024-03-01', projectCode: 'PRJ-006', projectName: 'Studio Apartment', clientId: '6', clientName: 'Neha Kapoor', budget: 800000, amountReceived: 320000, city: 'Bangalore', state: 'Karnataka', stage: 'Handover', phone: '+91 43210 98765', email: 'neha@example.com' },
+  { id: '7', createdDate: '2024-03-10', projectCode: 'PRJ-007', projectName: 'Corporate HQ', clientId: '7', clientName: 'Rajesh Iyer', budget: 8000000, amountReceived: 3200000, city: 'Chennai', state: 'Tamil Nadu', stage: 'Designing', phone: '+91 32109 87654', email: 'rajesh@example.com' },
+  { id: '8', createdDate: '2024-03-15', projectCode: 'PRJ-008', projectName: 'Boutique Hotel Lobby', clientId: '8', clientName: 'Ananya Das', budget: 6500000, amountReceived: 2600000, city: 'Kolkata', state: 'West Bengal', stage: 'Execution', phone: '+91 21098 76543', email: 'ananya@example.com' },
+  { id: '9', createdDate: '2024-04-01', projectCode: 'PRJ-009', projectName: 'Urban Apartment Layout', clientId: '1', clientName: 'Rahul Sharma', budget: 1500000, amountReceived: 500000, city: 'Mumbai', state: 'Maharashtra', stage: 'Sales', phone: '+91 98765 43210', email: 'rahul@example.com' },
+  { id: '10', createdDate: '2024-04-10', projectCode: 'PRJ-010', projectName: 'Co-working Cafe Design', clientId: '2', clientName: 'Priya Patel', budget: 2200000, amountReceived: 1500000, city: 'Pune', state: 'Maharashtra', stage: 'Completed', phone: '+91 87654 32109', email: 'priya@example.com' },
 ];
 
 export const mockClients = [
@@ -16,6 +18,8 @@ export const mockClients = [
   { id: '4', createdDate: '2024-02-05', legalName: 'Reddy Foods Pvt Ltd', clientName: 'Sneha Reddy', phone: '+91 65432 10987', email: 'sneha@example.com', city: 'Hyderabad', state: 'Telangana' },
   { id: '5', createdDate: '2024-02-12', legalName: 'Singh Properties', clientName: 'Vikram Singh', phone: '+91 54321 09876', email: 'vikram@example.com', city: 'Jaipur', state: 'Rajasthan' },
   { id: '6', createdDate: '2024-02-20', legalName: 'Kapoor Interiors', clientName: 'Neha Kapoor', phone: '+91 43210 98765', email: 'neha@example.com', city: 'Bangalore', state: 'Karnataka' },
+  { id: '7', createdDate: '2024-03-05', legalName: 'Iyer Associates', clientName: 'Rajesh Iyer', phone: '+91 32109 87654', email: 'rajesh@example.com', city: 'Chennai', state: 'Tamil Nadu' },
+  { id: '8', createdDate: '2024-03-12', legalName: 'Das Studio', clientName: 'Ananya Das', phone: '+91 21098 76543', email: 'ananya@example.com', city: 'Kolkata', state: 'West Bengal' },
 ];
 
 export const mockTasks = [

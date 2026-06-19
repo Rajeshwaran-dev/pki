@@ -2,14 +2,14 @@ import { useState, useMemo } from 'react';
 import {
   Table, Button, Input, Modal, Form, Select, InputNumber,
   Tooltip, DatePicker, Avatar, Row, Col, Drawer, Tag,
-  Space, Typography, Divider, Checkbox, Dropdown,
+  Space, Typography, Divider, Checkbox, Dropdown, Spin,
 } from 'antd';
 import {
   PlusOutlined, ExportOutlined, EditOutlined, SearchOutlined,
   FilterOutlined, AppstoreOutlined, UnorderedListOutlined,
   PhoneOutlined, UserOutlined, MoreOutlined, ArrowRightOutlined,
   CloseOutlined, InfoCircleOutlined, ClockCircleOutlined, MailOutlined, DeleteOutlined, EyeOutlined,
-  PlusCircleOutlined,
+  PlusCircleOutlined, AimOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store';
@@ -20,6 +20,7 @@ import { stages, indianStates } from '@/data/mockData';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusTag from '@/components/shared/StatusTag';
 import useIsMobile from '@/hooks/useIsMobile';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import { Folder, Users, MapPin } from 'lucide-react';
 
 const { RangePicker } = DatePicker;
@@ -360,6 +361,7 @@ const ProjectsPage = () => {
   const [clientForm] = Form.useForm();
   const [editClientInviteForm] = Form.useForm();
   const [editVendorInviteForm] = Form.useForm();
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const filtered = useMemo(() => {
     let list = projects;
@@ -845,7 +847,11 @@ const ProjectsPage = () => {
                 <Row gutter={12}>
                   <Col span={6}><Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
                   <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
-                  <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+                  <Col span={6}>
+                    <Form.Item name="location" label="Location">
+                      <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(form, 'location')} />}</Tooltip>} />
+                    </Form.Item>
+                  </Col>
                   <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
                 </Row>
               </div>
@@ -873,7 +879,11 @@ const ProjectsPage = () => {
                   <Row gutter={12}>
                     <Col span={6}><Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item></Col>
                     <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
-                    <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+                    <Col span={6}>
+                      <Form.Item name="location" label="Location">
+                        <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(clientForm, 'location')} />}</Tooltip>} />
+                      </Form.Item>
+                    </Col>
                     <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
                   </Row>
                 </div>
@@ -938,7 +948,9 @@ const ProjectsPage = () => {
                     <Form.Item name="city" label="City"><Input /></Form.Item>
                     <Form.Item name="state" label="State"><Select placeholder="Select state" options={indianStates.map(s => ({ value: s, label: s }))} /></Form.Item>
                     <Form.Item name="pincode" label="Pincode"><Input /></Form.Item>
-                    <Form.Item name="location" label="Location"><Input /></Form.Item>
+                    <Form.Item name="location" label="Location">
+                      <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(form, 'location')} />}</Tooltip>} />
+                    </Form.Item>
                   </div>
                 </div>
               </div>

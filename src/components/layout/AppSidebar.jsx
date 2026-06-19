@@ -24,6 +24,7 @@ const menuItems = [
   { key: '/projects', icon: <ProjectOutlined />, label: 'Projects' },
   { key: '/tasks', icon: <CheckSquareOutlined />, label: 'Tasks' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Reports' },
+  { key: '/financial', icon: <BankOutlined />, label: 'Financial' },
   { key: '/messages', icon: <MessageOutlined />, label: 'Chat' },
   { key: '/attendance', icon: <TeamOutlined />, label: 'Attendance' },
   { key: '/payroll', icon: <DollarOutlined />, label: 'Payroll' },

@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
-import { Form, Input, Select, DatePicker, Button, Row, Col, AutoComplete, Spin, Result } from 'antd';
+import { Form, Input, Select, DatePicker, Button, Row, Col, AutoComplete, Spin, Result, Tooltip } from 'antd';
+import { AimOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { addEnquiry } from '@/store/slices/enquirySlice';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import dayjs from 'dayjs';
 
 const PROJECT_TYPES = ['Residential', 'Commercial', 'Renovation', 'Interior'];
@@ -18,6 +20,7 @@ const PublicEnquiryForm = () => {
   const searchTimeoutRef = useRef(null);
   const [locationOptions, setLocationOptions] = useState([]);
   const [fetchingLocation, setFetchingLocation] = useState(false);
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const handleLocationSearch = (value) => {
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
@@ -131,7 +134,7 @@ const PublicEnquiryForm = () => {
                   placeholder="Type to search location... e.g. Anna Nagar"
                   notFoundContent={fetchingLocation ? <Spin size="small" /> : null}
                 >
-                  <Input />
+                  <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: '#D69F6D' }} onClick={() => fetchLiveLocation(form, 'location')} />}</Tooltip>} />
                 </AutoComplete>
               </Form.Item>
             </div>
@@ -158,7 +161,7 @@ const PublicEnquiryForm = () => {
                 </Col>
                 <Col xs={24} sm={12}>
                   <Form.Item name="siteLocation" label="Site Location">
-                    <Input placeholder="e.g. Hyderabad" />
+                    <Input placeholder="e.g. Hyderabad" addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: '#D69F6D' }} onClick={() => fetchLiveLocation(form, 'siteLocation')} />}</Tooltip>} />
                   </Form.Item>
                 </Col>
               </Row>

@@ -2,15 +2,16 @@ import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Row, Col, Card, Space, Button, Typography, Tag,
-  Avatar, Divider, Tooltip, Empty, Modal, Form, Input, Select, Table
+  Avatar, Divider, Tooltip, Empty, Modal, Form, Input, Select, Table, Spin
 } from 'antd';
 import {
   ArrowLeftOutlined, MailOutlined, PhoneOutlined,
   EnvironmentOutlined, EditOutlined, PlusOutlined,
   UserOutlined, ProjectOutlined, InfoCircleOutlined,
   DoubleRightOutlined, GlobalOutlined, ClockCircleOutlined,
-  DollarCircleOutlined, MinusCircleOutlined
+  DollarCircleOutlined, MinusCircleOutlined, AimOutlined
 } from '@ant-design/icons';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { updateClient } from '@/store/slices/clientSlice';
 import { indianStates } from '@/data/mockData';
@@ -105,6 +106,7 @@ const ClientDetailPage = () => {
   const [contacts, setContacts] = useState([]);
   const [form] = Form.useForm();
   const [contactForm] = Form.useForm();
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const client = useMemo(() => clients.find(c => c.id === id), [clients, id]);
   const clientProjects = useMemo(() => 
@@ -396,7 +398,11 @@ const ClientDetailPage = () => {
                 </Form.Item>
               </Col>
               <Col span={6}><Form.Item name="city" label="City"><Input /></Form.Item></Col>
-              <Col span={6}><Form.Item name="location" label="Location"><Input /></Form.Item></Col>
+              <Col span={6}>
+                <Form.Item name="location" label="Location">
+                  <Input addonAfter={<Tooltip title="Fetch Live Location">{fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: 'var(--primary)' }} onClick={() => fetchLiveLocation(form, 'location')} />}</Tooltip>} />
+                </Form.Item>
+              </Col>
               <Col span={6}><Form.Item name="pincode" label="Pincode"><Input /></Form.Item></Col>
             </Row>
           </div>

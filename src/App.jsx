@@ -22,6 +22,7 @@ import ClientDetailPage from './pages/ClientDetailPage';
 import LoginPage from './pages/LoginPage';
 import PublicEnquiryForm from './pages/PublicEnquiryForm';
 import NotFound from './pages/NotFound';
+import FinancialPage from './pages/FinancialPage';
 import AttendanceSettings from './pages/attendancepages/AttendanceSettings';
 import AdminAttendance from './pages/attendancepages/AdminAttendance';
 import AttendanceTemplates from './pages/attendancepages/AttendanceTemplates';
@@ -98,6 +99,7 @@ const ThemedApp = () => {
               <Route path="/inventory/:tab" element={<InventoryPage />} />
               <Route path="/enquiry" element={<EnquiryPage />} />
               <Route path="/enquiry/:id" element={<EnquiryDetailPage />} />
+              <Route path="/financial" element={<FinancialPage />} />
               <Route path="/settings/organisation" element={<OrganisationSettings />} />
               <Route path="/settings/users" element={<UserManagementSettings />} />
               <Route path="/settings/permissions" element={<PermissionsSettings />} />

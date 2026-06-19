@@ -8,7 +8,7 @@ import {
 import {
   ArrowLeftOutlined, EditOutlined, DeleteOutlined,
   DownloadOutlined, PlusOutlined, FileImageOutlined,
-  FilePdfOutlined, InboxOutlined, CheckOutlined, WhatsAppOutlined
+  FilePdfOutlined, InboxOutlined, CheckOutlined, WhatsAppOutlined, AimOutlined
 } from '@ant-design/icons';
 import { useAppSelector, useAppDispatch } from '@/store';
 import {
@@ -22,6 +22,7 @@ import {
   User, HardHat, Search, Mail, MapPin
 } from 'lucide-react';
 import useIsMobile from '@/hooks/useIsMobile';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import dayjs from 'dayjs';
 import QuoteBuilder from '@/components/quotes/QuoteBuilder';
 
@@ -211,6 +212,12 @@ const SiteVisitCard = ({ visit, isDark, primaryColor }) => {
             <div style={{ fontSize: 15, fontWeight: 600, color: isDark ? '#d8e8f8' : '#222' }}>{visit.condition || '—'}</div>
           </div>
         </div>
+        {visit.location && (
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>Location</div>
+            <div style={{ fontSize: 15, color: isDark ? '#a8b8c8' : '#444' }}>{visit.location}</div>
+          </div>
+        )}
         {(visit.mep && visit.mep.length > 0) && (
           <div style={{ marginBottom: 8 }}>
             <div style={{ fontSize: 14, color: isDark ? '#6a7f95' : '#bbb', fontWeight: 500, marginBottom: 2 }}>MEP Provisions</div>
@@ -338,6 +345,7 @@ const EnquiryDetailPage = () => {
   const searchTimeoutRef = useRef(null);
   const [locationOptions, setLocationOptions] = useState([]);
   const [fetchingLocation, setFetchingLocation] = useState(false);
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const handleLocationSearch = (value) => {
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
@@ -476,6 +484,7 @@ const EnquiryDetailPage = () => {
           carpetArea: values.carpetArea,
           ceilingHeight: values.ceilingHeight,
           condition: values.condition,
+          location: values.location,
           mep: values.mep || [],
           observations: values.observations || '',
         },
@@ -536,6 +545,7 @@ const EnquiryDetailPage = () => {
   const tabStyle = (key) => {
     const isConvert = key === 'convert';
     const isActive = activeTab === key;
+    const disabled = !enquiry.assignedTo && key !== 'detail';
     
     return {
       display: 'flex',
@@ -543,7 +553,8 @@ const EnquiryDetailPage = () => {
       gap: 8,
       padding: '10px 14px',
       borderRadius: 10,
-      cursor: 'pointer',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      opacity: disabled ? 0.5 : 1,
       fontSize: 15,
       fontWeight: isActive ? 600 : 500,
       color: isActive ? (isConvert ? '#fff' : primaryColor) : (isDark ? '#8a9ab0' : '#666'),
@@ -597,7 +608,8 @@ const EnquiryDetailPage = () => {
               type="primary" 
               icon={<CheckCircle size={16} />}
               onClick={() => setActiveTab('convert')}
-              style={{ background: '#52C41A', border: 'none', borderRadius: 8, fontWeight: 600 }}
+              disabled={!enquiry.assignedTo}
+              style={{ background: enquiry.assignedTo ? '#52C41A' : undefined, border: 'none', borderRadius: 8, fontWeight: 600 }}
             >
               Convert Now
             </Button>
@@ -693,14 +705,16 @@ const EnquiryDetailPage = () => {
           <Upload
             showUploadList={false}
             beforeUpload={(file) => { handleFileUpload(fileType, { file }); return false; }}
+            disabled={!enquiry.assignedTo}
           >
-            <Tooltip title="Add file">
+            <Tooltip title={enquiry.assignedTo ? "Add file" : "Assign to add files"}>
               <Button
                 type="text"
                 size="small"
                 icon={<PlusOutlined />}
+                disabled={!enquiry.assignedTo}
                 style={{
-                  color: primaryColor,
+                  color: enquiry.assignedTo ? primaryColor : undefined,
                   background: isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)',
                   borderRadius: 6,
                 }}
@@ -743,7 +757,8 @@ const EnquiryDetailPage = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => setFollowUpModalOpen(true)}
-          style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
+          disabled={!enquiry.assignedTo}
+          style={{ background: enquiry.assignedTo ? primaryColor : undefined, border: 'none', borderRadius: 8 }}
         >
           New Follow Up
         </Button>
@@ -792,33 +807,40 @@ const EnquiryDetailPage = () => {
       </div>
 
       {proposalSubTab === 'new' ? (
-        <QuoteBuilder 
-          initialData={editingProposal ? { title: editingProposal.title || '', items: editingProposal.items || [] } : null}
-          onGenerate={({ title, items }) => {
-            const versionNum = editingProposal ? parseInt(editingProposal.version.replace('Ver', '')) : enquiry.proposals.length + 1;
-            const totalAmount = items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) * 1.18;
-            
-            const proposalData = {
-              id: editingProposal ? editingProposal.id : `PRO-${Date.now().toString().slice(-6)}`,
-              version: `Ver${versionNum}`,
-              date: dayjs().format('MMM D, YYYY'),
-              amount: `₹${totalAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`,
-              notes: title || (editingProposal ? 'Updated from Quote Builder' : 'Generated from Quote Builder'),
-              title: title,
-              items: items
-            };
+        !enquiry.assignedTo ? (
+          <div style={{ textAlign: 'center', padding: '48px 0', color: isDark ? '#5a7a95' : '#ccc' }}>
+            <FileText size={40} style={{ marginBottom: 16 }} color={isDark ? '#5a7a95' : '#ccc'} />
+            <div style={{ fontSize: 16 }}>Please assign this enquiry to generate a quote.</div>
+          </div>
+        ) : (
+          <QuoteBuilder 
+            initialData={editingProposal ? { title: editingProposal.title || '', items: editingProposal.items || [] } : null}
+            onGenerate={({ title, items }) => {
+              const versionNum = editingProposal ? parseInt(editingProposal.version.replace('Ver', '')) : enquiry.proposals.length + 1;
+              const totalAmount = items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) * 1.18;
+              
+              const proposalData = {
+                id: editingProposal ? editingProposal.id : `PRO-${Date.now().toString().slice(-6)}`,
+                version: `Ver${versionNum}`,
+                date: dayjs().format('MMM D, YYYY'),
+                amount: `₹${totalAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`,
+                notes: title || (editingProposal ? 'Updated from Quote Builder' : 'Generated from Quote Builder'),
+                title: title,
+                items: items
+              };
 
-            if (editingProposal) {
-              dispatch(updateProposal({ enquiryId: enquiry.id, proposal: proposalData }));
-              message.success('Quote updated');
-            } else {
-              dispatch(addProposal({ enquiryId: enquiry.id, proposal: proposalData }));
-              message.success('Quote generated');
-            }
-            
-            setEditingProposal(null);
-            setProposalSubTab('versions');
-        }} />
+              if (editingProposal) {
+                dispatch(updateProposal({ enquiryId: enquiry.id, proposal: proposalData }));
+                message.success('Quote updated');
+              } else {
+                dispatch(addProposal({ enquiryId: enquiry.id, proposal: proposalData }));
+                message.success('Quote generated');
+              }
+              
+              setEditingProposal(null);
+              setProposalSubTab('versions');
+          }} />
+        )
       ) : (
         <div>
           {enquiry.proposals.length === 0 ? (
@@ -1091,7 +1113,8 @@ const EnquiryDetailPage = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => setSiteVisitModalOpen(true)}
-          style={{ background: primaryColor, border: 'none', borderRadius: 8 }}
+          disabled={!enquiry.assignedTo}
+          style={{ background: enquiry.assignedTo ? primaryColor : undefined, border: 'none', borderRadius: 8 }}
         >
           Add Site Visit
         </Button>
@@ -1144,6 +1167,46 @@ const EnquiryDetailPage = () => {
         </Button>
       </div>
 
+      {!enquiry.assignedTo && (
+        <div style={{
+          marginBottom: 16,
+          background: isDark ? 'rgba(250, 173, 20, 0.1)' : '#fffbe6',
+          border: `1px solid ${isDark ? 'rgba(250, 173, 20, 0.2)' : '#ffe58f'}`,
+          borderRadius: 12,
+          padding: '16px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 16
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ 
+              width: 32, height: 32, borderRadius: '50%', 
+              background: '#faad1420', display: 'flex', 
+              alignItems: 'center', justifyContent: 'center' 
+            }}>
+              <span style={{ color: '#faad14', fontWeight: 'bold', fontSize: 16 }}>!</span>
+            </div>
+            <span style={{ fontWeight: 600, color: isDark ? '#ffc53d' : '#d48806', fontSize: 15 }}>
+              Please assign this enquiry before proceeding.
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14, color: isDark ? '#8a9ab0' : '#666', fontWeight: 500 }}>Assign To:</span>
+            <Select
+              placeholder="Select User"
+              style={{ width: 200 }}
+              options={STAFF_MEMBERS.map(s => ({ value: s.name, label: s.name }))}
+              onChange={(val) => {
+                dispatch(updateEnquiry({ ...enquiry, assignedTo: val }));
+                message.success(`Enquiry assigned to ${val}`);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* ── Header card ── */}
       <div
         style={{
@@ -1180,7 +1243,19 @@ const EnquiryDetailPage = () => {
               {enquiry.id}
             </div>
             {enquiry.assignedTo && (
-              <div style={{ fontSize: 14, color: isDark ? '#8a9ab0' : '#666', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                marginTop: 8,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '4px 12px',
+                borderRadius: 20,
+                background: isDark ? 'rgba(90,181,232,0.1)' : 'rgba(214,159,109,0.1)',
+                border: `1px solid ${isDark ? 'rgba(90,181,232,0.2)' : 'rgba(214,159,109,0.2)'}`,
+                color: primaryColor,
+                fontSize: 13,
+                fontWeight: 600,
+              }}>
                 <User size={14} />
                 <span>Assigned to: <strong>{enquiry.assignedTo}</strong></span>
               </div>
@@ -1212,9 +1287,10 @@ const EnquiryDetailPage = () => {
           <Button
             icon={<EditOutlined />}
             onClick={openEditModal}
+            disabled={!enquiry.assignedTo}
             style={{
-              background: primaryColor,
-              color: '#fff',
+              background: enquiry.assignedTo ? primaryColor : (isDark ? '#333' : '#f5f5f5'),
+              color: enquiry.assignedTo ? '#fff' : (isDark ? '#666' : '#b8b8b8'),
               border: 'none',
               borderRadius: 8,
               fontWeight: 600,
@@ -1226,6 +1302,7 @@ const EnquiryDetailPage = () => {
             danger
             icon={<DeleteOutlined />}
             onClick={handleDelete}
+            disabled={!enquiry.assignedTo}
             style={{ borderRadius: 8, fontWeight: 600 }}
           >
             Delete Enquiry
@@ -1256,53 +1333,61 @@ const EnquiryDetailPage = () => {
         >
           {isMobile ? (
             <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
-              {TABS.map(tab => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  style={{
-                    padding: '7px 14px',
-                    borderRadius: 8,
-                    border: 'none',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    fontSize: 14,
-                    fontWeight: activeTab === tab.key ? 600 : 500,
-                    color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
-                    background: activeTab === tab.key ? primaryColor : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {tab.label}
-                </button>
-              ))}
+              {TABS.map(tab => {
+                const disabled = !enquiry.assignedTo && tab.key !== 'detail';
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => { if (!disabled) setActiveTab(tab.key); }}
+                    disabled={disabled}
+                    style={{
+                      padding: '7px 14px',
+                      borderRadius: 8,
+                      border: 'none',
+                      cursor: disabled ? 'not-allowed' : 'pointer',
+                      opacity: disabled ? 0.5 : 1,
+                      whiteSpace: 'nowrap',
+                      fontSize: 14,
+                      fontWeight: activeTab === tab.key ? 600 : 500,
+                      color: activeTab === tab.key ? '#fff' : (isDark ? '#8a9ab0' : '#666'),
+                      background: activeTab === tab.key ? primaryColor : (isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0'),
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
           ) : (
-            TABS.map(tab => (
-              <div
-                key={tab.key}
-                style={tabStyle(tab.key)}
-                onClick={() => setActiveTab(tab.key)}
-                onMouseEnter={e => {
-                  if (activeTab !== tab.key) {
-                    e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
-                    e.currentTarget.style.color = isDark ? '#d8e8f8' : '#333';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (activeTab !== tab.key) {
-                    const isConvert = tab.key === 'convert';
-                    e.currentTarget.style.background = isConvert && !enquiry.convertedToClient 
-                      ? (isDark ? 'rgba(82,196,26,0.08)' : 'rgba(82,196,26,0.05)') 
-                      : 'transparent';
-                    e.currentTarget.style.color = isDark ? '#8a9ab0' : '#666';
-                  }
-                }}
-              >
-                <span style={{ fontSize: 19 }}>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </div>
-            ))
+            TABS.map(tab => {
+              const disabled = !enquiry.assignedTo && tab.key !== 'detail';
+              return (
+                <div
+                  key={tab.key}
+                  style={tabStyle(tab.key)}
+                  onClick={() => { if (!disabled) setActiveTab(tab.key); }}
+                  onMouseEnter={e => {
+                    if (activeTab !== tab.key && !disabled) {
+                      e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
+                      e.currentTarget.style.color = isDark ? '#d8e8f8' : '#333';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (activeTab !== tab.key && !disabled) {
+                      const isConvert = tab.key === 'convert';
+                      e.currentTarget.style.background = isConvert && !enquiry.convertedToClient 
+                        ? (isDark ? 'rgba(82,196,26,0.08)' : 'rgba(82,196,26,0.05)') 
+                        : 'transparent';
+                      e.currentTarget.style.color = isDark ? '#8a9ab0' : '#666';
+                    }
+                  }}
+                >
+                  <span style={{ fontSize: 19 }}>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </div>
+              );
+            })
           )}
         </div>
 
@@ -1382,7 +1467,13 @@ const EnquiryDetailPage = () => {
                 placeholder="Type to search location..."
                 notFoundContent={fetchingLocation ? <Spin size="small" /> : null}
               >
-                <Input />
+                <Input 
+                  addonAfter={
+                    <Tooltip title="Fetch Live Location">
+                      {fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(editForm, 'location')} />}
+                    </Tooltip>
+                  }
+                />
               </AutoComplete>
             </Form.Item>
             <Form.Item name="assignedTo" label="Assign To">
@@ -1421,7 +1512,13 @@ const EnquiryDetailPage = () => {
               </Col>
               <Col span={12}>
                 <Form.Item name="siteLocation" label="Site Location">
-                  <Input />
+                  <Input 
+                    addonAfter={
+                      <Tooltip title="Fetch Live Location">
+                        {fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(editForm, 'siteLocation')} />}
+                      </Tooltip>
+                    }
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -1517,6 +1614,16 @@ const EnquiryDetailPage = () => {
               </Form.Item>
             </Col>
           </Row>
+          <Form.Item name="location" label="Location">
+            <Input
+              placeholder="Enter location manually or fetch live location"
+              addonAfter={
+                <Tooltip title="Fetch Live Location">
+                  {fetchingLiveLocation ? <Spin size="small" /> : <AimOutlined style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(siteVisitForm, 'location')} />}
+                </Tooltip>
+              }
+            />
+          </Form.Item>
           <Row gutter={12}>
             <Col span={12}>
               <Form.Item name="carpetArea" label="Carpet Area (sq ft)">

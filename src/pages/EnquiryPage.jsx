@@ -14,6 +14,7 @@ import { addEnquiry, deleteEnquiry, assignEnquiry, convertToClient, STAFF_MEMBER
 import { addClient } from '@/store/slices/clientSlice';
 import PageHeader from '@/components/shared/PageHeader';
 import useIsMobile from '@/hooks/useIsMobile';
+import useLiveLocation from '@/hooks/useLiveLocation';
 import dayjs from 'dayjs';
 const PROJECT_TYPES = ['Residential', 'Commercial', 'Renovation', 'Interior'];
 const SOURCES = ['Instagram', 'Facebook', 'Google', 'Referral', 'Advertisement', 'Website'];
@@ -45,6 +46,7 @@ const EnquiryPage = () => {
   const searchTimeoutRef = useRef(null);
   const [locationOptions, setLocationOptions] = useState([]);
   const [fetchingLocation, setFetchingLocation] = useState(false);
+  const { fetchingLiveLocation, fetchLiveLocation } = useLiveLocation();
 
   const handleLocationSearch = (value) => {
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
@@ -621,7 +623,13 @@ const EnquiryPage = () => {
                 placeholder="Type to search location..."
                 notFoundContent={fetchingLocation ? <Spin size="small" /> : null}
               >
-                <Input />
+                <Input 
+                  addonAfter={
+                    <Tooltip title="Fetch Live Location">
+                      {fetchingLiveLocation ? <Spin size="small" /> : <div style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(form, 'location')}><i className="anticon"><svg viewBox="64 64 896 896" focusable="false" data-icon="aim" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 872c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zm0-648c-158.8 0-288 129.2-288 288s129.2 288 288 288 288-129.2 288-288-129.2-288-288-288zm152 288c0 83.8-68.2 152-152 152s-152-68.2-152-152 68.2-152 152-152 152 68.2 152 152zm-152 88c-48.5 0-88-39.5-88-88s39.5-88 88-88 88 39.5 88 88-39.5 88-88 88z"></path><path d="M512 80c-17.7 0-32 14.3-32 32v104h64V112c0-17.7-14.3-32-32-32zm0 864c17.7 0 32-14.3 32-32V808h-64v104c0 17.7 14.3 32 32 32zM112 544h104v-64H112c-17.7 0-32 14.3-32 32s14.3 32 32 32zm800-64H808v64h104c17.7 0 32-14.3 32-32s-14.3-32-32-32z"></path></svg></i></div>}
+                    </Tooltip>
+                  }
+                />
               </AutoComplete>
             </Form.Item>
             <Form.Item name="assignedTo" label="Assign To">
@@ -658,7 +666,14 @@ const EnquiryPage = () => {
               </Col>
               <Col span={12}>
                 <Form.Item name="siteLocation" label="Site Location">
-                  <Input placeholder="e.g. Hyderabad" />
+                  <Input 
+                    placeholder="e.g. Hyderabad" 
+                    addonAfter={
+                      <Tooltip title="Fetch Live Location">
+                        {fetchingLiveLocation ? <Spin size="small" /> : <div style={{ cursor: 'pointer', color: primaryColor }} onClick={() => fetchLiveLocation(form, 'siteLocation')}><i className="anticon"><svg viewBox="64 64 896 896" focusable="false" data-icon="aim" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 872c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zm0-648c-158.8 0-288 129.2-288 288s129.2 288 288 288 288-129.2 288-288-129.2-288-288-288zm152 288c0 83.8-68.2 152-152 152s-152-68.2-152-152 68.2-152 152-152 152 68.2 152 152zm-152 88c-48.5 0-88-39.5-88-88s39.5-88 88-88 88 39.5 88 88-39.5 88-88 88z"></path><path d="M512 80c-17.7 0-32 14.3-32 32v104h64V112c0-17.7-14.3-32-32-32zm0 864c17.7 0 32-14.3 32-32V808h-64v104c0 17.7 14.3 32 32 32zM112 544h104v-64H112c-17.7 0-32 14.3-32 32s14.3 32 32 32zm800-64H808v64h104c17.7 0 32-14.3 32-32s-14.3-32-32-32z"></path></svg></i></div>}
+                      </Tooltip>
+                    }
+                  />
                 </Form.Item>
               </Col>
             </Row>
